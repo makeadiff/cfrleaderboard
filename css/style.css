@@ -25,3 +25,7 @@
 .card td {
 	padding:0;
 }
+
+.card .unit-name {
+	padding-left: 20px;
+}

@@ -3,14 +3,12 @@ require 'common.php';
 include("../donutleaderboard/_city_filter.php");
 
 $view_level = i($QUERY, 'view_level', 'national');
-$timeframe = i($QUERY, 'timeframe', '0');
+$timeframe = intval(i($QUERY, 'timeframe', '0'));
 $view = i($QUERY, 'view', 'top');
 $action = i($QUERY, 'action', '');
 $state_id = i($QUERY, 'state_id', 0);
 $city_id = i($QUERY, 'city_id', 0);
 $group_id = i($QUERY, 'group_id', 0);
-$from = i($QUERY,'from', '2015-06-01');
-$to = i($QUERY,'to', date('Y-m-d'));
 
 setlocale(LC_MONETARY, 'en_IN');
 $year = 2015;
@@ -18,12 +16,13 @@ $top_count = 8;
 $all_states = $sql->getById("SELECT id,name FROM states");
 $all_cities = $sql->getById("SELECT id,name FROM cities");
 $all_view_levels = array('national' => "National", 'region' => "Region", 'city' => "City", 'group' => "Group", 'coach' => "Coach");
-$all_timeframes = array('1' => 'Day', '30' => 'Month', '0' => 'Year');
+$all_timeframes = array('1' => 'Day', '7' => 'Week', '0' => 'Year');
 
 $checks = array('users.is_deleted=0');
 if($state_id and $view_level == 'region')	$checks[] = "C.state_id=$state_id";
 if($group_id and $view_level == 'group')	$checks[] = "users.group_id=$group_id";
 if($city_id  and $view_level == 'city')		$checks[] = "users.city_id=$city_id";
+if($timeframe) $checks[] = "D.created_at > DATE_SUB(NOW(), INTERVAL $timeframe DAY)";
 
 $filter = "WHERE $city_checks";
 if($checks) $filter .= " AND " . implode(" AND ", $checks);

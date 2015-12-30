@@ -87,22 +87,32 @@
 	</div>
 	<div class="row">
 		<div class="col s12 m6">
-			<?php if($all_levels['group']['data']) { ?>
-			<div class="card">
-				<?php showCard('group'); ?>
-			</div>
-			<?php } ?>
-		</div>
-
-		<div class="col s12 m6">
 			<?php if($all_levels['user']['data']) { ?>
 			<div class="card">
 				<?php showCard('user'); ?>
 			</div>
 			<?php } ?>
 		</div>
+
+		<div class="col s12 m6">
+			<?php if($all_levels['coach']['data']) { ?>
+			<div class="card">
+				<?php showCard('coach'); ?>
+			</div>
+			<?php } ?>
+		</div>
  
-	</div>    
+	</div>
+
+	<div class="row">
+		<div class="col s12 m6">
+			<?php if($all_levels['group']['data']) { ?>
+			<div class="card">
+				<?php showCard('group'); ?>
+			</div>
+			<?php } ?>
+		</div>
+	</div>
 </body>
 
 </html>
@@ -116,24 +126,25 @@
 <?php 
 function show($key, $data, $title) {
 ?>
-<div class="card-content">
+<div class="card-content" id='top-<?php echo $key ?>'>
 <span class="card-title activator grey-text text-darken-4"><?php echo $title ?></span>
 <table>
 	<thead>
 		<th width="50%">Name</th>
 		<th width="50%">Amount Raised</th>
 	</thead>
+	<tr><td colspan="2">&nbsp;</td></tr>
 <?php 
 $count = 1;
 foreach ($data as $row) { ?>
 <tr class="<?php if($count <= 3) echo 'show-row'; else echo 'hide-row'; ?>">
-	<td width="50%"><?php echo $count . '. ' . $row['name'] ?></td>
+	<td width="50%" class="unit-name"><?php echo $count . '. ' . $row['name'] ?></td>
 	<td width="50%"><?php echo money_format("%n", $row['amount']) ?></td>
 </tr>
 <?php 
 	$count++;
 } ?>	
-</table>
+</table><br />
 <p class="activator" id="activator0"><a href="#"  id='show-more-<?php echo $key ?>' class='toggle-link'> <i class="tiny material-icons">add</i>See More</a></p>
 </div>
 
