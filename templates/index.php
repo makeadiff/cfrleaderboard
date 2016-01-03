@@ -5,7 +5,8 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>Donut</title>
 	<link rel="stylesheet" type="text/css" href="css/materialize.min.css" />
-	<link rel="stylesheet" type="text/css" href="css/style.css" />    
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+	<link rel="stylesheet" type="text/css" href="css/index.css" />
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	
@@ -33,33 +34,15 @@
 
 	<div class="row">  
 		<form method="post" action="">
-		<div class="col s12 m3" >
-			
-			<div class="input-field box-div">
-				<?php 
-				$html->buildDropDownArray($all_view_levels, "view_level", $view_level);
-				?>
-				<label>Select Level</label>
-			</div>
-		</div>
-		
-		<div class="col s12 m3">
-			<div class="input-field box-div">
-				<?php 
-				$html->buildDropDownArray($all_timeframes, "timeframe", $timeframe);
-				?>
-				<label>Select Timeframe</label>
-			</div>
-		</div>
+		<?php
+		showOption("view_level", $all_view_levels, $view_level);
+		showOption("timeframe", $all_timeframes, $timeframe); 
+		showOption("state_id", $all_states, $state_id, 'State');
+		showOption("city_id", $all_cities, $city_id, 'City');
+		showOption("group_id", array(), $group_id, 'Group');
+		// showOption("coach_id", array(), $coach_id, 'Coach');
+		?>
 
-		<div class="col s12 m3">
-			<div class="input-field box-div">
-				<?php 
-				$html->buildDropDownArray($all_cities, "city_id", $city_id);
-				?>
-				<label>Select City</label>
-			</div>
-		</div>
 
 		<div class="col s12 m3">
 			<br/><br/>
@@ -113,15 +96,22 @@
 			<?php } ?>
 		</div>
 	</div>
-</body>
-
-</html>
 
 <script type="text/javascript">
-	$(document).ready(function() {
-		$('select').material_select();
-	});
+	// $(document).ready(function() {
+	// 	$('select').material_select();
+	// });
+	var menu = <?php echo json_encode($menu); ?>;
+	<?php
+	if($state_id) { echo "changeCity('$state_id');changeViewLevel('region');"; } 
+	if($city_id) { echo "changeGroup('$city_id');changeViewLevel('city');"; } 
+	if($group_id) { echo "changeViewLevel('group');"; } 
+	?>
 </script>
+
+</body>
+</html>
+
 
 <?php 
 function show($key, $data, $title) {
@@ -130,8 +120,10 @@ function show($key, $data, $title) {
 <span class="card-title activator grey-text text-darken-4"><?php echo $title ?></span>
 <table>
 	<thead>
+		<tr>
 		<th width="50%">Name</th>
 		<th width="50%">Amount Raised</th>
+		</tr>
 	</thead>
 	<tr><td colspan="2">&nbsp;</td></tr>
 <?php 
@@ -154,4 +146,19 @@ foreach ($data as $row) { ?>
 function showCard($key) {
 	global $all_levels;
 	show($key, $all_levels[$key]['data'], $all_levels[$key]['title']);
+}
+
+
+function showOption($id, $values, $selected, $title='') {
+	global $html;
+	?>
+	<div class="col s12 m3" id="<?php echo $id ?>_area">
+	<div class="input-field box-div">
+		<?php 
+		$html->buildDropDownArray($values, $id, $selected);
+		?>
+		<label>Select <?php echo $title ?></label>
+	</div>
+	</div>
+<?php
 }

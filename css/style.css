@@ -1,22 +1,22 @@
 @charset "utf-8";
 /* CSS Document */
 
-	.box-div{
-		padding:14px;
-		margin-top:50px;
-	}
+.box-div{
+	padding:14px;
+	margin-top:50px;
+}
 
-	.hidden{
-		display: none;
-	}
+.hidden{
+	display: none;
+}
 
-	.more0, .more1{
-		display: none;
-	}
+.more0, .more1{
+	display: none;
+}
 
-	.activator{
-		cursor: pointer;
-	}
+.activator{
+	cursor: pointer;
+}
 
 .hide-row {
 	display: none;
@@ -28,4 +28,11 @@
 
 .card .unit-name {
 	padding-left: 20px;
+}
+
+select {
+	display: block !important;
+}
+.input-field label {
+	top: -10px !important;
 }

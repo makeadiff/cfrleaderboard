@@ -10,12 +10,16 @@ $state_id = i($QUERY, 'state_id', 0);
 $city_id = i($QUERY, 'city_id', 0);
 $group_id = i($QUERY, 'group_id', 0);
 
+if($view_level != 'group' and $view_level != 'city' and $state_id != 'region') $state_id = 0;
+if($view_level != 'group' and $view_level != 'city') $city_id = 0;
+if($view_level != 'group') $group_id = 0;
+
 setlocale(LC_MONETARY, 'en_IN');
 $year = 2015;
 $top_count = 8;
 $all_states = $sql->getById("SELECT id,name FROM states");
 $all_cities = $sql->getById("SELECT id,name FROM cities");
-$all_view_levels = array('national' => "National", 'region' => "Region", 'city' => "City", 'group' => "Group", 'coach' => "Coach");
+$all_view_levels = array('national' => "National", 'region' => "Region", 'city' => "City", 'group' => "Group"); // , 'coach' => "Coach"
 $all_timeframes = array('1' => 'Day', '7' => 'Week', '0' => 'Year');
 
 $checks = array('users.is_deleted=0');
@@ -55,21 +59,20 @@ $menu = $mem->get("Infogen:index/menu");
 if(!$menu) {
 	foreach ($all_states as $state_id => $state_name) {
 		$all_cities_in_state = $sql->getById("SELECT id, name FROM cities WHERE state_id=$state_id");
-		$menu[$state_id] = array('name' => $state_name, 'id' => $state_id, 'cities' => array());
+		$menu[$state_id] = array('name' => $state_name, 'id' => $state_id, 'cities' => $all_cities_in_state);
 
 		foreach ($all_cities_in_state as $city_id => $city_name) {
 			$all_groups_in_city = $sql->getById("SELECT id, name FROM groups WHERE city_id=$city_id");
 			$menu[$state_id]['cities'][$city_id] = array('name' => $city_name, 'id' => $city_id, 'groups' => array());
 
 			foreach ($all_groups_in_city as $group_id => $group_name) {
-				$all_users_in_group = $sql->getById("SELECT id, first_name FROM users WHERE group_id=$group_id");
+				$all_users_in_group = $sql->getById("SELECT id, CONCAT(first_name, ' ', last_name) AS name FROM users WHERE group_id=$group_id");
 				$menu[$state_id]['cities'][$city_id]['groups'][$group_id] = array('name' => $group_name, 'id' => $group_id, 'users' => $all_users_in_group);
 			}
 		}
 	}
 	$mem->set("Infogen:index/menu", $menu) or die("Couldn't cache data.");
 }
-
 
 function getData($key) {
 	$data = array();
