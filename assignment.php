@@ -1,8 +1,14 @@
 <?php
 require 'common.php';
 
-$sql_donut = new Sql("Project_Donut");
-$sql_madapp= new Sql("Project_Madapp");
+
+if($_SERVER['HTTP_HOST'] == 'makeadiff.in') {
+	$sql_donut = new Sql("makeadiff_cfrapp");
+	$sql_madapp= new Sql("makeadiff_madapp");
+} else {
+	$sql_donut = new Sql("Project_Donut");
+	$sql_madapp= new Sql("Project_Madapp");
+}
 
 // Argument Parsing.
 $madapp_city_id = i($QUERY,'madapp_city_id', 10);
