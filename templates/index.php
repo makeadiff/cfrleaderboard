@@ -16,7 +16,6 @@
 	<script type="text/javascript" src="js/script.js"></script>
 	<script type="text/javascript" src="js/application.js"></script>
 	<script type="text/javascript" src="js/index.js"></script>
-
 </head>
 
 <body>
@@ -35,8 +34,8 @@
 	<div class="row">  
 		<form method="post" action="">
 		<?php
-		showOption("view_level", $all_view_levels, $view_level);
-		showOption("timeframe", $all_timeframes, $timeframe); 
+		showOption("view_level", $all_view_levels, $view_level, "View Level");
+		showOption("timeframe", $all_timeframes, $timeframe, "Timeframe"); 
 		showOption("state_id", $all_states, $state_id, 'State');
 		showOption("city_id", $all_cities, $city_id, 'City');
 		showOption("group_id", array(), $group_id, 'Group');
@@ -46,7 +45,7 @@
 
 		<div class="col s12 m3">
 			<br/><br/>
-			<input type="submit" class="waves-effect waves-light btn-large" value="Submit"/>
+			<input type="submit" class="waves-effect waves-light btn-large action-button" value="Submit"/>
 		</div>
 		</form>
 	</div>
@@ -96,16 +95,69 @@
 			<?php } ?>
 		</div>
 	</div>
+	
+
+	<div class="row">
+		 <div class="col s12 m12">
+			<div class="row">
+				<div class="image_container">
+					<div class="popup">
+						<div class="container_fill" style="height:<?php echo $percentage_done ?>%; top:<?php echo 100 - $percentage_done ?>%"> <!-- Change the percentage Values here. -->
+						</div>
+						<img src="images/oxycyl.png" id="image_over" alt="Cylinder" >
+						
+					</div>
+				</div>
+				<p title="Target: <?php echo $target_amount ?>. Raised So Far : <?php echo $total_donation ?>. Total Volunteers : <?php echo $total_user_count ?>"><?php echo $percentage_done ?>% (<?php echo $ecs_count_remaining ?> ECS) left.</p>
+						
+<!-- 						<div class="row" >
+							<div class="col s12 m12">
+								<div class="card">
+									<div class="card-content">
+										<table>
+											<thead>
+												<th>Center</th>
+												<th>Current Status</th>
+											</thead>
+											<tr>
+												<td>Center 01</td>
+												<td>
+													<div class="histo-container">
+														<div class="histogram" style="width:50%; float:left;">
+														50% (Some ECS Left)
+														</div>        
+													</div>
+												</td>
+											</tr>
+											<tr>
+												<td>Center 01</td>
+												<td>
+													<div class="histo-container">
+														<div class="histogram" style="width:60%; float:left;">
+														60% (Some ECS Left)
+														</div>        
+													</div>
+												</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div> -->
+			</div>
+		</div>
+	</div>
 
 <script type="text/javascript">
 	// $(document).ready(function() {
 	// 	$('select').material_select();
 	// });
 	var menu = <?php echo json_encode($menu); ?>;
+	
 	<?php
-	if($state_id) { echo "changeCity('$state_id');changeViewLevel('region');"; } 
-	if($city_id) { echo "changeGroup('$city_id');changeViewLevel('city');"; } 
-	if($group_id) { echo "changeViewLevel('group');"; } 
+	if($view_level == 'region') { echo "changeCity('$state_id');changeViewLevel('region');"; } 
+	if($view_level == 'city') { echo "changeGroup('$city_id');changeViewLevel('city');"; } 
+	if($view_level == 'group') { echo "changeViewLevel('group');"; } 
 	?>
 </script>
 

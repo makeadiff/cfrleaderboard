@@ -10,7 +10,7 @@ $state_id = i($QUERY, 'state_id', 0);
 $city_id = i($QUERY, 'city_id', 0);
 $group_id = i($QUERY, 'group_id', 0);
 
-if($view_level != 'group' and $view_level != 'city' and $state_id != 'region') $state_id = 0;
+if($view_level != 'group' and $view_level != 'city' and $view_level != 'region') $state_id = 0;
 if($view_level != 'group' and $view_level != 'city') $city_id = 0;
 if($view_level != 'group') $group_id = 0;
 
@@ -24,7 +24,7 @@ $all_timeframes = array('1' => 'Day', '7' => 'Week', '0' => 'Year');
 
 $checks = array('users.is_deleted=0');
 if($state_id and $view_level == 'region')	$checks[] = "C.state_id=$state_id";
-if($group_id and $view_level == 'group')	$checks[] = "users.group_id=$group_id";
+if($group_id and $view_level == 'group')	$checks[] = "manager.group_id=$group_id";
 if($city_id  and $view_level == 'city')		$checks[] = "users.city_id=$city_id";
 if($timeframe) $checks[] = "D.created_at > DATE_SUB(NOW(), INTERVAL $timeframe DAY)";
 
@@ -51,6 +51,61 @@ foreach ($all_levels as $key => $level_info) {
 		$all_levels[$key]['data'] = getData($key);
 	}
 }
+
+// Get data for the Oxygen graphic
+if($view_level == 'region') {
+	$total_user_count = $sql->getOne("SELECT COUNT(users.id) AS count 
+		FROM users 
+		INNER JOIN cities C ON C.id=users.city_id
+		WHERE " . implode(" AND ", $checks));
+	$total_donation = $sql->getOne("SELECT SUM(D.donation_amount) AS sum
+		FROM users 
+		INNER JOIN cities C ON C.id=users.city_id
+		INNER JOIN donations D ON D.fundraiser_id=users.id
+		$filter");
+	$total_donation += $sql->getOne("SELECT SUM(D.amount) AS sum
+		FROM users 
+		INNER JOIN cities C ON C.id=users.city_id
+		INNER JOIN external_donations D ON D.fundraiser_id=users.id
+		$filter");
+
+} elseif($view_level == 'city') {
+	$total_user_count = $sql->getOne("SELECT COUNT(users.id) AS count 
+		FROM users 
+		WHERE " . implode(" AND ", $checks));
+	$total_donation = $sql->getOne("SELECT SUM(D.donation_amount) AS sum
+		FROM users 
+		INNER JOIN donations D ON D.fundraiser_id=users.id
+		$filter");
+	$total_donation += $sql->getOne("SELECT SUM(D.amount) AS sum
+		FROM users 
+		INNER JOIN external_donations D ON D.fundraiser_id=users.id
+		$filter");
+
+} elseif($view_level == 'group') {
+	$total_user_count = $sql->getOne("SELECT COUNT(users.id) AS count 
+		FROM users 
+		INNER JOIN reports_tos RT ON RT.user_id=users.id
+		INNER JOIN users manager ON manager.id=RT.manager_id
+		WHERE " . implode(" AND ", $checks));
+	$total_donation = $sql->getOne("SELECT SUM(D.donation_amount) AS sum
+		FROM users 
+		INNER JOIN reports_tos RT ON RT.user_id=users.id
+		INNER JOIN users manager ON manager.id=RT.manager_id
+		INNER JOIN donations D ON D.fundraiser_id=users.id
+		$filter");
+	$total_donation += $sql->getOne("SELECT SUM(D.amount) AS sum
+		FROM users 
+		INNER JOIN reports_tos RT ON RT.user_id=users.id
+		INNER JOIN users manager ON manager.id=RT.manager_id
+		INNER JOIN external_donations D ON D.fundraiser_id=users.id
+		$filter");
+}
+$target_amount = (($total_user_count * 70 / 100) * 12000) + (floor($total_user_count * 5 / 100) * 100000);
+$remaining_amount = $target_amount - $total_donation;
+$percentage_done = round($total_donation / $target_amount * 100, 2);
+$ecs_count_remaining = ceil($remaining_amount / 6000);
+// dump($target_amount, $remaining_amount, $percentage_done, $total_donation); exit;
 
 // Get the hirarchy
 $mem = new Memcached();
@@ -90,7 +145,9 @@ function getData($key) {
 
 	} elseif($key == 'group') {
 		$data = getFromBothTables("G.id,G.name, %amount%", "users
-					INNER JOIN groups G ON G.id=users.group_id
+					INNER JOIN reports_tos RT ON RT.user_id=users.id
+					INNER JOIN users manager ON manager.id=RT.manager_id
+					INNER JOIN groups G ON G.id=manager.group_id
 					INNER JOIN cities C ON C.id=users.city_id
 					%donation_table%", "G.id");
 

@@ -36,3 +36,38 @@ select {
 .input-field label {
 	top: -10px !important;
 }
+
+.popup{
+	position: relative;
+	height: 500px;
+	width: 375px;
+}
+#image_over{
+	position: absolute;
+	top:0;
+	height: 500px;
+	z-index: 1;
+}
+.container_fill{
+	position: absolute;
+	background: #ed1849;
+	width: 100%;
+	height: 100%;
+	z-index: 0;
+}
+
+
+@media only screen and (max-width: 500px){
+	.image_container{
+		width: 95%; 
+		height:100%;
+		position: absolute;
+	}
+
+	#image_over{
+		width: 100%;
+		height: auto;
+	}
+
+	
+}

@@ -14,3 +14,6 @@
 	display: none;
 }
 
+.action-button input {
+	top:15px !important;
+}
