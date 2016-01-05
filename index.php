@@ -54,7 +54,27 @@ $all_levels['user']['show_in']		= array('national', 'region', 'city', 'group', '
 
 foreach ($all_levels as $key => $level_info) {
 	if(in_array($view_level, $level_info['show_in'])) {
-		$all_levels[$key]['title'] = 'Top ' . ucfirst($key);// . ' in ' . 
+		$name = ucfirst($key);
+		if($name == 'User') $name = 'Fundraiser';
+
+		$title = 'Top ' . $name;
+
+		if($city_id) {
+			$city_name = $sql->getOne("SELECT name FROM cities WHERE id=$city_id");
+			$title .= " in $city_name";
+		} elseif($state_id) {
+			$state_name = $sql->getOne("SELECT name FROM states WHERE id=$state_id");
+			$title .= " in $state_name";
+		}
+
+		if($timeframe == '1') {
+			$title .= " on " . date("jS M");
+		
+		} elseif($timeframe == '7') {
+			$title .= " on " . date("jS M", strtotime("last week"));
+		}
+
+		$all_levels[$key]['title'] = $title;
 		$all_levels[$key]['data'] = getData($key);
 	}
 }
