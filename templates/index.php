@@ -31,17 +31,18 @@
 		</nav>
 	</div>
 
+	<div class="container">
+
 	<div class="row">  
 		<form method="post" action="">
 		<?php
 		showOption("view_level", $all_view_levels, $view_level, "View Level");
 		showOption("timeframe", $all_timeframes, $timeframe, "Timeframe"); 
-		showOption("state_id", $all_states, $state_id, 'State');
+		showOption("state_id", $all_states, $state_id, 'Region');
 		showOption("city_id", $all_cities, $city_id, 'City');
 		showOption("group_id", array(), $group_id, 'Group');
 		// showOption("coach_id", array(), $coach_id, 'Coach');
 		?>
-
 
 		<div class="col s12 m3">
 			<br/><br/>
@@ -66,8 +67,7 @@
 			</div>
 			<?php } ?>
 		</div>
-	</div>
-	<div class="row">
+
 		<div class="col s12 m6">
 			<?php if($all_levels['user']['data']) { ?>
 			<div class="card">
@@ -105,10 +105,9 @@
 						<div class="container_fill" style="height:<?php echo $percentage_done ?>%; top:<?php echo 100 - $percentage_done ?>%"> <!-- Change the percentage Values here. -->
 						</div>
 						<img src="images/oxycyl.png" id="image_over" alt="Cylinder" >
-						
+						<p id="cylinder-info" title="Target: <?php echo $target_amount ?>. Raised So Far : <?php echo $total_donation ?>. Total Volunteers : <?php echo $total_user_count ?>"><?php echo $percentage_done ?>% (<?php echo $ecs_count_remaining ?> ECS) left.</p>
 					</div>
 				</div>
-				<p title="Target: <?php echo $target_amount ?>. Raised So Far : <?php echo $total_donation ?>. Total Volunteers : <?php echo $total_user_count ?>"><?php echo $percentage_done ?>% (<?php echo $ecs_count_remaining ?> ECS) left.</p>
 						
 <!-- 						<div class="row" >
 							<div class="col s12 m12">
@@ -144,6 +143,8 @@
 								</div>
 							</div>
 						</div> -->
+
+				</div>
 			</div>
 		</div>
 	</div>
@@ -153,12 +154,14 @@
 	// 	$('select').material_select();
 	// });
 	var menu = <?php echo json_encode($menu); ?>;
-	
+	function pageInit() {
 	<?php
 	if($view_level == 'region') { echo "changeCity('$state_id');changeViewLevel('region');"; } 
-	if($view_level == 'city') { echo "changeGroup('$city_id');changeViewLevel('city');"; } 
+	if($view_level == 'city') { echo "changeCity('$state_id');changeGroup('$city_id');changeViewLevel('city');"; } 
 	if($view_level == 'group') { echo "changeViewLevel('group');"; } 
 	?>
+	}
+	$(pageInit);
 </script>
 
 </body>

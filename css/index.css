@@ -17,3 +17,10 @@
 .action-button input {
 	top:15px !important;
 }
+
+#cylinder-info {
+	top: 40%;
+	left: 115px;
+	position: absolute;
+	z-index: 5;
+}

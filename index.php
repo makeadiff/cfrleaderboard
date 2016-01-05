@@ -53,7 +53,22 @@ foreach ($all_levels as $key => $level_info) {
 }
 
 // Get data for the Oxygen graphic
-if($view_level == 'region') {
+if($view_level == 'national') {
+	$total_user_count = $sql->getOne("SELECT COUNT(users.id) AS count 
+		FROM users 
+		INNER JOIN cities C ON C.id=users.city_id
+		WHERE " . implode(" AND ", $checks));
+	$total_donation = $sql->getOne("SELECT SUM(D.donation_amount) AS sum
+		FROM users 
+		INNER JOIN cities C ON C.id=users.city_id
+		INNER JOIN donations D ON D.fundraiser_id=users.id
+		$filter");
+	$total_donation += $sql->getOne("SELECT SUM(D.amount) AS sum
+		FROM users 
+		INNER JOIN cities C ON C.id=users.city_id
+		INNER JOIN external_donations D ON D.fundraiser_id=users.id
+		$filter");
+} elseif($view_level == 'region') {
 	$total_user_count = $sql->getOne("SELECT COUNT(users.id) AS count 
 		FROM users 
 		INNER JOIN cities C ON C.id=users.city_id
@@ -103,7 +118,8 @@ if($view_level == 'region') {
 }
 $target_amount = (($total_user_count * 70 / 100) * 12000) + (floor($total_user_count * 5 / 100) * 100000);
 $remaining_amount = $target_amount - $total_donation;
-$percentage_done = round($total_donation / $target_amount * 100, 2);
+$percentage_done = 0;
+if($target_amount) $percentage_done = round($total_donation / $target_amount * 100, 2);
 $ecs_count_remaining = ceil($remaining_amount / 6000);
 // dump($target_amount, $remaining_amount, $percentage_done, $total_donation); exit;
 
@@ -152,15 +168,17 @@ function getData($key) {
 					%donation_table%", "G.id");
 
 	} elseif($key == 'coach') {
-		$data = getFromBothTables("coach.id,CONCAT(coach.first_name, ' ', coach.last_name) AS name, %amount%", "users
+		$data = getFromBothTables("manager.id,CONCAT(manager.first_name, ' ', manager.last_name) AS name, %amount%", "users
 					%donation_table%
 					INNER JOIN reports_tos RT ON RT.user_id=users.id 
-					INNER JOIN users AS coach ON RT.manager_id=coach.id
-					INNER JOIN cities C ON C.id=users.city_id", "coach.id");
+					INNER JOIN users AS manager ON RT.manager_id=manager.id
+					INNER JOIN cities C ON C.id=users.city_id", "manager.id");
 
 	} elseif($key == 'user') {
 		$data = getFromBothTables("users.id,CONCAT(users.first_name, ' ', users.last_name) AS name, %amount%", "users 
 					INNER JOIN cities C ON users.city_id=C.id
+					INNER JOIN reports_tos RT ON RT.user_id=users.id 
+					INNER JOIN users AS manager ON RT.manager_id=manager.id
 					%donation_table%", "users.id");
 	}
 
