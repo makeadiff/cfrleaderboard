@@ -23,13 +23,15 @@ $all_view_levels = array('national' => "National", 'region' => "Region", 'city' 
 $all_timeframes = array('1' => 'Day', '7' => 'Week', '0' => 'Year');
 
 $checks = array('users.is_deleted=0');
-if($state_id and $view_level == 'region')	$checks[] = "C.state_id=$state_id";
-if($group_id and $view_level == 'group')	$checks[] = "manager.group_id=$group_id";
-if($city_id  and $view_level == 'city')		$checks[] = "users.city_id=$city_id";
-if($timeframe) $checks[] = "D.created_at > DATE_SUB(NOW(), INTERVAL $timeframe DAY)";
+if($state_id and $view_level == 'region')	$checks['state_id'] = "C.state_id=$state_id";
+if($group_id and $view_level == 'group')	$checks['group_id'] = "manager.group_id=$group_id";
+if($city_id  and $view_level == 'city')		$checks['city_id'] = "users.city_id=$city_id";
+if($timeframe) $checks['timeframe'] = "D.created_at > DATE_SUB(NOW(), INTERVAL $timeframe DAY)";
+$user_checks = $checks;
+unset($user_checks['timeframe']);
 
 $filter = "WHERE $city_checks";
-if($checks) $filter .= " AND " . implode(" AND ", $checks);
+if($checks) $filter .= " AND " . implode(" AND ", array_values($checks));
 
 $top_data = array();
 $bottom_data = array();
@@ -57,7 +59,7 @@ if($view_level == 'national') {
 	$total_user_count = $sql->getOne("SELECT COUNT(users.id) AS count 
 		FROM users 
 		INNER JOIN cities C ON C.id=users.city_id
-		WHERE " . implode(" AND ", $checks));
+		WHERE " . implode(" AND ", $user_checks));
 	$total_donation = $sql->getOne("SELECT SUM(D.donation_amount) AS sum
 		FROM users 
 		INNER JOIN cities C ON C.id=users.city_id
@@ -72,7 +74,7 @@ if($view_level == 'national') {
 	$total_user_count = $sql->getOne("SELECT COUNT(users.id) AS count 
 		FROM users 
 		INNER JOIN cities C ON C.id=users.city_id
-		WHERE " . implode(" AND ", $checks));
+		WHERE " . implode(" AND ", $user_checks));
 	$total_donation = $sql->getOne("SELECT SUM(D.donation_amount) AS sum
 		FROM users 
 		INNER JOIN cities C ON C.id=users.city_id
@@ -87,7 +89,7 @@ if($view_level == 'national') {
 } elseif($view_level == 'city') {
 	$total_user_count = $sql->getOne("SELECT COUNT(users.id) AS count 
 		FROM users 
-		WHERE " . implode(" AND ", $checks));
+		WHERE " . implode(" AND ", $user_checks));
 	$total_donation = $sql->getOne("SELECT SUM(D.donation_amount) AS sum
 		FROM users 
 		INNER JOIN donations D ON D.fundraiser_id=users.id
@@ -102,7 +104,7 @@ if($view_level == 'national') {
 		FROM users 
 		INNER JOIN reports_tos RT ON RT.user_id=users.id
 		INNER JOIN users manager ON manager.id=RT.manager_id
-		WHERE " . implode(" AND ", $checks));
+		WHERE " . implode(" AND ", $user_checks));
 	$total_donation = $sql->getOne("SELECT SUM(D.donation_amount) AS sum
 		FROM users 
 		INNER JOIN reports_tos RT ON RT.user_id=users.id
