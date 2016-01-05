@@ -27,7 +27,7 @@
 }
 
 .card .unit-name {
-	padding-left: 20px;
+	padding-left: 10px;
 }
 
 select {
@@ -37,30 +37,64 @@ select {
 	top: -10px !important;
 }
 
+.activator,.deactivator{
+		cursor: pointer;
+	}
+
+div.histo-container{
+	background: url('../images/bg.png') repeat;
+	width: 100%;
+	height: 30px;
+	padding: 2px;
+}
+
+div.histogram{
+	height: 30px;
+	padding: 3px;
+	color:#FFF;
+	font-size: 10px;
+	overflow: inherit;
+	background: #1976D2;
+}
+
+.image_container{
+	height:300px;
+	position: absolute;
+	background: url('../images/bg.png') repeat;
+	opacity: 1;
+}
+
 .popup{
-	position: relative;
-	height: 500px;
-	width: 375px;
-}
-#image_over{
-	position: absolute;
-	top:0;
-	height: 500px;
-	z-index: 1;
-}
-.container_fill{
-	position: absolute;
-	background: #ed1849;
 	width: 100%;
 	height: 100%;
-	z-index: 0;
+	position: absolute;
+	top:0;
+	left: 0;
 }
 
+#image_over{
+	position: relative;
+	top:0;
+	height: 300px;
+	z-index: 20;
+}
 
-@media only screen and (max-width: 500px){
+.container_fill{
+	position: absolute;
+	top:0;
+	background: #1976D2;
+	width: 100%;
+	height: 270px;
+	z-index: 10;
+}
+
+.imagebox{
+	height:350px;
+}
+
+@media only screen and (max-width: 600px){
 	.image_container{
 		width: 95%; 
-		height:100%;
 		position: absolute;
 	}
 

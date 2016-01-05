@@ -120,17 +120,14 @@ if($view_level == 'national') {
 $target_amount = (($total_user_count * 70 / 100) * 12000) + (floor($total_user_count * 5 / 100) * 100000);
 $remaining_amount = $target_amount - $total_donation;
 $percentage_done = 0;
-if($target_amount) $percentage_done = round($total_donation / $target_amount * 100, 2);
+if($target_amount) $percentage_done = round($total_donation / $target_amount * 81.5, 2);
 $ecs_count_remaining = ceil($remaining_amount / 6000);
-// dump($target_amount, $remaining_amount, $percentage_done, $total_donation); exit;
+dump($target_amount, $remaining_amount, $percentage_done, $total_donation); exit;
 
 // Get the hirarchy
-/*$mem = new Memcached();
+$mem = new Memcached();
 $mem->addServer("127.0.0.1", 11211);
-<<<<<<< HEAD
-$menu = $mem->get("Infogen:index/menu");
-*/
-/*if(!$menu) {
+if(!$menu) {
 	foreach ($all_states as $state_id => $state_name) {
 		$all_cities_in_state = $sql->getById("SELECT id, name FROM cities WHERE state_id=$state_id");
 		$menu[$state_id] = array('name' => $state_name, 'id' => $state_id, 'cities' => array());
@@ -145,9 +142,8 @@ $menu = $mem->get("Infogen:index/menu");
 			}
 		}
 	}
-	//$mem->set("Infogen:index/menu", $menu) or die("Couldn't cache data.");
+	$mem->set("Infogen:index/menu", $menu) or die("Couldn't cache data.");
 }
-*/
 
 function getData($key) {
 	$data = array();
@@ -218,6 +214,7 @@ function getFromBothTables($select, $tables, $group_by) {
 
 $html = new HTML;
 render('index.php', false);
-function money_format($format,$amount){
+/*function money_format($format,$amount){
 		return '<i class="fa fa-inr"></i>'.$amount;
 }
+*/
