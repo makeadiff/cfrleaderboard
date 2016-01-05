@@ -7,6 +7,13 @@ $(document).ready(function(){
 		$(class_to_unhide).slideDown('1000');
 	});
 
+	var width = $('#image_over').width();
+	var height = $('#image_over').height();
+
+	$('.image_container').css({
+		width:width,
+		height:height
+	});
 });
 
 	

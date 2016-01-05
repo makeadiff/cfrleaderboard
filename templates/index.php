@@ -5,7 +5,8 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>Donut</title>
 	<link rel="stylesheet" type="text/css" href="css/materialize.min.css" />
-	<link rel="stylesheet" type="text/css" href="css/style.css" />    
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+	<link rel="stylesheet" type="text/css" href="css/index.css" />
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	
@@ -15,7 +16,6 @@
 	<script type="text/javascript" src="js/script.js"></script>
 	<script type="text/javascript" src="js/application.js"></script>
 	<script type="text/javascript" src="js/index.js"></script>
-
 </head>
 
 <body>
@@ -31,39 +31,22 @@
 		</nav>
 	</div>
 
+	<div class="container">
+
 	<div class="row">  
 		<form method="post" action="">
-		<div class="col s12 m3" >
-			
-			<div class="input-field box-div">
-				<?php 
-				$html->buildDropDownArray($all_view_levels, "view_level", $view_level);
-				?>
-				<label>Select Level</label>
-			</div>
-		</div>
-		
-		<div class="col s12 m3">
-			<div class="input-field box-div">
-				<?php 
-				$html->buildDropDownArray($all_timeframes, "timeframe", $timeframe);
-				?>
-				<label>Select Timeframe</label>
-			</div>
-		</div>
-
-		<div class="col s12 m3">
-			<div class="input-field box-div">
-				<?php 
-				$html->buildDropDownArray($all_cities, "city_id", $city_id);
-				?>
-				<label>Select City</label>
-			</div>
-		</div>
+		<?php
+		showOption("view_level", $all_view_levels, $view_level, "View Level");
+		showOption("timeframe", $all_timeframes, $timeframe, "Timeframe"); 
+		showOption("state_id", $all_states, $state_id, 'Region');
+		showOption("city_id", $all_cities, $city_id, 'City');
+		showOption("group_id", array(), $group_id, 'Group');
+		// showOption("coach_id", array(), $coach_id, 'Coach');
+		?>
 
 		<div class="col s12 m3">
 			<br/><br/>
-			<input type="submit" class="waves-effect waves-light btn-large" value="Submit"/>
+			<input type="submit" class="waves-effect waves-light btn-large action-button" value="Submit"/>
 		</div>
 		</form>
 	</div>
@@ -84,15 +67,6 @@
 			</div>
 			<?php } ?>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col s12 m6">
-			<?php if($all_levels['group']['data']) { ?>
-			<div class="card">
-				<?php showCard('group'); ?>
-			</div>
-			<?php } ?>
-		</div>
 
 		<div class="col s12 m6">
 			<?php if($all_levels['user']['data']) { ?>
@@ -101,33 +75,117 @@
 			</div>
 			<?php } ?>
 		</div>
- 
-	</div>    
-</body>
 
-</html>
+		<div class="col s12 m6">
+			<?php if($all_levels['coach']['data']) { ?>
+			<div class="card">
+				<?php showCard('coach'); ?>
+			</div>
+			<?php } ?>
+		</div>
+ 
+	</div>
+
+	<div class="row">
+		<div class="col s12 m6">
+			<?php if($all_levels['group']['data']) { ?>
+			<div class="card">
+				<?php showCard('group'); ?>
+			</div>
+			<?php } ?>
+		</div>
+	</div>
+	
+
+	<div class="row">
+		 <div class="col s12 m12">
+			<div class="row">
+				<div class="image_container">
+					<div class="popup">
+						<div class="container_fill" style="height:<?php echo $percentage_done ?>%; top:<?php echo 100 - $percentage_done ?>%"> <!-- Change the percentage Values here. -->
+						</div>
+						<img src="images/oxycyl.png" id="image_over" alt="Cylinder" >
+						<p id="cylinder-info" title="Target: <?php echo $target_amount ?>. Raised So Far : <?php echo $total_donation ?>. Total Volunteers : <?php echo $total_user_count ?>"><?php echo $percentage_done ?>% (<?php echo $ecs_count_remaining ?> ECS) left.</p>
+					</div>
+				</div>
+						
+<!-- 						<div class="row" >
+							<div class="col s12 m12">
+								<div class="card">
+									<div class="card-content">
+										<table>
+											<thead>
+												<th>Center</th>
+												<th>Current Status</th>
+											</thead>
+											<tr>
+												<td>Center 01</td>
+												<td>
+													<div class="histo-container">
+														<div class="histogram" style="width:50%; float:left;">
+														50% (Some ECS Left)
+														</div>        
+													</div>
+												</td>
+											</tr>
+											<tr>
+												<td>Center 01</td>
+												<td>
+													<div class="histo-container">
+														<div class="histogram" style="width:60%; float:left;">
+														60% (Some ECS Left)
+														</div>        
+													</div>
+												</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div> -->
+
+				</div>
+			</div>
+		</div>
+	</div>
 
 <script type="text/javascript">
-	$(document).ready(function() {
-		$('select').material_select();
-	});
+	// $(document).ready(function() {
+	// 	$('select').material_select();
+	// });
+	var menu = <?php echo json_encode($menu); ?>;
+	function pageInit() {
+	<?php
+	if($view_level == 'region') { echo "changeViewLevel('region');"; } 
+	if($view_level == 'city') { echo "changeViewLevel('city');changeCity('$state_id');"; } 
+	if($view_level == 'group') { echo "changeViewLevel('group');changeCity('$state_id');changeGroup('$city_id');$('#group_id').val($group_id);"; } 
+	?>
+	}
+	$(pageInit);
 </script>
+
+</body>
+</html>
+
 
 <?php 
 function show($key, $data, $title) {
 ?>
-<div class="card-content">
+<div class="card-content" id='top-<?php echo $key ?>'>
 <span class="card-title activator grey-text text-darken-4"><?php echo $title ?></span>
 <table>
 	<thead>
+		<tr>
 		<th width="50%">Name</th>
 		<th width="50%">Amount Raised</th>
+		</tr>
 	</thead>
+	<tr><td colspan="2">&nbsp;</td></tr>
 <?php 
 $count = 1;
 foreach ($data as $row) { ?>
 <tr class="<?php if($count <= 3) echo 'show-row'; else echo 'hide-row'; ?>">
-	<td width="50%"><?php echo $count . '. ' . $row['name'] ?></td>
+	<td width="50%" class="unit-name"><?php echo $count . '. ' . $row['name'] ?></td>
 	<td width="50%"><?php echo money_format("%n", $row['amount']) ?></td>
 </tr>
 <?php 
@@ -143,4 +201,19 @@ foreach ($data as $row) { ?>
 function showCard($key) {
 	global $all_levels;
 	show($key, $all_levels[$key]['data'], $all_levels[$key]['title']);
+}
+
+
+function showOption($id, $values, $selected, $title='') {
+	global $html;
+	?>
+	<div class="col s12 m3" id="<?php echo $id ?>_area">
+	<div class="input-field box-div">
+		<?php
+		$html->buildDropDownArray($values, $id, $selected);
+		?>
+		<label>Select <?php echo $title ?></label>
+	</div>
+	</div>
+<?php
 }
