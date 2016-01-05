@@ -10,6 +10,7 @@ $state_id = i($QUERY, 'state_id', 0);
 $city_id = i($QUERY, 'city_id', 0);
 $group_id = i($QUERY, 'group_id', 0);
 
+
 if($view_level != 'group' and $view_level != 'city' and $view_level != 'region') $state_id = 0;
 if($view_level != 'group' and $view_level != 'city') $city_id = 0;
 if($view_level != 'group') $group_id = 0;
@@ -128,7 +129,9 @@ $ecs_count_remaining = ceil($remaining_amount / 6000);
 // Get the hirarchy
 $mem = new Memcached();
 $mem->addServer("127.0.0.1", 11211);
-$menu = $mem->get("Infogen:index/menu");
+
+if(i($QUERY,'no_cache')) $menu = array();
+else $menu = $mem->get("Infogen:index/menu");
 if(!$menu) {
 	foreach ($all_states as $state_id => $state_name) {
 		$all_cities_in_state = $sql->getById("SELECT id, name FROM cities WHERE state_id=$state_id");

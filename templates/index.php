@@ -157,7 +157,7 @@
 	function pageInit() {
 	<?php
 	if($view_level == 'region') { echo "changeCity('$state_id');changeViewLevel('region');"; } 
-	if($view_level == 'city') { echo "changeCity('$state_id');changeGroup('$city_id');changeViewLevel('city');"; } 
+	if($view_level == 'city') { echo "changeCity('$state_id');changeGroup('$city_id');$('#city_id').val($city_id);changeViewLevel('city');"; } 
 	if($view_level == 'group') { echo "changeViewLevel('group');"; } 
 	?>
 	}
@@ -209,7 +209,7 @@ function showOption($id, $values, $selected, $title='') {
 	?>
 	<div class="col s12 m3" id="<?php echo $id ?>_area">
 	<div class="input-field box-div">
-		<?php 
+		<?php
 		$html->buildDropDownArray($values, $id, $selected);
 		?>
 		<label>Select <?php echo $title ?></label>
