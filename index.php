@@ -50,10 +50,10 @@ foreach ($all_levels as $key => $level_info) {
 }
 
 // Get the hirarchy
-$mem = new Memcached();
+/*$mem = new Memcached();
 $mem->addServer("127.0.0.1", 11211);
 $menu = $mem->get("Infogen:index/menu");
-if(!$menu) {
+*/if(!$menu) {
 	foreach ($all_states as $state_id => $state_name) {
 		$all_cities_in_state = $sql->getById("SELECT id, name FROM cities WHERE state_id=$state_id");
 		$menu[$state_id] = array('name' => $state_name, 'id' => $state_id, 'cities' => array());
@@ -68,7 +68,7 @@ if(!$menu) {
 			}
 		}
 	}
-	$mem->set("Infogen:index/menu", $menu) or die("Couldn't cache data.");
+	//$mem->set("Infogen:index/menu", $menu) or die("Couldn't cache data.");
 }
 
 
@@ -137,3 +137,6 @@ function getFromBothTables($select, $tables, $group_by) {
 
 $html = new HTML;
 render('index.php', false);
+function money_format($format,$amount){
+		return '<i class="fa fa-inr"></i>'.$amount;
+}
