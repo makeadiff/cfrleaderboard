@@ -157,7 +157,7 @@
 	function pageInit() {
 	<?php
 	if($view_level == 'region') { echo "changeViewLevel('region');"; } 
-	if($view_level == 'city') { echo "changeViewLevel('city');changeCity('$state_id');"; } 
+	if($view_level == 'city') { echo "changeViewLevel('city');changeCity('$state_id');$('#city_id').val($city_id);"; } 
 	if($view_level == 'group') { echo "changeViewLevel('group');changeCity('$state_id');changeGroup('$city_id');$('#group_id').val($group_id);"; } 
 	?>
 	}
@@ -192,7 +192,7 @@ foreach ($data as $row) { ?>
 	$count++;
 } ?>	
 </table><br />
-<p class="activator" id="activator0"><a href="#"  id='show-more-<?php echo $key ?>' class='toggle-link'> <i class="tiny material-icons">add</i>See More</a></p>
+<p class="activator" id="activator0"><a id='show-more-<?php echo $key ?>' class='toggle-link'> <i class="tiny material-icons">add</i>See More</a></p>
 </div>
 
 <?php

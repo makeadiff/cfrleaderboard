@@ -160,10 +160,9 @@ $remaining_amount = $target_amount - $total_donation;
 $percentage_done = 0;
 if($target_amount) $percentage_done = round($total_donation / $target_amount * 100, 2);
 $ecs_count_remaining = ceil($remaining_amount / 6000);
-// dump($target_amount, $remaining_amount, $percentage_done, $total_donation); exit;
+
 
 // Get the hirarchy
-
 if(i($QUERY,'no_cache')) $menu = array();
 else $menu = $mem->get("Infogen:index/menu");
 if(!$menu) {
