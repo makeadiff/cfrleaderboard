@@ -10,7 +10,6 @@ $state_id = i($QUERY, 'state_id', 0);
 $city_id = i($QUERY, 'city_id', 0);
 $group_id = i($QUERY, 'group_id', 0);
 
-
 if($view_level != 'group' and $view_level != 'city' and $view_level != 'region') $state_id = 0;
 if($view_level != 'group' and $view_level != 'city') $city_id = 0;
 if($view_level != 'group') $group_id = 0;
@@ -46,7 +45,6 @@ $all_levels['city']['show_in']		= array('national', 'region');
 $all_levels['group']['show_in']		= array('national', 'region', 'city');
 $all_levels['coach']['show_in']		= array('national', 'region', 'city', 'group');
 $all_levels['user']['show_in']		= array('national', 'region', 'city', 'group', 'coach');
-
 
 foreach ($all_levels as $key => $level_info) {
 	if(in_array($view_level, $level_info['show_in'])) {
@@ -133,17 +131,17 @@ $mem->addServer("127.0.0.1", 11211);
 if(i($QUERY,'no_cache')) $menu = array();
 else $menu = $mem->get("Infogen:index/menu");
 if(!$menu) {
-	foreach ($all_states as $state_id => $state_name) {
-		$all_cities_in_state = $sql->getById("SELECT id, name FROM cities WHERE state_id=$state_id");
-		$menu[$state_id] = array('name' => $state_name, 'id' => $state_id, 'cities' => $all_cities_in_state);
+	foreach ($all_states as $this_state_id => $state_name) {
+		$all_cities_in_state = $sql->getById("SELECT id, name FROM cities WHERE state_id=$this_state_id");
+		$menu[$this_state_id] = array('name' => $state_name, 'id' => $this_state_id, 'cities' => $all_cities_in_state);
 
-		foreach ($all_cities_in_state as $city_id => $city_name) {
-			$all_groups_in_city = $sql->getById("SELECT id, name FROM groups WHERE city_id=$city_id");
-			$menu[$state_id]['cities'][$city_id] = array('name' => $city_name, 'id' => $city_id, 'groups' => array());
+		foreach ($all_cities_in_state as $this_city_id => $city_name) {
+			$all_groups_in_city = $sql->getById("SELECT id, name FROM groups WHERE city_id=$this_city_id");
+			$menu[$this_state_id]['cities'][$this_city_id] = array('name' => $city_name, 'id' => $this_city_id, 'groups' => array());
 
-			foreach ($all_groups_in_city as $group_id => $group_name) {
-				$all_users_in_group = $sql->getById("SELECT id, CONCAT(first_name, ' ', last_name) AS name FROM users WHERE group_id=$group_id");
-				$menu[$state_id]['cities'][$city_id]['groups'][$group_id] = array('name' => $group_name, 'id' => $group_id, 'users' => $all_users_in_group);
+			foreach ($all_groups_in_city as $this_group_id => $group_name) {
+				$all_users_in_group = $sql->getById("SELECT id, CONCAT(first_name, ' ', last_name) AS name FROM users WHERE group_id=$this_group_id");
+				$menu[$this_state_id]['cities'][$this_city_id]['groups'][$this_group_id] = array('name' => $group_name, 'id' => $this_group_id, 'users' => $all_users_in_group);
 			}
 		}
 	}

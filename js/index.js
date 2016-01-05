@@ -64,16 +64,19 @@ function changeViewLevel(view_level_arg) {
 
 function changeCity(state_id) {
 	if(typeof state_id != "string") state_id = this.value;
+	$("#state_id").val(state_id);
 	current_state_id = state_id;
 	populateSelect("city_id", menu[state_id]['cities']);
 }
 function changeGroup(city_id) {
 	if(typeof city_id != "string") city_id = this.value;
+	$("#city_id").val(city_id);
 	current_city_id = city_id;
 	populateSelect("group_id", menu[current_state_id]['cities'][city_id]['groups']);
 }
 function changeCoach(group_id) {
 	if(typeof group_id != "string") group_id = this.value;
+	$("#group_id").val(group_id);
 	current_group_id = group_id;
 	populateSelect("coach_id", menu[current_state_id]['cities'][current_city_id]['groups'][group_id]['users']);
 }

@@ -156,9 +156,9 @@
 	var menu = <?php echo json_encode($menu); ?>;
 	function pageInit() {
 	<?php
-	if($view_level == 'region') { echo "changeCity('$state_id');changeViewLevel('region');"; } 
-	if($view_level == 'city') { echo "changeCity('$state_id');changeGroup('$city_id');$('#city_id').val($city_id);changeViewLevel('city');"; } 
-	if($view_level == 'group') { echo "changeViewLevel('group');"; } 
+	if($view_level == 'region') { echo "changeViewLevel('region');"; } 
+	if($view_level == 'city') { echo "changeViewLevel('city');changeCity('$state_id');"; } 
+	if($view_level == 'group') { echo "changeViewLevel('group');changeCity('$state_id');changeGroup('$city_id');$('#group_id').val($group_id);"; } 
 	?>
 	}
 	$(pageInit);
