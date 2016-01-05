@@ -26,7 +26,7 @@ $top_count = 8;
 $all_states = $sql->getById("SELECT id,name FROM states");
 $all_cities = $sql->getById("SELECT id,name FROM cities");
 $all_view_levels = array('national' => "National", 'region' => "Region", 'city' => "City", 'group' => "Group"); // , 'coach' => "Coach"
-$all_timeframes = array('1' => 'Day', '7' => 'Week', '0' => 'Year');
+$all_timeframes = array('1' => 'Day', '7' => 'Week', '0' => 'Overall');
 
 $checks = array('users.is_deleted=0');
 if($state_id and $view_level == 'region')	$checks['state_id'] = "C.state_id=$state_id";
@@ -71,7 +71,7 @@ foreach ($all_levels as $key => $level_info) {
 			$title .= " on " . date("jS M");
 		
 		} elseif($timeframe == '7') {
-			$title .= " on " . date("jS M", strtotime("last week"));
+			$title .= " for last week(" . date("jS M", strtotime("last week") . ")");
 		}
 
 		$all_levels[$key]['title'] = $title;
