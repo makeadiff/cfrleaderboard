@@ -11,8 +11,17 @@ function init() {
 
 function showMore() {
 	var key = this.id.replace(/show\-more\-/, '');
-	$("#top-" + key + " .hide-row").removeClass("hide-row");
-	$(this).hide();
+	$("#top-" + key + " .hide-row").toggle('fade');
+
+	var link = $(this);
+
+	if(!link.hasClass("currently-active")) {
+		link.addClass("currently-active");
+		link.html(' <i class="tiny material-icons">remove</i>See Less');
+	} else {
+		link.removeClass("currently-active");
+		link.html(' <i class="tiny material-icons">add</i>See More');
+	}
 }
 
 function changeViewLevel(view_level_arg) {
