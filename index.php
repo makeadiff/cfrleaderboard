@@ -28,7 +28,7 @@ $all_cities = $sql->getById("SELECT id,name FROM cities");
 $all_view_levels = array('national' => "National", 'region' => "Region", 'city' => "City", 'group' => "Center"); // , 'coach' => "Coach"
 $all_timeframes = array('1' => 'Day', '7' => 'Week', '0' => 'Overall');
 
-$checks = array('users.is_deleted=0');
+$checks = array('is_deleted' => 'users.is_deleted=0');
 if($state_id and $view_level == 'region')	$checks['state_id'] = "C.state_id=$state_id";
 if($group_id and $view_level == 'group')	$checks['group_id'] = "manager.group_id=$group_id";
 if($city_id  and $view_level == 'city')		$checks['city_id'] = "users.city_id=$city_id";
@@ -190,7 +190,7 @@ if(!$menu) {
 }
 
 function getData($key, $get_user_count = false) {
-	global $timeframe,$view_level,$state_id,$city_id,$group_id, $mem, $QUERY, $cache_expire, $checks, $sql;
+	global $timeframe,$view_level,$state_id,$city_id,$group_id, $mem, $QUERY, $cache_expire, $checks, $sql, $user_checks;
 
 	if(i($QUERY,'no_cache')) {
 		$data = array();
@@ -209,7 +209,7 @@ function getData($key, $get_user_count = false) {
 					FROM users 
 					INNER JOIN cities C ON C.id=users.city_id
 					INNER JOIN states S ON S.id=C.state_id
-					WHERE " . implode(" AND ", $checks)
+					WHERE " . implode(" AND ", $user_checks)
 					. " GROUP BY S.id");
 
 			foreach ($data as $key => $row) {
@@ -225,7 +225,7 @@ function getData($key, $get_user_count = false) {
 			$user_count_data = $sql->getById("SELECT C.id, COUNT(users.id) AS count 
 					FROM users 
 					INNER JOIN cities C ON C.id=users.city_id
-					WHERE " . implode(" AND ", $checks)
+					WHERE " . implode(" AND ", $user_checks)
 					. " GROUP BY C.id");
 
 			foreach ($data as $key => $row) {
@@ -248,7 +248,7 @@ function getData($key, $get_user_count = false) {
 				INNER JOIN users manager ON manager.id=RT.manager_id
 				INNER JOIN groups G ON G.id=manager.group_id
 				INNER JOIN cities C ON C.id=users.city_id
-				WHERE " . implode(" AND ", $checks)
+				WHERE " . implode(" AND ", $user_checks)
 				. " GROUP BY G.id");
 
 			foreach ($data as $key => $row) {

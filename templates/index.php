@@ -55,6 +55,17 @@
 	</div>
 	
 	<div class="row">
+		<?php if(!$total_donation) { ?>
+		<div class="col s12 m6">
+			<div class="card">
+				<div class="card-image">
+					<img src="images/region.jpg">
+					<span class="card-title img-title">No data for the selected options</span>
+				</div>
+			</div>
+		</div>
+		<?php } ?>
+
 		<div class="col s12 m6">
 			<?php if($all_levels['region']['data']) { ?>
 			<div class="card">
