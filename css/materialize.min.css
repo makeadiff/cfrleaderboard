@@ -7155,7 +7155,7 @@ input[type=range]+.thumb {
 
 nav {
     color: #fff;
-    background-color: #1976D2;
+    background-color: #ED1849;
     width: 100%;
     height: 56px;
     line-height: 56px
@@ -8004,7 +8004,7 @@ footer.page-footer .footer-copyright {
 .btn-large {
     text-decoration: none;
     color: #fff;
-    background-color: #7C4DFF;
+    background-color: #9C27B0;
     text-align: center;
     letter-spacing: .5px;
     transition: .2s ease-out;
@@ -8013,7 +8013,7 @@ footer.page-footer .footer-copyright {
 
 .btn:hover,
 .btn-large:hover {
-    background-color: #7C4DFF
+    background-color: #9C27B0;
 }
 
 .btn-floating {
