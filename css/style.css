@@ -60,7 +60,8 @@ div.histogram{
 .image_container{
 	height:300px;
 	position: absolute;
-	background: url('../images/bg.png') repeat;
+	/*background: url('../images/bg.png') repeat;*/
+	background: #005555;
 	opacity: 1;
 }
 

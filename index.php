@@ -25,7 +25,7 @@ $cache_expire = 60 * 60;
 $top_count = 8;
 $all_states = $sql->getById("SELECT id,name FROM states");
 $all_cities = $sql->getById("SELECT id,name FROM cities");
-$all_view_levels = array('national' => "National", 'region' => "Region", 'city' => "City", 'group' => "Group"); // , 'coach' => "Coach"
+$all_view_levels = array('national' => "National", 'region' => "Region", 'city' => "City", 'group' => "Group", 'coach' => "Coach");   
 $all_timeframes = array('1' => 'Day', '7' => 'Week', '0' => 'Overall');
 
 $checks = array('users.is_deleted=0');
@@ -79,7 +79,7 @@ foreach ($all_levels as $key => $level_info) {
 	}
 }
 
-// Get data for the Oxygen graphic
+//Get data for the Oxygen graphic
 if(i($QUERY,'no_cache')) {
 	$total_user_count = 0;
 	$total_donation = 0;
@@ -262,7 +262,8 @@ function getFromBothTables($select, $tables, $group_by) {
 
 $html = new HTML;
 render('index.php', false);
-/*function money_format($format,$amount){
+f
+/*unction money_format($format,$amount){
 		return '<i class="fa fa-inr"></i>'.$amount;
-}
-*/
+}*/
+
