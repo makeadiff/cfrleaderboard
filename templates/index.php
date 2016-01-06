@@ -119,7 +119,7 @@
 		</div>
 	</div>
 
-
+	<?php if($total_donation and $timeframe == 0) { ?>
 	<div class="row">
 		<div class="col s12 m12">
 			<div class="card">
@@ -129,7 +129,7 @@
 							<div class="container_fill" style="height:<?php echo $percentage_done ?>%; top:<?php echo 100 - $percentage_done ?>%"> <!-- Change the percentage Values here. -->
 							</div>
 							<img src="images/oxycyl.png" id="image_over" alt="Cylinder" >
-							<p id="cylinder-info" title="Target: <?php echo $target_amount ?>. Raised So Far : <?php echo $total_donation ?>. Total Volunteers : <?php echo $total_user_count ?>"><?php echo $percentage_done.'%<br/>['.$ecs_count_remaining ?> <br/>ECS left]</p>
+							<p id="cylinder-info" title="Target: <?php echo $target_amount ?>. Raised So Far : <?php echo $total_donation ?>. Total Volunteers : <?php echo $total_user_count ?>"><?php echo $ecs_count_remaining ?> <br/>ECS to target.</p>
 							<?php if($oxygen_card_data) { ?>
 							<div id="table_data">
 								<table>
@@ -151,7 +151,7 @@
 										<td><?php echo $row['name'] ?></td>
 										<td>
 											<div class="histo-container" title="Target: <?php echo $unit_target_amount ?>. Raised So Far : <?php echo $row['amount'] ?>. Total Volunteers : <?php echo $row['user_count'] ?>">
-												<?php echo $unit_percentage_done ?>% (<?php echo $unit_ecs_count_remaining ?> ECS Left)
+												<?php echo $unit_ecs_count_remaining ?> ECS to target.
 												<div class="histogram" style="width:<?php echo $unit_percentage_done ?>%; float:left;">
 												
 												</div>        
@@ -169,6 +169,7 @@
 			</div>
 		</div>
 	</div>
+	<?php } ?>
 
 <script type="text/javascript">
 	// $(document).ready(function() {
