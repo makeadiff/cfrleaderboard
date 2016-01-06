@@ -59,7 +59,7 @@
 		<div class="col s12 m6">
 			<div class="card">
 				<div class="card-image">
-					<img src="images/region.jpg">
+					<img src="images/warning.png">
 					<span class="card-title img-title">No data for the selected options</span>
 				</div>
 			</div>
