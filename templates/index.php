@@ -75,7 +75,6 @@
 			<?php } ?>
 		</div>
 
-		<div class="row">
 			<div class="col s12 m6">
 				<?php if($all_levels['group']['data']) { ?>
 				<div class="card">
