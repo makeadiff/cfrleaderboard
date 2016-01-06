@@ -2,15 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ab5a81b1-bba2-40cd-80d5-e7aed184311f" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/1.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/3.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/bg.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/images/oxycyl.png" afterPath="$PROJECT_DIR$/images/oxycyl.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/css/index.css" afterPath="$PROJECT_DIR$/css/index.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.php" afterPath="$PROJECT_DIR$/index.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/index.php" afterPath="$PROJECT_DIR$/templates/index.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/css/style.css" afterPath="$PROJECT_DIR$/css/style.css" />
     </list>
     <ignored path="infogen.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -52,41 +44,41 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.php" pinned="false" current-in-tab="false">
+      <file leaf-file-name="index.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-4.4583335">
-              <caret line="162" column="0" selection-start-line="162" selection-start-column="0" selection-end-line="162" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.33272058">
+              <caret line="73" column="30" selection-start-line="73" selection-start-column="30" selection-end-line="73" selection-end-column="30" />
               <folding>
-                <marker date="1452051770713" expanded="true" signature="771:797" placeholder="SELECT id,na..states..." />
-                <marker date="1452051770713" expanded="true" signature="830:856" placeholder="SELECT id,na..cities..." />
-                <marker date="1452051770713" expanded="true" signature="2569:2602" placeholder="SELECT name ..cities..." />
-                <marker date="1452051770713" expanded="true" signature="2700:2733" placeholder="SELECT name ..states..." />
-                <marker date="1452051770713" expanded="true" signature="3517:3619" placeholder="SELECT COUNT..." />
-                <marker date="1452051770713" expanded="true" signature="3690:3844" placeholder="SELECT SUM(D..." />
-                <marker date="1452051770713" expanded="true" signature="3890:4044" placeholder="SELECT SUM(D..." />
-                <marker date="1452051770713" expanded="true" signature="4128:4230" placeholder="SELECT COUNT..." />
-                <marker date="1452051770713" expanded="true" signature="4301:4455" placeholder="SELECT SUM(D..." />
-                <marker date="1452051770713" expanded="true" signature="4501:4655" placeholder="SELECT SUM(D..." />
-                <marker date="1452051770713" expanded="true" signature="4738:4795" placeholder="SELECT COUNT..." />
-                <marker date="1452051770713" expanded="true" signature="4866:4975" placeholder="SELECT SUM(D..." />
-                <marker date="1452051770713" expanded="true" signature="5021:5130" placeholder="SELECT SUM(D..." />
-                <marker date="1452051770713" expanded="true" signature="5214:5379" placeholder="SELECT COUNT..." />
-                <marker date="1452051770713" expanded="true" signature="5450:5667" placeholder="SELECT SUM(D..." />
-                <marker date="1452051770713" expanded="true" signature="5713:5930" placeholder="SELECT SUM(D..." />
-                <marker date="1452051770713" expanded="true" signature="6752:6795" placeholder="SELECT id, n..cities..." />
-                <marker date="1452051770713" expanded="true" signature="7006:7048" placeholder="SELECT id, n..groups..." />
-                <marker date="1452051770713" expanded="true" signature="7300:7380" placeholder="SELECT id, C..users..." />
-                <marker date="1452051770713" expanded="true" signature="9646:9701" placeholder="SELECT ${$se..." />
+                <marker date="1452052042197" expanded="true" signature="771:797" placeholder="SELECT id,na..states..." />
+                <marker date="1452052042197" expanded="true" signature="830:856" placeholder="SELECT id,na..cities..." />
+                <marker date="1452052042197" expanded="true" signature="2569:2602" placeholder="SELECT name ..cities..." />
+                <marker date="1452052042197" expanded="true" signature="2700:2733" placeholder="SELECT name ..states..." />
+                <marker date="1452052042197" expanded="true" signature="3517:3619" placeholder="SELECT COUNT..." />
+                <marker date="1452052042197" expanded="true" signature="3690:3844" placeholder="SELECT SUM(D..." />
+                <marker date="1452052042197" expanded="true" signature="3890:4044" placeholder="SELECT SUM(D..." />
+                <marker date="1452052042197" expanded="true" signature="4128:4230" placeholder="SELECT COUNT..." />
+                <marker date="1452052042197" expanded="true" signature="4301:4455" placeholder="SELECT SUM(D..." />
+                <marker date="1452052042197" expanded="true" signature="4501:4655" placeholder="SELECT SUM(D..." />
+                <marker date="1452052042197" expanded="true" signature="4738:4795" placeholder="SELECT COUNT..." />
+                <marker date="1452052042197" expanded="true" signature="4866:4975" placeholder="SELECT SUM(D..." />
+                <marker date="1452052042197" expanded="true" signature="5021:5130" placeholder="SELECT SUM(D..." />
+                <marker date="1452052042197" expanded="true" signature="5214:5379" placeholder="SELECT COUNT..." />
+                <marker date="1452052042197" expanded="true" signature="5450:5667" placeholder="SELECT SUM(D..." />
+                <marker date="1452052042197" expanded="true" signature="5713:5930" placeholder="SELECT SUM(D..." />
+                <marker date="1452052042197" expanded="true" signature="6752:6795" placeholder="SELECT id, n..cities..." />
+                <marker date="1452052042197" expanded="true" signature="7006:7048" placeholder="SELECT id, n..groups..." />
+                <marker date="1452052042197" expanded="true" signature="7295:7375" placeholder="SELECT id, C..users..." />
+                <marker date="1452052042197" expanded="true" signature="9636:9691" placeholder="SELECT ${$se..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/index.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.3216783">
+            <state vertical-scroll-proportion="-7.6666665">
               <caret line="219" column="0" selection-start-line="219" selection-start-column="0" selection-end-line="219" selection-end-column="0" />
               <folding>
                 <element signature="e#3486#3575#0#HTML" expanded="true" />
@@ -159,8 +151,8 @@
       <list>
         <option value="$PROJECT_DIR$/css/materialize.min.css" />
         <option value="$PROJECT_DIR$/templates/index.php" />
-        <option value="$PROJECT_DIR$/index.php" />
         <option value="$PROJECT_DIR$/css/style.css" />
+        <option value="$PROJECT_DIR$/index.php" />
       </list>
     </option>
   </component>
@@ -258,6 +250,28 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="FullScreen" value="false" />
   </component>
+  <component name="RunManager">
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
+      <method />
+    </configuration>
+    <configuration default="true" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
+      <TestRunner />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpBehatConfigurationType" factoryName="Behat">
+      <BehatRunner />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpLocalRunConfigurationType" factoryName="PHP Console">
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpUnitRemoteRunConfigurationType" factoryName="PHPUnit on Server">
+      <method />
+    </configuration>
+    <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
+      <method />
+    </configuration>
+  </component>
   <component name="ShelveChangesManager" show_recycled="false" />
   <component name="SvnConfiguration">
     <configuration />
@@ -332,26 +346,26 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1452051770713" expanded="true" signature="771:797" placeholder="SELECT id,na..states..." />
-            <marker date="1452051770713" expanded="true" signature="830:856" placeholder="SELECT id,na..cities..." />
-            <marker date="1452051770713" expanded="true" signature="2569:2602" placeholder="SELECT name ..cities..." />
-            <marker date="1452051770713" expanded="true" signature="2700:2733" placeholder="SELECT name ..states..." />
-            <marker date="1452051770713" expanded="true" signature="3517:3619" placeholder="SELECT COUNT..." />
-            <marker date="1452051770713" expanded="true" signature="3690:3844" placeholder="SELECT SUM(D..." />
-            <marker date="1452051770713" expanded="true" signature="3890:4044" placeholder="SELECT SUM(D..." />
-            <marker date="1452051770713" expanded="true" signature="4128:4230" placeholder="SELECT COUNT..." />
-            <marker date="1452051770713" expanded="true" signature="4301:4455" placeholder="SELECT SUM(D..." />
-            <marker date="1452051770713" expanded="true" signature="4501:4655" placeholder="SELECT SUM(D..." />
-            <marker date="1452051770713" expanded="true" signature="4738:4795" placeholder="SELECT COUNT..." />
-            <marker date="1452051770713" expanded="true" signature="4866:4975" placeholder="SELECT SUM(D..." />
-            <marker date="1452051770713" expanded="true" signature="5021:5130" placeholder="SELECT SUM(D..." />
-            <marker date="1452051770713" expanded="true" signature="5214:5379" placeholder="SELECT COUNT..." />
-            <marker date="1452051770713" expanded="true" signature="5450:5667" placeholder="SELECT SUM(D..." />
-            <marker date="1452051770713" expanded="true" signature="5713:5930" placeholder="SELECT SUM(D..." />
-            <marker date="1452051770713" expanded="true" signature="6752:6795" placeholder="SELECT id, n..cities..." />
-            <marker date="1452051770713" expanded="true" signature="7006:7048" placeholder="SELECT id, n..groups..." />
-            <marker date="1452051770713" expanded="true" signature="7300:7380" placeholder="SELECT id, C..users..." />
-            <marker date="1452051770713" expanded="true" signature="9646:9701" placeholder="SELECT ${$se..." />
+            <marker date="1452052042197" expanded="true" signature="771:797" placeholder="SELECT id,na..states..." />
+            <marker date="1452052042197" expanded="true" signature="830:856" placeholder="SELECT id,na..cities..." />
+            <marker date="1452052042197" expanded="true" signature="2569:2602" placeholder="SELECT name ..cities..." />
+            <marker date="1452052042197" expanded="true" signature="2700:2733" placeholder="SELECT name ..states..." />
+            <marker date="1452052042197" expanded="true" signature="3517:3619" placeholder="SELECT COUNT..." />
+            <marker date="1452052042197" expanded="true" signature="3690:3844" placeholder="SELECT SUM(D..." />
+            <marker date="1452052042197" expanded="true" signature="3890:4044" placeholder="SELECT SUM(D..." />
+            <marker date="1452052042197" expanded="true" signature="4128:4230" placeholder="SELECT COUNT..." />
+            <marker date="1452052042197" expanded="true" signature="4301:4455" placeholder="SELECT SUM(D..." />
+            <marker date="1452052042197" expanded="true" signature="4501:4655" placeholder="SELECT SUM(D..." />
+            <marker date="1452052042197" expanded="true" signature="4738:4795" placeholder="SELECT COUNT..." />
+            <marker date="1452052042197" expanded="true" signature="4866:4975" placeholder="SELECT SUM(D..." />
+            <marker date="1452052042197" expanded="true" signature="5021:5130" placeholder="SELECT SUM(D..." />
+            <marker date="1452052042197" expanded="true" signature="5214:5379" placeholder="SELECT COUNT..." />
+            <marker date="1452052042197" expanded="true" signature="5450:5667" placeholder="SELECT SUM(D..." />
+            <marker date="1452052042197" expanded="true" signature="5713:5930" placeholder="SELECT SUM(D..." />
+            <marker date="1452052042197" expanded="true" signature="6752:6795" placeholder="SELECT id, n..cities..." />
+            <marker date="1452052042197" expanded="true" signature="7006:7048" placeholder="SELECT id, n..groups..." />
+            <marker date="1452052042197" expanded="true" signature="7295:7375" placeholder="SELECT id, C..users..." />
+            <marker date="1452052042197" expanded="true" signature="9636:9691" placeholder="SELECT ${$se..." />
           </folding>
         </state>
       </provider>
@@ -460,43 +474,43 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.4583335">
-          <caret line="162" column="0" selection-start-line="162" selection-start-column="0" selection-end-line="162" selection-end-column="0" />
-          <folding>
-            <marker date="1452051770713" expanded="true" signature="771:797" placeholder="SELECT id,na..states..." />
-            <marker date="1452051770713" expanded="true" signature="830:856" placeholder="SELECT id,na..cities..." />
-            <marker date="1452051770713" expanded="true" signature="2569:2602" placeholder="SELECT name ..cities..." />
-            <marker date="1452051770713" expanded="true" signature="2700:2733" placeholder="SELECT name ..states..." />
-            <marker date="1452051770713" expanded="true" signature="3517:3619" placeholder="SELECT COUNT..." />
-            <marker date="1452051770713" expanded="true" signature="3690:3844" placeholder="SELECT SUM(D..." />
-            <marker date="1452051770713" expanded="true" signature="3890:4044" placeholder="SELECT SUM(D..." />
-            <marker date="1452051770713" expanded="true" signature="4128:4230" placeholder="SELECT COUNT..." />
-            <marker date="1452051770713" expanded="true" signature="4301:4455" placeholder="SELECT SUM(D..." />
-            <marker date="1452051770713" expanded="true" signature="4501:4655" placeholder="SELECT SUM(D..." />
-            <marker date="1452051770713" expanded="true" signature="4738:4795" placeholder="SELECT COUNT..." />
-            <marker date="1452051770713" expanded="true" signature="4866:4975" placeholder="SELECT SUM(D..." />
-            <marker date="1452051770713" expanded="true" signature="5021:5130" placeholder="SELECT SUM(D..." />
-            <marker date="1452051770713" expanded="true" signature="5214:5379" placeholder="SELECT COUNT..." />
-            <marker date="1452051770713" expanded="true" signature="5450:5667" placeholder="SELECT SUM(D..." />
-            <marker date="1452051770713" expanded="true" signature="5713:5930" placeholder="SELECT SUM(D..." />
-            <marker date="1452051770713" expanded="true" signature="6752:6795" placeholder="SELECT id, n..cities..." />
-            <marker date="1452051770713" expanded="true" signature="7006:7048" placeholder="SELECT id, n..groups..." />
-            <marker date="1452051770713" expanded="true" signature="7300:7380" placeholder="SELECT id, C..users..." />
-            <marker date="1452051770713" expanded="true" signature="9646:9701" placeholder="SELECT ${$se..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3216783">
+        <state vertical-scroll-proportion="-7.6666665">
           <caret line="219" column="0" selection-start-line="219" selection-start-column="0" selection-end-line="219" selection-end-column="0" />
           <folding>
             <element signature="e#3486#3575#0#HTML" expanded="true" />
             <element signature="e#4232#4262#0#HTML" expanded="true" />
             <element signature="e#4506#4536#0#HTML" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33272058">
+          <caret line="73" column="30" selection-start-line="73" selection-start-column="30" selection-end-line="73" selection-end-column="30" />
+          <folding>
+            <marker date="1452052042197" expanded="true" signature="771:797" placeholder="SELECT id,na..states..." />
+            <marker date="1452052042197" expanded="true" signature="830:856" placeholder="SELECT id,na..cities..." />
+            <marker date="1452052042197" expanded="true" signature="2569:2602" placeholder="SELECT name ..cities..." />
+            <marker date="1452052042197" expanded="true" signature="2700:2733" placeholder="SELECT name ..states..." />
+            <marker date="1452052042197" expanded="true" signature="3517:3619" placeholder="SELECT COUNT..." />
+            <marker date="1452052042197" expanded="true" signature="3690:3844" placeholder="SELECT SUM(D..." />
+            <marker date="1452052042197" expanded="true" signature="3890:4044" placeholder="SELECT SUM(D..." />
+            <marker date="1452052042197" expanded="true" signature="4128:4230" placeholder="SELECT COUNT..." />
+            <marker date="1452052042197" expanded="true" signature="4301:4455" placeholder="SELECT SUM(D..." />
+            <marker date="1452052042197" expanded="true" signature="4501:4655" placeholder="SELECT SUM(D..." />
+            <marker date="1452052042197" expanded="true" signature="4738:4795" placeholder="SELECT COUNT..." />
+            <marker date="1452052042197" expanded="true" signature="4866:4975" placeholder="SELECT SUM(D..." />
+            <marker date="1452052042197" expanded="true" signature="5021:5130" placeholder="SELECT SUM(D..." />
+            <marker date="1452052042197" expanded="true" signature="5214:5379" placeholder="SELECT COUNT..." />
+            <marker date="1452052042197" expanded="true" signature="5450:5667" placeholder="SELECT SUM(D..." />
+            <marker date="1452052042197" expanded="true" signature="5713:5930" placeholder="SELECT SUM(D..." />
+            <marker date="1452052042197" expanded="true" signature="6752:6795" placeholder="SELECT id, n..cities..." />
+            <marker date="1452052042197" expanded="true" signature="7006:7048" placeholder="SELECT id, n..groups..." />
+            <marker date="1452052042197" expanded="true" signature="7295:7375" placeholder="SELECT id, C..users..." />
+            <marker date="1452052042197" expanded="true" signature="9636:9691" placeholder="SELECT ${$se..." />
           </folding>
         </state>
       </provider>
