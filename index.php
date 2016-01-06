@@ -16,10 +16,10 @@ if($view_level != 'group' and $view_level != 'city' and $view_level != 'region')
 if($view_level != 'group' and $view_level != 'city') $city_id = 0;
 if($view_level != 'group') $group_id = 0;
 
-/*setlocale(LC_MONETARY, 'en_IN');
+setlocale(LC_MONETARY, 'en_IN');
 $mem = new Memcached();
 $mem->addServer("127.0.0.1", 11211);
-*/
+
 $year = 2015;
 $cache_expire = 60 * 60;
 $top_count = 8;
@@ -152,13 +152,13 @@ if(!$total_user_count or !$total_donation) {
 			$filter");
 	}
 
-	//$mem->set("Infogen:index/total_user_count#$timeframe,$view_level,$state_id,$city_id,$group_id", $total_user_count, $cache_expire);
-	//$mem->set("Infogen:index/total_donation#$timeframe,$view_level,$state_id,$city_id,$group_id", $total_donation, $cache_expire);
+	$mem->set("Infogen:index/total_user_count#$timeframe,$view_level,$state_id,$city_id,$group_id", $total_user_count, $cache_expire);
+	$mem->set("Infogen:index/total_donation#$timeframe,$view_level,$state_id,$city_id,$group_id", $total_donation, $cache_expire);
 }
 $target_amount = (($total_user_count * 70 / 100) * 12000) + (floor($total_user_count * 5 / 100) * 100000);
 $remaining_amount = $target_amount - $total_donation;
-$percentage_done = 40;
-//if($target_amount) $percentage_done = round($total_donation / $target_amount * 81.5, 2);
+$percentage_done = 0;
+if($target_amount) $percentage_done = round($total_donation / $target_amount * 81.5, 2);
 $ecs_count_remaining = ceil($remaining_amount / 6000);
 
 
@@ -182,7 +182,7 @@ if(!$menu) {
 			}
 		}
 	}
-	//$mem->set("Infogen:index/menu", $menu, $cache_expire) or die("Couldn't cache data.");
+	$mem->set("Infogen:index/menu", $menu, $cache_expire) or die("Couldn't cache data.");
 }
 
 function getData($key) {
@@ -228,7 +228,7 @@ function getData($key) {
 					%donation_table%", "users.id");
 	}
 
-	//$mem->set("Infogen:index/data#$timeframe,$view_level,$state_id,$city_id,$group_id,$key", $data, $cache_expire);
+	$mem->set("Infogen:index/data#$timeframe,$view_level,$state_id,$city_id,$group_id,$key", $data, $cache_expire);
 
 	return $data;
 }
@@ -262,7 +262,8 @@ function getFromBothTables($select, $tables, $group_by) {
 
 $html = new HTML;
 render('index.php', false);
-function money_format($format,$amount){
+
+/*function money_format($format,$amount){
 		return '<i class="fa fa-inr"></i>'.$amount;
-}
+}*/
 
