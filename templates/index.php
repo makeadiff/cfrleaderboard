@@ -119,6 +119,7 @@
 							</div>
 							<img src="images/oxycyl.png" id="image_over" alt="Cylinder" >
 							<p id="cylinder-info" title="Target: <?php echo $target_amount ?>. Raised So Far : <?php echo $total_donation ?>. Total Volunteers : <?php echo $total_user_count ?>"><?php echo $percentage_done.'%<br/>['.$ecs_count_remaining ?> <br/>ECS left]</p>
+							<?php if($oxygen_card_data) { ?>
 							<div id="table_data">
 								<table>
 									<thead>
@@ -150,6 +151,7 @@
 									<?php } ?>
 								</table>
 							</div>
+							<?php } ?>
 						</div>
 					</div>
 				</div>

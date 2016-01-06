@@ -81,8 +81,9 @@ foreach ($all_levels as $key => $level_info) {
 }
 $level_hirarchy = array_keys($all_view_levels);
 $key_pos = array_search($view_level, $level_hirarchy);
-$next_view_level = $level_hirarchy[$key_pos + 1];
-$oxygen_card_data = getData($next_view_level, true);
+$next_view_level = i($level_hirarchy, $key_pos + 1, 0);
+$oxygen_card_data = array();
+if($next_view_level) $oxygen_card_data = getData($next_view_level, true);
 
 // Get data for the Oxygen graphic
 if(i($QUERY,'no_cache')) {
@@ -241,7 +242,7 @@ function getData($key, $get_user_count = false) {
 					%donation_table%", "G.id");
 
 		if($get_user_count) {
-			$user_count_data = $sql->getById("SELECT G.id, G.name, COUNT(users.id) AS count 
+			$user_count_data = $sql->getById("SELECT G.id, COUNT(users.id) AS count 
 				FROM users 
 				INNER JOIN reports_tos RT ON RT.user_id=users.id
 				INNER JOIN users manager ON manager.id=RT.manager_id
