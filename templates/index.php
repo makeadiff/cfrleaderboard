@@ -210,8 +210,8 @@ $count = 1;
 foreach ($data as $row) { ?>
 <tr class="<?php if($count <= 3) echo 'show-row'; else echo 'hide-row'; ?>">
 	<td width="5%"><?php if($count <= 3){ echo '<img src="./images/'.$count.'.png" height="15px" />'; } else echo ' '; ?></td>
-	<td width="70%" class="unit-name"><?php echo $count . '.  ' . $row['name'] ?></td>
-	<td width="25%"><?php echo money_format("%.0n", $row['amount']) ?></td>
+	<td width="65%" class="unit-name"><?php echo $count . '.  ' . $row['name'] ?></td>
+	<td width="30%"><?php echo money_format("%.0n", $row['amount']) ?></td>
 </tr>
 <?php 
 	$count++;
