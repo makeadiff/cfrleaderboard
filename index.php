@@ -25,7 +25,7 @@ $cache_expire = 60 * 60;
 $top_count = 8;
 $all_states = $sql->getById("SELECT id,name FROM states");
 $all_cities = $sql->getById("SELECT id,name FROM cities");
-$all_view_levels = array('national' => "National", 'region' => "Region", 'city' => "City", 'group' => "Group"); // , 'coach' => "Coach"
+$all_view_levels = array('national' => "National", 'region' => "Region", 'city' => "City", 'group' => "Center"); // , 'coach' => "Coach"
 $all_timeframes = array('1' => 'Day', '7' => 'Week', '0' => 'Overall');
 
 $checks = array('users.is_deleted=0');
@@ -56,6 +56,7 @@ foreach ($all_levels as $key => $level_info) {
 	if(in_array($view_level, $level_info['show_in'])) {
 		$name = ucfirst($key);
 		if($name == 'User') $name = 'Fundraiser';
+		if($name == 'Group') $name = 'Center';
 
 		$title = 'Top ' . $name;
 

@@ -3,7 +3,7 @@
 <head>
 	<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>Donut Dashboard</title>
+	<title>CFR Leaderboard</title>
 	<link rel="stylesheet" type="text/css" href="css/materialize.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/style.css" />
 	<link rel="stylesheet" type="text/css" href="css/index.css" />
@@ -22,7 +22,7 @@
 	<div class="navbar-fixed">
 		<nav>
 			<div class="nav-wrapper">
-				 <a href="#" class="brand-logo center-align">&nbsp; &nbsp;Donut Dashboard</a>
+				 <a href="#" class="brand-logo center-align">&nbsp; &nbsp;#LetMADBreathe</a>
 				 <ul id="nav-mobile" class="right hide-on-med-and-down">
 				 </ul>
 			</div>
@@ -38,7 +38,7 @@
 		showOption("timeframe", $all_timeframes, $timeframe, "Timeframe"); 
 		showOption("state_id", $all_states, $state_id, 'Region');
 		showOption("city_id", $all_cities, $city_id, 'City');
-		showOption("group_id", array(), $group_id, 'Group');
+		showOption("group_id", array(), $group_id, 'Center');
 		// showOption("coach_id", array(), $coach_id, 'Coach');
 		?>
 
@@ -80,7 +80,7 @@
 				<?php if($all_levels['group']['data']) { ?>
 				<div class="card">
 					<div class="card-image">
-						<img src="images/group.jpg">
+						<img src="images/group.png">
 						<?php showCard('group'); ?>
 					</div>
 					<?php } ?>
@@ -239,8 +239,8 @@ $count = 1;
 foreach ($data as $row) { ?>
 <tr class="<?php if($count <= 3) echo 'show-row'; else echo 'hide-row'; ?>">
 	<td width="5%"><?php if($count <= 3){ echo '<img src="./images/'.$count.'.png" height="15px" />'; } else echo ' '; ?></td>
-	<td width="45%" class="unit-name"><?php echo $count . '.  ' . $row['name'] ?></td>
-	<td width="50%"><?php echo money_format("%n", $row['amount']) ?></td>
+	<td width="65%" class="unit-name"><?php echo $count . '.  ' . $row['name'] ?></td>
+	<td width="30%"><?php echo money_format("%n", $row['amount']) ?></td>
 </tr>
 <?php 
 	$count++;
