@@ -50,6 +50,7 @@
 				<i class="material-icons right">send</i>
 			</button>
 			</div>
+
 		</form>
 	</div>
 	
@@ -115,55 +116,88 @@
 
 
 	<div class="row">
-		 <div class="col s12 m12">
-			<div class="row">
-				<div class="image_container">
-					<div class="popup">
-						<div class="container_fill" style="height:<?php echo $percentage_done ?>%; top:<?php echo 100 - $percentage_done ?>%"> <!-- Change the percentage Values here. -->
-						</div>
-						<img src="images/oxycyl.png" id="image_over" alt="Cylinder" >
-						<p id="cylinder-info" title="Target: <?php echo $target_amount ?>. Raised So Far : <?php echo $total_donation ?>. Total Volunteers : <?php echo $total_user_count ?>"><?php echo $percentage_done ?>% (<?php echo $ecs_count_remaining ?> ECS) left.</p>
-					</div>
-				</div>
-						
-<!-- 						<div class="row" >
-							<div class="col s12 m12">
-								<div class="card">
-									<div class="card-content">
-										<table>
-											<thead>
-												<th>Center</th>
-												<th>Current Status</th>
-											</thead>
-											<tr>
-												<td>Center 01</td>
-												<td>
-													<div class="histo-container">
-														<div class="histogram" style="width:50%; float:left;">
-														50% (Some ECS Left)
-														</div>        
-													</div>
-												</td>
-											</tr>
-											<tr>
-												<td>Center 01</td>
-												<td>
-													<div class="histo-container">
-														<div class="histogram" style="width:60%; float:left;">
-														60% (Some ECS Left)
-														</div>        
-													</div>
-												</td>
-											</tr>
-										</table>
-									</div>
-								</div>
+		<div class="col s12 m12">
+			<div class="card">
+				<div class="card-content imagebox">
+					<div class="image_container">
+						<div class="popup">
+							<div class="container_fill" style="height:<?php echo $percentage_done ?>%; top:<?php echo 100 - $percentage_done ?>%"> <!-- Change the percentage Values here. -->
 							</div>
-						</div> -->
-
+							<img src="images/oxycyl.png" id="image_over" alt="Cylinder" >
+							<p id="cylinder-info" title="Target: <?php echo $target_amount ?>. Raised So Far : <?php echo $total_donation ?>. Total Volunteers : <?php echo $total_user_count ?>"><?php echo $percentage_done.'%<br/>['.$ecs_count_remaining ?> <br/>ECS left]</p>
+							<div id="table_data">
+								<table>
+									<thead>
+										<th>Center</th>
+										<th>Current Status</th>
+									</thead>
+									<tr>
+										<td>Center 01</td>
+										<td>
+											<div class="histo-container">
+												<div class="histogram" style="width:50%; float:left;">
+												50% (Some ECS Left)
+												</div>        
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td>Center 01</td>
+										<td>
+											<div class="histo-container">
+												<div class="histogram" style="width:60%; float:left;">
+												60% (Some ECS Left)
+												</div>        
+											</div>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
+						
+		<!--<div class="col s12 m6">
+			<div class="card">
+				<div class="card-content">
+					<table>
+						<thead>
+							<th>Center</th>
+							<th>Current Status</th>
+						</thead>
+						<tr>
+							<td>Center 01</td>
+							<td>
+								<div class="histo-container">
+									<div class="histogram" style="width:50%; float:left;">
+									50% (Some ECS Left)
+									</div>        
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>Center 01</td>
+							<td>
+								<div class="histo-container">
+									<div class="histogram" style="width:60%; float:left;">
+									60% (Some ECS Left)
+									</div>        
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>-->
+	
+		<!--
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>-->
 	</div>
 
 <script type="text/javascript">
@@ -194,7 +228,8 @@ function show($key, $data, $title) {
 <table>
 	<thead>
 		<tr>
-		<th width="50%">Name</th>
+		<th width="5%"></th>
+		<th width="45%">Name</th>
 		<th width="50%">Amount Raised</th>
 		</tr>
 	</thead>
@@ -203,14 +238,17 @@ function show($key, $data, $title) {
 $count = 1;
 foreach ($data as $row) { ?>
 <tr class="<?php if($count <= 3) echo 'show-row'; else echo 'hide-row'; ?>">
-	<td width="50%" class="unit-name"><?php echo $count . '. ' . $row['name'] ?></td>
+	<td width="5%"><?php if($count <= 3){ echo '<img src="./images/'.$count.'.png" height="15px" />'; } else echo ' '; ?></td>
+	<td width="45%" class="unit-name"><?php echo $count . '.  ' . $row['name'] ?></td>
 	<td width="50%"><?php echo money_format("%n", $row['amount']) ?></td>
 </tr>
 <?php 
 	$count++;
 } ?>	
+
 </table><br />
 <p class="activator" id="activator0"><a id='show-more-<?php echo $key ?>' class='toggle-link'> <i class="tiny material-icons">add</i>See More</a></p>
+
 </div>
 
 <?php

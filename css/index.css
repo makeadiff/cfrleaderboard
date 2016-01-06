@@ -20,7 +20,17 @@
 
 #cylinder-info {
 	top: 40%;
-	left: 115px;
+	left: 85px;
+	text-align: center;
+	font-size: 14px;
+	font-weight: bolder;
 	position: absolute;
-	z-index: 5;
+	z-index: 50;
+}
+
+#table_data{
+	top:30%;
+	position: absolute;
+	left: 300px;
+	width: 500px;
 }
