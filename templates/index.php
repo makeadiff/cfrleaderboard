@@ -60,7 +60,7 @@
 			<div class="card">
 				<div class="card-image">
 					<img src="images/region.jpg">
-				<?php showCard('region'); ?>
+					<?php showCard('region'); ?>
 			</div>
 			<?php } ?>
 		</div> 
@@ -70,8 +70,7 @@
 			<div class="card">
 				<div class="card-image">
 					<img src="images/city.jpg">
-
-				<?php showCard('city'); ?>
+					<?php showCard('city'); ?>
 			</div>
 			<?php } ?>
 		</div>
@@ -103,16 +102,11 @@
 			<div class="card">
 				<div class="card-image">
 					<img src="images/person.jpg">
-				<?php showCard('user'); ?>
+					<?php showCard('user'); ?>
 			</div>
 			<?php } ?>
 		</div>
-
-
- 
 	</div>
-
-
 
 
 	<div class="row">
@@ -128,29 +122,32 @@
 							<div id="table_data">
 								<table>
 									<thead>
+										<tr>
 										<th>Center</th>
 										<th>Current Status</th>
+										</tr>
 									</thead>
+									<?php foreach ($oxygen_card_data as $row) {
+										$unit_target_amount = (($row['user_count'] * 70 / 100) * 12000) + (floor($row['user_count'] * 5 / 100) * 100000);
+										$unit_remaining_amount = $unit_target_amount - $row['amount'];
+										$unit_percentage_done = 0;
+										if($unit_target_amount) $unit_percentage_done = round($row['amount'] / $unit_target_amount * 100, 2);
+										$unit_ecs_count_remaining = ceil($unit_remaining_amount / 6000);
+
+										?>
 									<tr>
-										<td>Center 01</td>
+										<td><?php echo $row['name'] ?></td>
 										<td>
-											<div class="histo-container">
-												<div class="histogram" style="width:50%; float:left;">
-												50% (Some ECS Left)
+											<div class="histo-container" title="Target: <?php echo $unit_target_amount ?>. Raised So Far : <?php echo $row['amount'] ?>. Total Volunteers : <?php echo $row['user_count'] ?>">
+												<?php echo $unit_percentage_done ?>% (<?php echo $unit_ecs_count_remaining ?> ECS Left)
+												<div class="histogram" style="width:<?php echo $unit_percentage_done ?>%; float:left;">
+												
 												</div>        
 											</div>
 										</td>
 									</tr>
-									<tr>
-										<td>Center 01</td>
-										<td>
-											<div class="histo-container">
-												<div class="histogram" style="width:60%; float:left;">
-												60% (Some ECS Left)
-												</div>        
-											</div>
-										</td>
-									</tr>
+										
+									<?php } ?>
 								</table>
 							</div>
 						</div>
@@ -158,46 +155,6 @@
 				</div>
 			</div>
 		</div>
-						
-		<!--<div class="col s12 m6">
-			<div class="card">
-				<div class="card-content">
-					<table>
-						<thead>
-							<th>Center</th>
-							<th>Current Status</th>
-						</thead>
-						<tr>
-							<td>Center 01</td>
-							<td>
-								<div class="histo-container">
-									<div class="histogram" style="width:50%; float:left;">
-									50% (Some ECS Left)
-									</div>        
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<td>Center 01</td>
-							<td>
-								<div class="histo-container">
-									<div class="histogram" style="width:60%; float:left;">
-									60% (Some ECS Left)
-									</div>        
-								</div>
-							</td>
-						</tr>
-					</table>
-				</div>
-			</div>
-		</div>-->
-	
-		<!--
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>-->
 	</div>
 
 <script type="text/javascript">

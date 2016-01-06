@@ -72,13 +72,17 @@ foreach ($all_levels as $key => $level_info) {
 			$title .= " on " . date("jS M");
 		
 		} elseif($timeframe == '7') {
-			$title .= " for last week(" . date("jS M", strtotime("last week") . ")");
+			$title .= " for last week(" . date("jS M", strtotime("last week")) . ")";
 		}
 
 		$all_levels[$key]['title'] = $title;
 		$all_levels[$key]['data'] = getData($key);
 	}
 }
+$level_hirarchy = array_keys($all_view_levels);
+$key_pos = array_search($view_level, $level_hirarchy);
+$next_view_level = $level_hirarchy[$key_pos + 1];
+$oxygen_card_data = getData($next_view_level, true);
 
 // Get data for the Oxygen graphic
 if(i($QUERY,'no_cache')) {
@@ -159,40 +163,38 @@ if(!$total_user_count or !$total_donation) {
 $target_amount = (($total_user_count * 70 / 100) * 12000) + (floor($total_user_count * 5 / 100) * 100000);
 $remaining_amount = $target_amount - $total_donation;
 $percentage_done = 0;
-if($target_amount) $percentage_done = round($total_donation / $target_amount * 81.5, 2);
+if($target_amount) $percentage_done = round($total_donation / $target_amount * 100, 2);
 $ecs_count_remaining = ceil($remaining_amount / 6000);
-
-
 
 // Get the hirarchy
 if(i($QUERY,'no_cache')) $menu = array();
 else $menu = $mem->get("Infogen:index/menu");
 
 if(!$menu) {
-	foreach ($all_states as $state_id => $state_name) {
-		$all_cities_in_state = $sql->getById("SELECT id, name FROM cities WHERE state_id=$state_id");
-		$menu[$state_id] = array('name' => $state_name, 'id' => $state_id, 'cities' => array());
+	foreach ($all_states as $this_state_id => $state_name) {
+		$all_cities_in_state = $sql->getById("SELECT id, name FROM cities WHERE state_id=$this_state_id");
+		$menu[$this_state_id] = array('name' => $state_name, 'id' => $this_state_id, 'cities' => array());
 
 		foreach ($all_cities_in_state as $this_city_id => $city_name) {
 			$all_groups_in_city = $sql->getById("SELECT id, name FROM groups WHERE city_id=$this_city_id");
-			$menu[$state_id]['cities'][$this_city_id] = array('name' => $city_name, 'id' => $this_city_id, 'groups' => array());
+			$menu[$this_state_id]['cities'][$this_city_id] = array('name' => $city_name, 'id' => $this_city_id, 'groups' => array());
 
 			foreach ($all_groups_in_city as $this_group_id => $group_name) {
 				$all_users_in_group = $sql->getById("SELECT id, CONCAT(first_name, ' ', last_name) AS name FROM users WHERE group_id=$this_group_id");
-				$menu[$state_id]['cities'][$this_city_id]['groups'][$this_group_id] = array('name' => $group_name, 'id' => $this_group_id, 'users' => $all_users_in_group);
+				$menu[$this_state_id]['cities'][$this_city_id]['groups'][$this_group_id] = array('name' => $group_name, 'id' => $this_group_id, 'users' => $all_users_in_group);
 			}
 		}
 	}
 	$mem->set("Infogen:index/menu", $menu, $cache_expire) or die("Couldn't cache data.");
 }
 
-function getData($key) {
-	global $timeframe,$view_level,$state_id,$city_id,$group_id, $mem, $QUERY, $cache_expire;
+function getData($key, $get_user_count = false) {
+	global $timeframe,$view_level,$state_id,$city_id,$group_id, $mem, $QUERY, $cache_expire, $checks, $sql;
 
 	if(i($QUERY,'no_cache')) {
 		$data = array();
 	} else {
-		$data = $mem->get("Infogen:index/data#$timeframe,$view_level,$state_id,$city_id,$group_id,$key");
+		return $mem->get("Infogen:index/data#$timeframe,$view_level,$state_id,$city_id,$group_id,$key");
 	}
 
 	if($key == 'region') {
@@ -201,10 +203,34 @@ function getData($key) {
 					INNER JOIN users ON users.city_id=C.id
 					%donation_table%", "S.id");
 
+		if($get_user_count) {
+			$user_count_data = $sql->getById("SELECT S.id, COUNT(users.id) AS count 
+					FROM users 
+					INNER JOIN cities C ON C.id=users.city_id
+					INNER JOIN states S ON S.id=C.state_id
+					WHERE " . implode(" AND ", $checks)
+					. " GROUP BY S.id");
+
+			foreach ($data as $key => $row) {
+				$data[$key]['user_count'] = $user_count_data[$row['id']];
+			}
+		}
 	} elseif($key == 'city') {
 		$data = getFromBothTables("C.id,C.name, %amount%", "cities C
 					INNER JOIN users ON city_id=C.id
 					%donation_table%", "C.id");
+
+		if($get_user_count) {
+			$user_count_data = $sql->getById("SELECT C.id, COUNT(users.id) AS count 
+					FROM users 
+					INNER JOIN cities C ON C.id=users.city_id
+					WHERE " . implode(" AND ", $checks)
+					. " GROUP BY C.id");
+
+			foreach ($data as $key => $row) {
+				$data[$key]['user_count'] = $user_count_data[$row['id']];
+			}
+		}
 
 	} elseif($key == 'group') {
 		$data = getFromBothTables("G.id,G.name, %amount%", "users
@@ -213,6 +239,23 @@ function getData($key) {
 					INNER JOIN groups G ON G.id=manager.group_id
 					INNER JOIN cities C ON C.id=users.city_id
 					%donation_table%", "G.id");
+
+		if($get_user_count) {
+			$user_count_data = $sql->getById("SELECT G.id, G.name, COUNT(users.id) AS count 
+				FROM users 
+				INNER JOIN reports_tos RT ON RT.user_id=users.id
+				INNER JOIN users manager ON manager.id=RT.manager_id
+				INNER JOIN groups G ON G.id=manager.group_id
+				INNER JOIN cities C ON C.id=users.city_id
+				WHERE " . implode(" AND ", $checks)
+				. " GROUP BY G.id");
+
+			foreach ($data as $key => $row) {
+				$data[$key]['user_count'] = $user_count_data[$row['id']];
+			}
+		}
+
+
 
 	} elseif($key == 'coach') {
 		$data = getFromBothTables("manager.id,CONCAT(manager.first_name, ' ', manager.last_name) AS name, %amount%", "users
@@ -235,7 +278,7 @@ function getData($key) {
 }
 
 function getFromBothTables($select, $tables, $group_by) {
-	global $filter, $top_count, $sql;
+	global $filter, $top_count, $sql, $checks;
 	
 	$order_and_limits = "ORDER BY amount DESC\nLIMIT 0, $top_count";
 
