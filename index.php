@@ -280,6 +280,7 @@ function getData($key, $get_user_count = false) {
 					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
 					INNER JOIN roles R ON R.id=RM.role_id
 					%donation_table%", "users.id", "AND R.id=9");
+
 	}
 
 	$mem->set("Infogen:index/data#$timeframe,$view_level,$state_id,$city_id,$group_id,$key", $data, $cache_expire);
@@ -290,7 +291,7 @@ function getData($key, $get_user_count = false) {
 function getFromBothTables($select, $tables, $group_by, $where = '') {
 	global $filter, $top_count, $sql, $checks;
 	
-	$order_and_limits = "ORDER BY amount DESC\nLIMIT 0, $top_count";
+	$order_and_limits = "ORDER BY amount DESC\nLIMIT 0, " . ($top_count * 20);
 
 	$query = "SELECT $select FROM $tables $filter $where GROUP BY $group_by $order_and_limits";
 	$donut_query = str_replace(array('%amount%', '%donation_table%'), array('SUM(D.donation_amount) AS amount', 'INNER JOIN donations D ON D.fundraiser_id=users.id'), $query);
@@ -303,6 +304,7 @@ function getFromBothTables($select, $tables, $group_by, $where = '') {
 
 	foreach ($extdon_data as $id => $value) {
 		if(isset($data[$id])) $data[$id]['amount'] += $extdon_data[$id]['amount'];
+		else $data[$id]= $extdon_data[$id];
 	}
 
 	usort($data, function($a, $b) {
@@ -311,7 +313,7 @@ function getFromBothTables($select, $tables, $group_by, $where = '') {
 		return 0;
 	});
 
-	return $data;
+	return array_slice($data, 0, 8);
 }
 
 $html = new HTML;
