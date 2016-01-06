@@ -129,7 +129,7 @@
 							<div class="container_fill" style="height:<?php echo $percentage_done ?>%; top:<?php echo 100 - $percentage_done ?>%"> <!-- Change the percentage Values here. -->
 							</div>
 							<img src="images/oxycyl.png" id="image_over" alt="Cylinder" >
-							<p id="cylinder-info" title="Target: <?php echo $target_amount ?>. Raised So Far : <?php echo $total_donation ?>. Total Volunteers : <?php echo $total_user_count ?>"><?php echo $ecs_count_remaining ?> <br/>ECS to target.</p>
+							<p id="cylinder-info" title="Target: <?php echo $target_amount ?>. Raised So Far : <?php echo $total_donation ?>. Total Volunteers : <?php echo $total_user_count ?>"><?php echo $ecs_count_remaining ?> <br/>ECS<br>to target.</p>
 							<?php if($oxygen_card_data) { ?>
 							<div id="table_data">
 								<table>
