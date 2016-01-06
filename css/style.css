@@ -56,6 +56,15 @@ select {
 	z-index: 0;
 }
 
+.img-title {
+	font-weight : bold;
+	text-shadow: 2px 2px black;
+}
+
+th {
+	color :#1976D2
+}
+
 
 @media only screen and (max-width: 500px){
 	.image_container{

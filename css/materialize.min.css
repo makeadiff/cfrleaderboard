@@ -7155,7 +7155,7 @@ input[type=range]+.thumb {
 
 nav {
     color: #fff;
-    background-color: rgb(63,81,181);
+    background-color: #1976D2;
     width: 100%;
     height: 56px;
     line-height: 56px
@@ -7638,7 +7638,6 @@ footer.page-footer .footer-copyright {
 
 .card .card-title {
     font-size: 24px;
-    font-weight: 300
 }
 
 .card .card-title.activator {
@@ -8005,7 +8004,7 @@ footer.page-footer .footer-copyright {
 .btn-large {
     text-decoration: none;
     color: #fff;
-    background-color: #26a69a;
+    background-color: #7C4DFF;
     text-align: center;
     letter-spacing: .5px;
     transition: .2s ease-out;
@@ -8014,7 +8013,7 @@ footer.page-footer .footer-copyright {
 
 .btn:hover,
 .btn-large:hover {
-    background-color: #2bbbad
+    background-color: #7C4DFF
 }
 
 .btn-floating {

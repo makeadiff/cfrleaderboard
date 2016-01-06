@@ -3,7 +3,7 @@
 <head>
 	<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>Donut</title>
+	<title>Donut Dashboard</title>
 	<link rel="stylesheet" type="text/css" href="css/materialize.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/style.css" />
 	<link rel="stylesheet" type="text/css" href="css/index.css" />
@@ -22,10 +22,8 @@
 	<div class="navbar-fixed">
 		<nav>
 			<div class="nav-wrapper">
-				 <a href="#" class="brand-logo">&nbsp; &nbsp;Donut</a>
+				 <a href="#" class="brand-logo center-align">&nbsp; &nbsp;Donut Dashboard</a>
 				 <ul id="nav-mobile" class="right hide-on-med-and-down">
-					<li><a href="./donations">National Dashboard</a></li>
-					<li><a href="./donations">City Dashboard</a></li>
 				 </ul>
 			</div>
 		</nav>
@@ -44,10 +42,14 @@
 		// showOption("coach_id", array(), $coach_id, 'Coach');
 		?>
 
-		<div class="col s12 m3">
-			<br/><br/>
-			<input type="submit" class="waves-effect waves-light btn-large action-button" value="Submit"/>
-		</div>
+
+
+		<div class="col offset-s4 s8 m3">
+			<br/><br/><br/>
+			<button class="btn waves-effect waves-light" type="submit" name="action">Submit
+				<i class="material-icons right">send</i>
+			</button>
+			</div>
 		</form>
 	</div>
 	
@@ -55,6 +57,8 @@
 		<div class="col s12 m6">
 			<?php if($all_levels['region']['data']) { ?>
 			<div class="card">
+				<div class="card-image">
+					<img src="images/region.jpg">
 				<?php showCard('region'); ?>
 			</div>
 			<?php } ?>
@@ -63,39 +67,53 @@
 		<div class="col s12 m6">
 			<?php if($all_levels['city']['data']) { ?>
 			<div class="card">
+				<div class="card-image">
+					<img src="images/city.jpg">
+
 				<?php showCard('city'); ?>
 			</div>
 			<?php } ?>
 		</div>
 
+		<div class="row">
+			<div class="col s12 m6">
+				<?php if($all_levels['group']['data']) { ?>
+				<div class="card">
+					<div class="card-image">
+						<img src="images/group.jpg">
+						<?php showCard('group'); ?>
+					</div>
+					<?php } ?>
+
+			</div>
+
+
+		<div class="col s12 m6">
+			<?php if($all_levels['coach']['data']) { ?>
+			<div class="card">
+				<div class="card-image">
+					<img src="images/coach.jpg">
+					<?php showCard('coach'); ?>
+				</div>
+				<?php } ?>
+			</div>
+
 		<div class="col s12 m6">
 			<?php if($all_levels['user']['data']) { ?>
 			<div class="card">
+				<div class="card-image">
+					<img src="images/person.jpg">
 				<?php showCard('user'); ?>
 			</div>
 			<?php } ?>
 		</div>
 
-		<div class="col s12 m6">
-			<?php if($all_levels['coach']['data']) { ?>
-			<div class="card">
-				<?php showCard('coach'); ?>
-			</div>
-			<?php } ?>
-		</div>
+
  
 	</div>
 
-	<div class="row">
-		<div class="col s12 m6">
-			<?php if($all_levels['group']['data']) { ?>
-			<div class="card">
-				<?php showCard('group'); ?>
-			</div>
-			<?php } ?>
-		</div>
-	</div>
-	
+
+
 
 	<div class="row">
 		 <div class="col s12 m12">
@@ -171,8 +189,9 @@
 <?php 
 function show($key, $data, $title) {
 ?>
+	<span class="card-title img-title"><?php echo $title ?></span>
+</div>
 <div class="card-content" id='top-<?php echo $key ?>'>
-<span class="card-title activator grey-text text-darken-4"><?php echo $title ?></span>
 <table>
 	<thead>
 		<tr>
