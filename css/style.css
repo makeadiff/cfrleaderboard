@@ -42,19 +42,29 @@ select {
 	}
 
 div.histo-container{
-	background: url('../images/bg.png') repeat;
+	background: #FFF212;
 	width: 100%;
 	height: 30px;
-	padding: 2px;
+	margin-top: 5px;
 }
 
 div.histogram{
 	height: 30px;
-	padding: 3px;
+	margin-top:0px;
 	color:#FFF;
 	font-size: 10px;
 	overflow: inherit;
 	background: #00BCD4;
+	padding: 2px;
+}
+
+.histo-row{
+	margin-top: 3px;
+	padding:2px;
+}
+
+.histo-row td{
+	padding: 2px;
 }
 
 .image_container{
@@ -108,7 +118,8 @@ th {
 
 @media only screen and (max-width: 600px){
 	.image_container{
-		width: 95%; 
+		width: 65%;
+		height:250px;
 		position: absolute;
 	}
 
@@ -117,6 +128,7 @@ th {
 		height: auto;
 	}
 
-	
-}
+	.imagebox{
 
+	}
+}

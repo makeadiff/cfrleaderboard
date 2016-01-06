@@ -29,8 +29,28 @@
 }
 
 #table_data{
-	top:30%;
+	top:1	0%;
 	position: absolute;
 	left: 300px;
 	width: 500px;
+}
+
+@media only screen and (max-width: 600px){
+	#cylinder-info {
+		top: 40%;
+		left: 33%;
+		text-align: center;
+		font-size: 14px;
+		font-weight: bolder;
+		position: absolute;
+		z-index: 50;
+	}
+
+	#table_data{
+		top:105%;
+		position: absolute;
+		width: 100%;
+		left: 0;
+	}
+
 }
