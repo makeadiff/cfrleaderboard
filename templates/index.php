@@ -117,6 +117,25 @@
 			</div>
 			<?php } ?>
 		</div>
+
+		<?php if($total_donation and $timeframe == 0) { ?>
+
+			<div class="col s12 m6">
+				<?php if($all_levels['user']['data']) { ?>
+				<div class="card">
+					<div class="card-image">
+						<img src="images/child.jpg">
+						<span class="card-title img-title">Children Sponsored</span>
+					</div>
+					<div class="card-content">
+						<p class="children_sponsored"><?php echo round($total_donation/12000); ?></p>
+					</div>
+
+				</div>
+					<?php } ?>
+			</div>
+		<?php } ?>
+
 	</div>
 
 	<?php if($total_donation and $timeframe == 0) { ?>

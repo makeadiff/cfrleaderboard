@@ -115,6 +115,13 @@ th {
 	height:350px;
 }
 
+.children_sponsored {
+	font-weight: bold;
+	color:#ED1849 !important;
+	font-size: xx-large;
+	text-align: center;
+}
+
 
 @media only screen and (max-width: 600px){
 	.image_container{

@@ -76,6 +76,7 @@ foreach ($all_levels as $key => $level_info) {
 		}
 
 		$all_levels[$key]['title'] = $title;
+		$all_levels[$key]['area'] =
 		$all_levels[$key]['data'] = getData($key);
 	}
 }
