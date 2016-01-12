@@ -32,10 +32,30 @@ $city_transilation = array(
 		'32'	=> '25',
 	);
 
+
+$state_transilation = array(
+	// Madapp Region ID 		=> Donut State ID
+	'1'	=> '3',
+	'2'	=> '6',
+	'3'		=> '4',
+	'4'	=> '5',
+	'5'	=> '7',
+
+);
+
 function city_transilation_donut_to_madapp($city_id) {
 	global $city_transilation;
 	foreach ($city_transilation as $madapp_city_id => $donut_city_id) {
 		if($donut_city_id == $city_id) return $madapp_city_id;
+	}
+	return 0;
+}
+
+
+function state_transilation_donut_to_madapp($state_id) {
+	global $state_transilation;
+	foreach ($state_transilation as $madapp_region_id => $donut_state_id) {
+		if($donut_state_id == $state_id) return $madapp_region_id;
 	}
 	return 0;
 }

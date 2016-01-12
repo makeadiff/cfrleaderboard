@@ -125,10 +125,10 @@
 				<div class="card">
 					<div class="card-image">
 						<img src="images/child.jpg">
-						<span class="card-title img-title">Children Sponsored</span>
+						<span class="card-title img-title">Children Sponsored <?php echo $all_levels['children_sponsored_title']?></span>
 					</div>
 					<div class="card-content">
-						<p class="children_sponsored"><?php echo round($total_donation/12000); ?></p>
+						<p class="children_sponsored"><?php echo number_format(round($total_donation/12000,0,PHP_ROUND_HALF_DOWN)); ?> / <?php echo number_format($all_levels['children_count']); ?></p>
 					</div>
 
 				</div>
