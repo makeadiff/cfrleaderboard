@@ -170,7 +170,7 @@
 										<td><?php echo $row['name'] ?></td>
 										<td>
 											<div class="histo-container" title="Target: <?php echo $unit_target_amount ?>. Raised So Far : <?php echo $row['amount'] ?>. Total Volunteers : <?php echo $row['user_count'] ?>">
-												<?php echo $unit_ecs_count_remaining ?> ECS to target.
+												<p>&nbsp; &nbsp; &nbsp; <?php echo $unit_ecs_count_remaining ?> ECS to target.</p>
 												<div class="histogram" style="width:<?php echo $unit_percentage_done ?>%; float:left;">
 												
 												</div>        
