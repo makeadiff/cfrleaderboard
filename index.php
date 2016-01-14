@@ -2,6 +2,12 @@
 require 'common.php';
 include("../donutleaderboard/_city_filter.php");
 
+if($_SERVER['HTTP_HOST'] == 'makeadiff.in') {
+	$sql_madapp= new Sql($config_data['db_host'], $config_data['db_user'], $config_data['db_password'], "makeadiff_madapp");
+} else {
+	$sql_madapp= new Sql("makeadiff_madapp");
+}
+
 $view_level = i($QUERY, 'view_level', 'national');
 $timeframe = intval(i($QUERY, 'timeframe', '0'));
 $view = i($QUERY, 'view', 'top');
@@ -60,25 +66,63 @@ foreach ($all_levels as $key => $level_info) {
 
 		$title = 'Top ' . $name;
 
-		if($city_id) {
+
+		if($group_id) {
 			$city_name = $sql->getOne("SELECT name FROM cities WHERE id=$city_id");
 			$title .= " in $city_name";
+			$group_name = $sql->getOne("SELECT name FROM groups WHERE id=$group_id");
+			$children_sponsored_title = " by " . $group_name;
+			$children_count = $sql_madapp->getOne("SELECT COUNT(*) FROM Student
+											INNER JOIN Center
+											ON Center.id = Student.center_id
+											WHERE Student.status = 1 AND Center.name = '$group_name'");
+		}elseif($city_id) {
+			$city_name = $sql->getOne("SELECT name FROM cities WHERE id=$city_id");
+			$title .= " in $city_name";
+			$children_sponsored_title = " by " . $city_name;
+			$madapp_city_id = city_transilation_donut_to_madapp($city_id);
+			$children_count = $sql_madapp->getOne("SELECT COUNT(*) FROM Student
+											INNER JOIN Center
+											ON Center.id = Student.center_id
+											INNER JOIN City
+											ON City.id = Center.city_id
+											WHERE Student.status = 1 AND Center.status = 1 AND City.id = $madapp_city_id");
 		} elseif($state_id) {
 			$state_name = $sql->getOne("SELECT name FROM states WHERE id=$state_id");
 			$title .= " in $state_name";
+			$children_sponsored_title = " by " . $state_name;
+			$madapp_region_id = state_transilation_donut_to_madapp($state_id);
+			$children_count = $sql_madapp->getOne("SELECT COUNT(*) FROM Student
+											INNER JOIN Center
+											ON Center.id = Student.center_id
+											INNER JOIN City
+											ON City.id = Center.city_id
+											INNER JOIN Region
+											ON Region.id = City.region_id
+											WHERE Student.status = 1 AND Center.status = 1 AND Region.id = $madapp_region_id");
+		}else {
+			$children_sponsored_title = "Nationally";
+			$children_count = $sql_madapp->getOne("SELECT COUNT(*) FROM Student
+											INNER JOIN Center
+											ON Center.id = Student.center_id
+											WHERE Student.status = 1 AND Center.status = 1");
 		}
 
 		if($timeframe == '1') {
 			$title .= " on " . date("jS M");
-		
+
 		} elseif($timeframe == '7') {
 			$title .= " for last week(" . date("jS M", strtotime("last week")) . ")";
 		}
 
 		$all_levels[$key]['title'] = $title;
+		$all_levels[$key]['area'] =
 		$all_levels[$key]['data'] = getData($key);
+		$all_levels['children_sponsored_title'] = $children_sponsored_title;
+		$all_levels['children_count'] = $children_count;
 	}
 }
+
 $level_hirarchy = array_keys($all_view_levels);
 $key_pos = array_search($view_level, $level_hirarchy);
 $next_view_level = i($level_hirarchy, $key_pos + 1, 0);
