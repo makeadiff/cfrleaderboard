@@ -29,11 +29,6 @@ $(document).ready(function(){
 		})
 	}
 
-	/*var card_width = $('.imagebox').width();
-	$('#table_data').css({
-		width=0.6*card_width;
-	});*/
-
 	$(window).resize(function(){
 		var width = $('#image_over').width();
 		var height = $('#image_over').height();
@@ -60,11 +55,7 @@ $(document).ready(function(){
 			var width_image = $('.image_container').width();
 			$('.imagebox').css({
 				height:height+60
-			});
-			/*var card_width = $('.imagebox').width();
-			$('#table_data').css({
-				width=0.6*card_width;
-			});*/
+			})
 		}
 
 	})
