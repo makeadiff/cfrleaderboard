@@ -216,7 +216,7 @@ if(!$total_donation){
 
 
 function getData($key, $get_user_count = false) {
-	global $timeframe,$view_level,$vertical_id, $mem, $QUERY, $cache_expire, $checks, $sql, $user_checks;
+	global $timeframe,$view_level,$vertical_id, $mem, $QUERY, $cache_expire, $checks, $sql, $user_checks, $year;
 
 	if(i($QUERY,'no_cache')) {
 		$data = array();
@@ -234,7 +234,7 @@ function getData($key, $get_user_count = false) {
 					ON G.id = UG.group_id
 					INNER JOIN makeadiff_madapp.Vertical V
 					ON V.id = G.vertical_id
-					WHERE U.status = 1 AND U.user_type = 'volunteer' AND UG.year = 2015 AND (G.type = 'national' OR G.type = 'strat' OR G.type = 'fellow')
+					WHERE U.status = 1 AND U.user_type = 'volunteer' AND UG.year = $year AND (G.type = 'national' OR G.type = 'strat' OR G.type = 'fellow')
 					GROUP BY U.id,V.id)IQ
 					ON IQ.uid = users.madapp_user_id
 					%donation_table%", "IQ.vid");
@@ -264,7 +264,7 @@ function getData($key, $get_user_count = false) {
 					INNER JOIN makeadiff_madapp.UserGroup UG ON UG.user_id = users.madapp_user_id
 					INNER JOIN makeadiff_madapp.Group G on G.id = UG.group_id
 					INNER JOIN makeadiff_madapp.Vertical V on V.id = G.vertical_id
-					%donation_table%", "users.id","AND (G.type ='national' OR G.type = 'strat') AND R.id=9");
+					%donation_table%", "users.id","AND (G.type ='national' OR G.type = 'strat') AND R.id=9 AND UG.year = $year");
 
 
 
@@ -279,7 +279,7 @@ function getData($key, $get_user_count = false) {
 					INNER JOIN makeadiff_madapp.UserGroup UG ON UG.user_id = users.madapp_user_id
 					INNER JOIN makeadiff_madapp.Group G on G.id = UG.group_id
 					INNER JOIN makeadiff_madapp.Vertical V on V.id = G.vertical_id
-					%donation_table%", "users.id","AND (G.type = 'fellow') AND R.id=9");
+					%donation_table%", "users.id","AND (G.type = 'fellow') AND R.id=9 AND UG.year = $year");
 
 
 	} elseif($key == 'coach') {
@@ -293,7 +293,7 @@ function getData($key, $get_user_count = false) {
 					INNER JOIN makeadiff_madapp.UserGroup UG ON UG.user_id = users.madapp_user_id
 					INNER JOIN makeadiff_madapp.Group G on G.id = UG.group_id
 					INNER JOIN makeadiff_madapp.Vertical V on V.id = G.vertical_id
-					%donation_table%", "manager.id","AND (G.type = 'fellow') AND R.id=9");
+					%donation_table%", "manager.id","AND (G.type = 'fellow') AND R.id=9 AND UG.year = $year");
 
 
 
@@ -308,7 +308,7 @@ function getData($key, $get_user_count = false) {
 					INNER JOIN makeadiff_madapp.UserGroup UG ON UG.user_id = users.madapp_user_id
 					INNER JOIN makeadiff_madapp.Group G on G.id = UG.group_id
 					INNER JOIN makeadiff_madapp.Vertical V on V.id = G.vertical_id
-					%donation_table%", "users.id","AND (G.type = 'fellow') AND R.id=9");
+					%donation_table%", "users.id","AND (G.type = 'fellow') AND R.id=9 AND UG.year = $year");
 
 
 
