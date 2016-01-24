@@ -15,7 +15,7 @@
 	<script type="text/javascript" src="js/materialize.min.js"></script>
 	<script type="text/javascript" src="js/script.js"></script>
 	<script type="text/javascript" src="js/application.js"></script>
-	<script type="text/javascript" src="js/index.js"></script>
+	<script type="text/javascript" src="js/vertical.js"></script>
 </head>
 
 <body>
@@ -68,7 +68,7 @@
 			<?php if($all_levels['nt']['data']) { ?>
 			<div class="card">
 				<div class="card-image">
-					<img src="images/city.jpg">
+					<img src="images/coach.jpg">
 					<?php showCard('nt'); ?>
 			</div>
 			<?php } ?>
@@ -78,7 +78,7 @@
 				<?php if($all_levels['fellow']['data']) { ?>
 				<div class="card">
 					<div class="card-image">
-						<img src="images/group.png">
+						<img src="images/person.jpg">
 						<?php showCard('fellow'); ?>
 					</div>
 					<?php } ?>
@@ -86,37 +86,29 @@
 			</div>
 
 
-		<div class="col s12 m6">
-			<?php if($all_levels['coach']['data']) { ?>
-			<div class="card">
-				<div class="card-image">
-					<img src="images/coach.jpg">
-					<?php showCard('coach'); ?>
-				</div>
-				<?php } ?>
-			</div>
 
-		<div class="col s12 m6">
-			<?php if($all_levels['volunteer']['data']) { ?>
+
+<!--		<div class="col s12 m6">
+			<?php /*if($all_levels['volunteer']['data']) { */?>
 			<div class="card">
 				<div class="card-image">
 					<img src="images/person.jpg">
-					<?php showCard('volunteer'); ?>
+					<?php /*showCard('volunteer'); */?>
 			</div>
-			<?php } ?>
+			<?php /*} */?>
 		</div>
-
-		<?php /*if($total_donation and $timeframe == 0) { */?><!--
+-->
+		<?php /*if($timeframe == 0) { */?><!--
 
 			<div class="col s12 m6">
-				<?php /*if($all_levels['user']['data']) { */?>
+				<?php /*if($all_levels['fellow']['data']) { */?>
 				<div class="card">
 					<div class="card-image">
 						<img src="images/child.jpg">
 						<span class="card-title img-title">Children Sponsored <?php /*echo $all_levels['children_sponsored_title']*/?></span>
 					</div>
 					<div class="card-content">
-						<p class="children_sponsored"><?php /*echo number_format(round($total_donation/12000,0,PHP_ROUND_HALF_DOWN)); */?> / <?php /*echo number_format($all_levels['children_count']); */?></p>
+						<p class="children_sponsored"><?php /*echo number_format(round($total_donation[0]['amount']/12000,0,PHP_ROUND_HALF_DOWN)); */?></p>
 					</div>
 
 				</div>
@@ -132,10 +124,9 @@
 	// $(document).ready(function() {
 	// 	$('select').material_select();
 	// });
-	var menu = <?php echo json_encode($menu); ?>;
 	function pageInit() {
 	<?php
-	if($view_level == 'vertical') { echo "changeViewLevel('region');"; }
+	if($view_level == 'vertical') { echo "changeViewLevel('vertical');"; }
 
 	?>
 	}

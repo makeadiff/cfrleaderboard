@@ -27,7 +27,10 @@ $mem->addServer("127.0.0.1", 11211);
 $year = 2015;
 $cache_expire = 60 * 60;
 $top_count = 8;
-$all_verticals = $sql_madapp->getById("SELECT id,name FROM Vertical");
+
+//Ignoring verticals that are not being used anymore
+$all_verticals = $sql_madapp->getById("SELECT id,name FROM Vertical WHERE id <> 1 AND id <> 2 AND id <> 10 AND id <> 12 AND id <> 13 AND id <> 14 AND id <> 15 ORDER BY name");
+
 $all_view_levels = array('national' => "National", 'vertical' => "Vertical"); // , 'coach' => "Coach"
 $all_timeframes = array('1' => 'Day', '7' => 'Week', '0' => 'Overall');
 
@@ -47,12 +50,12 @@ $top_title = '';
 $bottom_title = '';
 
 $array_template = array('title' => '', 'data' => array(), 'show_in' => array());
-$all_levels = array('vertical' => $array_template, 'nt' => $array_template, 'fellow' => $array_template, 'coach' => $array_template, 'volunteer' => $array_template);
+$all_levels = array('vertical' => $array_template, 'nt' => $array_template, 'fellow' => $array_template, 'coach' => $array_template/*'volunteer' => $array_template*/);
 $all_levels['vertical']['show_in']	= array('national');
 $all_levels['nt']['show_in']		= array('national', 'vertical');
 $all_levels['fellow']['show_in']	= array('national', 'vertical');
 $all_levels['coach']['show_in']		= array('national', 'vertical');
-$all_levels['volunteer']['show_in']	= array('national', 'vertical');
+/*$all_levels['volunteer']['show_in']	= array('national', 'vertical');*/
 
 foreach ($all_levels as $key => $level_info) {
 	if(in_array($view_level, $level_info['show_in'])) {
@@ -66,16 +69,10 @@ foreach ($all_levels as $key => $level_info) {
 			$vertical_name = $sql_madapp->getOne("SELECT name FROM Vertical WHERE id=$vertical_id");
 			$title .= " in $vertical_name";
 			$children_sponsored_title = " by " . $vertical_name;
-			$children_count = $sql_madapp->getOne("SELECT COUNT(*) FROM Student
-											INNER JOIN Center
-											ON Center.id = Student.center_id
-											WHERE Student.status = 1 AND Center.name = '$group_name'");
+
 		}else {
 			$children_sponsored_title = "Nationally";
-			$children_count = $sql_madapp->getOne("SELECT COUNT(*) FROM Student
-											INNER JOIN Center
-											ON Center.id = Student.center_id
-											WHERE Student.status = 1 AND Center.status = 1");
+
 		}
 
 		if($timeframe == '1') {
@@ -89,7 +86,6 @@ foreach ($all_levels as $key => $level_info) {
 		$all_levels[$key]['area'] =
 		$all_levels[$key]['data'] = getData($key);
 		$all_levels['children_sponsored_title'] = $children_sponsored_title;
-		$all_levels['children_count'] = $children_count;
 	}
 }
 
@@ -183,6 +179,42 @@ if($target_amount) $percentage_done = round($total_donation / $target_amount * 1
 $ecs_count_remaining = ceil($remaining_amount / 6000);*/
 
 
+
+
+
+
+
+//Get data for children sponsored
+
+/*if(i($QUERY,'no_cache')) {
+	$total_donation = 0;
+} else {
+	$total_donation = $mem->get("Infogen:index/total_donation#$timeframe,$view_level,$vertical_id");
+}
+
+if(!$total_donation){
+	if ($view_level = 'national') {
+		$total_donation = getFromBothTables("%amount%", "users
+					INNER JOIN
+					(SELECT U.id as uid,U.name,V.id as vid,V.name as vname FROM makeadiff_madapp.User U
+					INNER JOIN makeadiff_madapp.UserGroup UG
+					ON UG.user_id = U.id
+					INNER JOIN makeadiff_madapp.`Group` G
+					ON G.id = UG.group_id
+					INNER JOIN makeadiff_madapp.Vertical V
+					ON V.id = G.vertical_id
+					WHERE U.status = 1 AND U.user_type = 'volunteer' AND UG.year = 2015 AND (G.type = 'national' OR G.type = 'strat' OR G.type = 'fellow')
+					GROUP BY U.id,V.id)IQ
+					ON IQ.uid = users.madapp_user_id
+					%donation_table%");
+	}
+
+	$mem->set("Infogen:index/total_donation#$timeframe,$view_level,$vertical_id", $total_donation, $cache_expire);
+}*/
+
+
+
+
 function getData($key, $get_user_count = false) {
 	global $timeframe,$view_level,$vertical_id, $mem, $QUERY, $cache_expire, $checks, $sql, $user_checks;
 
@@ -193,11 +225,19 @@ function getData($key, $get_user_count = false) {
 	}
 
 	if($key == 'vertical') {
-		$data = getFromBothTables("V.id,V.name, %amount%", "makeadiff_madapp.Vertical V
-					INNER JOIN makeadiff_madapp.`Group` G ON G.vertical_id=V.id
-					INNER JOIN makeadiff_madapp.UserGroup UG ON UG.group_id = G.id
-					INNER JOIN users ON users.madapp_user_id = UG.user_id
-					%donation_table%", "V.id");
+		$data = getFromBothTables("IQ.vid as id,IQ.vname as name, %amount%", "users
+					INNER JOIN
+					(SELECT U.id as uid,U.name,V.id as vid,V.name as vname FROM makeadiff_madapp.User U
+					INNER JOIN makeadiff_madapp.UserGroup UG
+					ON UG.user_id = U.id
+					INNER JOIN makeadiff_madapp.`Group` G
+					ON G.id = UG.group_id
+					INNER JOIN makeadiff_madapp.Vertical V
+					ON V.id = G.vertical_id
+					WHERE U.status = 1 AND U.user_type = 'volunteer' AND UG.year = 2015 AND (G.type = 'national' OR G.type = 'strat' OR G.type = 'fellow')
+					GROUP BY U.id,V.id)IQ
+					ON IQ.uid = users.madapp_user_id
+					%donation_table%", "IQ.vid");
 
 		if($get_user_count) {
 			$user_count_data = $sql->getById("SELECT V.id, COUNT(users.id) AS count
@@ -284,7 +324,11 @@ function getFromBothTables($select, $tables, $group_by, $where = '') {
 	
 	$order_and_limits = "ORDER BY amount DESC\nLIMIT 0, " . ($top_count * 20);
 
+
+
 	$query = "SELECT $select FROM $tables $filter $where GROUP BY $group_by $order_and_limits";
+
+
 	$donut_query = str_replace(array('%amount%', '%donation_table%'), array('SUM(D.donation_amount) AS amount', 'INNER JOIN donations D ON D.fundraiser_id=users.id'), $query);
 	$donut_data = $sql->getById($donut_query);
 
