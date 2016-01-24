@@ -29,7 +29,7 @@ $cache_expire = 60 * 60;
 $top_count = 8;
 
 //Ignoring verticals that are not being used anymore
-$all_verticals = $sql_madapp->getById("SELECT id,name FROM Vertical WHERE id <> 1 AND id <> 2 AND id <> 10 AND id <> 12 AND id <> 13 AND id <> 14 AND id <> 15 ORDER BY name");
+$all_verticals = $sql_madapp->getById("SELECT id,name FROM Vertical WHERE id <> 1 AND id <> 2 AND id <> 10 AND id <> 11 AND id <> 12 AND id <> 13 AND id <> 14 AND id <> 15 ORDER BY name");
 
 $all_view_levels = array('national' => "National", 'vertical' => "Vertical"); // , 'coach' => "Coach"
 $all_timeframes = array('1' => 'Day', '7' => 'Week', '0' => 'Overall');
