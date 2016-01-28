@@ -220,7 +220,7 @@ if(!$total_donation or !$total_count){
 					INNER JOIN makeadiff_madapp.UserGroup UG ON UG.user_id = users.madapp_user_id
 					INNER JOIN makeadiff_madapp.Group G on G.id = UG.group_id
 					INNER JOIN makeadiff_madapp.Vertical V on V.id = G.vertical_id
-					%donation_table%", "","AND (G.type = 'fellow') AND R.id=9 AND UG.year = $year");
+					%donation_table%", "","AND (G.type = 'fellow' OR G.type = 'strat' OR G.type = 'fellow') AND R.id=9 AND UG.year = $year");
 
 		$total_count = $sql_madapp->getById("SELECT G.type AS gtype, COUNT(*)
 					FROM makeadiff_madapp.User U
@@ -267,7 +267,7 @@ if(!$total_donation or !$total_count){
 					INNER JOIN makeadiff_madapp.UserGroup UG ON UG.user_id = users.madapp_user_id
 					INNER JOIN makeadiff_madapp.Group G on G.id = UG.group_id
 					INNER JOIN makeadiff_madapp.Vertical V on V.id = G.vertical_id
-					%donation_table%", "","AND (G.type = 'fellow') AND R.id=9 AND UG.year = $year");
+					%donation_table%", "","AND (G.type = 'fellow' OR G.type = 'strat' OR G.type = 'fellow') AND R.id=9 AND UG.year = $year");
 
 		$total_count = $sql_madapp->getById("SELECT G.type AS gtype, COUNT(*)
 					FROM makeadiff_madapp.User U
@@ -326,19 +326,7 @@ function getData($key, $get_user_count = false) {
 
 
 
-		if($get_user_count) {
-			$user_count_data = $sql->getById("SELECT V.id, COUNT(users.id) AS count
-					FROM users
-					INNER JOIN makeadiff_madapp.UserGroup UG ON UG.user_id = users.madapp_user_id
-					INNER JOIN makeadiff_madapp.Group G ON G.id = UG.group_id
-					INNER JOIN makeadiff_madapp.Vertical ON V.id = G.vertical_id
-					WHERE " . implode(" AND ", $user_checks)
-					. " GROUP BY V.id");
 
-			foreach ($data as $key => $row) {
-				$data[$key]['user_count'] = $user_count_data[$row['id']];
-			}
-		}
 	} elseif($key == 'nt') {
 
 
@@ -352,8 +340,6 @@ function getData($key, $get_user_count = false) {
 					INNER JOIN makeadiff_madapp.Group G on G.id = UG.group_id
 					INNER JOIN makeadiff_madapp.Vertical V on V.id = G.vertical_id
 					%donation_table%", "users.id","AND (G.type ='national' OR G.type = 'strat') AND R.id=9 AND UG.year = $year");
-
-
 
 
 	} elseif($key == 'fellow') {
