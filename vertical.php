@@ -186,31 +186,116 @@ $ecs_count_remaining = ceil($remaining_amount / 6000);*/
 
 //Get data for children sponsored
 
-/*if(i($QUERY,'no_cache')) {
+if(i($QUERY,'no_cache')) {
 	$total_donation = 0;
+	$total_count = 0;
 } else {
 	$total_donation = $mem->get("Infogen:index/total_donation#$timeframe,$view_level,$vertical_id");
+	$total_count = $mem->get("Infogen:index/total_count#$timeframe,$view_level,$vertical_id");
 }
 
-if(!$total_donation){
-	if ($view_level = 'national') {
-		$total_donation = getFromBothTables("%amount%", "users
+if(!$total_donation or !$total_count){
+	if ($view_level == 'national') {
+
+	/*	$total_donation = getFromBothTables("%amount%", "users
 					INNER JOIN
-					(SELECT U.id as uid,U.name,V.id as vid,V.name as vname FROM makeadiff_madapp.User U
+					(SELECT U.id as uid FROM makeadiff_madapp.User U
 					INNER JOIN makeadiff_madapp.UserGroup UG
 					ON UG.user_id = U.id
 					INNER JOIN makeadiff_madapp.`Group` G
 					ON G.id = UG.group_id
 					INNER JOIN makeadiff_madapp.Vertical V
 					ON V.id = G.vertical_id
-					WHERE U.status = 1 AND U.user_type = 'volunteer' AND UG.year = 2015 AND (G.type = 'national' OR G.type = 'strat' OR G.type = 'fellow')
-					GROUP BY U.id,V.id)IQ
+					WHERE U.status = 1 AND U.user_type = 'volunteer' AND UG.year = $year AND (G.type = 'national' OR G.type = 'strat' OR G.type = 'fellow')
+					GROUP BY U.id)IQ
 					ON IQ.uid = users.madapp_user_id
-					%donation_table%");
+					%donation_table%");*/
+
+		$data = getFromBothTables("%amount%", "
+					users
+					INNER JOIN reports_tos RT ON RT.user_id=users.id
+					INNER JOIN users AS manager ON RT.manager_id=manager.id
+					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
+					INNER JOIN roles R ON R.id=RM.role_id
+					INNER JOIN makeadiff_madapp.UserGroup UG ON UG.user_id = users.madapp_user_id
+					INNER JOIN makeadiff_madapp.Group G on G.id = UG.group_id
+					INNER JOIN makeadiff_madapp.Vertical V on V.id = G.vertical_id
+					%donation_table%", "","AND (G.type = 'fellow') AND R.id=9 AND UG.year = $year");
+
+		$total_count = $sql_madapp->getById("SELECT G.type AS gtype, COUNT(*)
+					FROM makeadiff_madapp.User U
+					INNER JOIN makeadiff_madapp.UserGroup UG ON UG.user_id = U.id
+					INNER JOIN makeadiff_madapp.`Group` G ON G.id = UG.group_id
+					INNER JOIN makeadiff_madapp.Vertical V ON V.id = G.vertical_id
+					WHERE U.status =1
+					AND U.user_type =  'volunteer'
+					AND UG.year = $year
+					AND (
+					G.type =  'national'
+					OR G.type =  'strat'
+					OR G.type =  'fellow'
+					)
+					GROUP BY G.type
+					");
+
+
+
+
+
+	}elseif($view_level == 'vertical'){
+
+	/*	$total_donation = getFromBothTables("%amount%", "users
+					INNER JOIN
+					(SELECT U.id as uid FROM makeadiff_madapp.User U
+					INNER JOIN makeadiff_madapp.UserGroup UG
+					ON UG.user_id = U.id
+					INNER JOIN makeadiff_madapp.`Group` G
+					ON G.id = UG.group_id
+					INNER JOIN makeadiff_madapp.Vertical V
+					ON V.id = G.vertical_id
+					WHERE U.status = 1 AND U.user_type = 'volunteer' AND UG.year = $year AND (G.type = 'national' OR G.type = 'strat' OR G.type = 'fellow')
+					GROUP BY U.id)IQ
+					ON IQ.uid = users.madapp_user_id
+					%donation_table%");*/
+
+		$data = getFromBothTables("%amount%", "
+					users
+					INNER JOIN reports_tos RT ON RT.user_id=users.id
+					INNER JOIN users AS manager ON RT.manager_id=manager.id
+					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
+					INNER JOIN roles R ON R.id=RM.role_id
+					INNER JOIN makeadiff_madapp.UserGroup UG ON UG.user_id = users.madapp_user_id
+					INNER JOIN makeadiff_madapp.Group G on G.id = UG.group_id
+					INNER JOIN makeadiff_madapp.Vertical V on V.id = G.vertical_id
+					%donation_table%", "","AND (G.type = 'fellow') AND R.id=9 AND UG.year = $year");
+
+		$total_count = $sql_madapp->getById("SELECT G.type AS gtype, COUNT(*)
+					FROM makeadiff_madapp.User U
+					INNER JOIN makeadiff_madapp.UserGroup UG ON UG.user_id = U.id
+					INNER JOIN makeadiff_madapp.`Group` G ON G.id = UG.group_id
+					INNER JOIN makeadiff_madapp.Vertical V ON V.id = G.vertical_id
+					WHERE U.status =1
+					AND U.user_type =  'volunteer'
+					AND UG.year = $year
+					AND (
+					G.type =  'national'
+					OR G.type =  'strat'
+					OR G.type =  'fellow'
+					)
+					AND V.id = $vertical_id
+					GROUP BY G.type
+					");
+
+
+
 	}
 
+	$total_donation = $data[0]['amount'] + $data[1]['amount'];
+
+	$total_target = ($total_count['national'] * 20 * 6000) + ($total_count['strat'] * 16 * 6000) +($total_count['fellow'] * 6 * 6000);
 	$mem->set("Infogen:index/total_donation#$timeframe,$view_level,$vertical_id", $total_donation, $cache_expire);
-}*/
+	$mem->set("Infogen:index/total_count#$timeframe,$view_level,$vertical_id", $total_count, $cache_expire);
+}
 
 
 
@@ -238,6 +323,8 @@ function getData($key, $get_user_count = false) {
 					GROUP BY U.id,V.id)IQ
 					ON IQ.uid = users.madapp_user_id
 					%donation_table%", "IQ.vid");
+
+
 
 		if($get_user_count) {
 			$user_count_data = $sql->getById("SELECT V.id, COUNT(users.id) AS count
@@ -319,14 +406,21 @@ function getData($key, $get_user_count = false) {
 	return $data;
 }
 
-function getFromBothTables($select, $tables, $group_by, $where = '') {
+function getFromBothTables($select, $tables, $group_by = '', $where = '') {
 	global $filter, $top_count, $sql, $checks;
 	
 	$order_and_limits = "ORDER BY amount DESC\nLIMIT 0, " . ($top_count * 20);
 
 
+	if ($group_by == '') {
+		$query = "SELECT $select FROM $tables $filter $where $order_and_limits";
 
-	$query = "SELECT $select FROM $tables $filter $where GROUP BY $group_by $order_and_limits";
+	}else{
+		$query = "SELECT $select FROM $tables $filter $where GROUP BY $group_by $order_and_limits";
+
+	}
+
+
 
 
 	$donut_query = str_replace(array('%amount%', '%donation_table%'), array('SUM(D.donation_amount) AS amount', 'INNER JOIN donations D ON D.fundraiser_id=users.id'), $query);
