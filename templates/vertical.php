@@ -100,7 +100,7 @@
 -->
 		<?php if($timeframe == 0) { ?>
 
-			<div class="col s12 m6">
+			<div class="col s12 m6" title="Amount : <?php echo money_format("%.0n", $total_donation)?> Target : <?php echo money_format("%.0n", $total_target)?>" >
 				<?php if($all_levels['fellow']['data']) { ?>
 				<div class="card">
 					<div class="card-image">
