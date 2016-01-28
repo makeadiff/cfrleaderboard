@@ -220,7 +220,7 @@ if(!$total_donation or !$total_count){
 					INNER JOIN makeadiff_madapp.UserGroup UG ON UG.user_id = users.madapp_user_id
 					INNER JOIN makeadiff_madapp.Group G on G.id = UG.group_id
 					INNER JOIN makeadiff_madapp.Vertical V on V.id = G.vertical_id
-					%donation_table%", "","AND (G.type = 'fellow' OR G.type = 'strat' OR G.type = 'fellow') AND R.id=9 AND UG.year = $year");
+					%donation_table%", "","AND (G.type = 'national' OR G.type = 'strat' OR G.type = 'fellow') AND R.id=9 AND UG.year = $year");
 
 		$total_count = $sql_madapp->getById("SELECT G.type AS gtype, COUNT(*)
 					FROM makeadiff_madapp.User U
@@ -267,7 +267,7 @@ if(!$total_donation or !$total_count){
 					INNER JOIN makeadiff_madapp.UserGroup UG ON UG.user_id = users.madapp_user_id
 					INNER JOIN makeadiff_madapp.Group G on G.id = UG.group_id
 					INNER JOIN makeadiff_madapp.Vertical V on V.id = G.vertical_id
-					%donation_table%", "","AND (G.type = 'fellow' OR G.type = 'strat' OR G.type = 'fellow') AND R.id=9 AND UG.year = $year");
+					%donation_table%", "","AND (G.type = 'national' OR G.type = 'strat' OR G.type = 'fellow') AND R.id=9 AND UG.year = $year");
 
 		$total_count = $sql_madapp->getById("SELECT G.type AS gtype, COUNT(*)
 					FROM makeadiff_madapp.User U

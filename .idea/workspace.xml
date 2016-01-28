@@ -120,29 +120,29 @@
       <file leaf-file-name="vertical.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/vertical.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.47513813">
-              <caret line="269" column="106" selection-start-line="269" selection-start-column="106" selection-end-line="269" selection-end-column="106" />
+            <state vertical-scroll-proportion="0.7237569">
+              <caret line="269" column="66" selection-start-line="269" selection-start-column="66" selection-end-line="269" selection-end-column="66" />
               <folding>
-                <marker date="1453974212619" expanded="true" signature="835:855" placeholder="SELECT id,na..states..." />
-                <marker date="1453974212619" expanded="true" signature="835:863" placeholder="SELECT id,na..Vertical..." />
-                <marker date="1453974212619" expanded="true" signature="835:981" placeholder="SELECT id,na..Vertical..." />
-                <marker date="1453974212619" expanded="true" signature="2501:2536" placeholder="SELECT name ..cities..." />
-                <marker date="1453974212619" expanded="true" signature="3802:3904" placeholder="SELECT COUNT..." />
-                <marker date="1453974212619" expanded="true" signature="3975:4129" placeholder="SELECT SUM(D..." />
-                <marker date="1453974212619" expanded="true" signature="4175:4329" placeholder="SELECT SUM(D..." />
-                <marker date="1453974212619" expanded="true" signature="4414:4516" placeholder="SELECT COUNT..." />
-                <marker date="1453974212619" expanded="true" signature="4587:4741" placeholder="SELECT SUM(D..." />
-                <marker date="1453974212619" expanded="true" signature="4787:4941" placeholder="SELECT SUM(D..." />
-                <marker date="1453974212619" expanded="true" signature="5024:5081" placeholder="SELECT COUNT..." />
-                <marker date="1453974212619" expanded="true" signature="5152:5261" placeholder="SELECT SUM(D..." />
-                <marker date="1453974212619" expanded="true" signature="5307:5416" placeholder="SELECT SUM(D..." />
-                <marker date="1453974212619" expanded="true" signature="5500:5665" placeholder="SELECT COUNT..." />
-                <marker date="1453974212619" expanded="true" signature="5736:5953" placeholder="SELECT SUM(D..." />
-                <marker date="1453974212619" expanded="true" signature="5999:6216" placeholder="SELECT SUM(D..." />
-                <marker date="1453974212619" expanded="true" signature="8431:8899" placeholder="SELECT G.typ..User..." />
-                <marker date="1453974212619" expanded="true" signature="10176:10673" placeholder="SELECT G.typ..User..." />
-                <marker date="1453974212619" expanded="true" signature="15170:15213" placeholder="SELECT ${$se..." />
-                <marker date="1453974212619" expanded="true" signature="15254:15316" placeholder="SELECT ${$se..." />
+                <marker date="1453974400219" expanded="true" signature="835:855" placeholder="SELECT id,na..states..." />
+                <marker date="1453974400219" expanded="true" signature="835:863" placeholder="SELECT id,na..Vertical..." />
+                <marker date="1453974400219" expanded="true" signature="835:981" placeholder="SELECT id,na..Vertical..." />
+                <marker date="1453974400219" expanded="true" signature="2501:2536" placeholder="SELECT name ..cities..." />
+                <marker date="1453974400219" expanded="true" signature="3802:3904" placeholder="SELECT COUNT..." />
+                <marker date="1453974400219" expanded="true" signature="3975:4129" placeholder="SELECT SUM(D..." />
+                <marker date="1453974400219" expanded="true" signature="4175:4329" placeholder="SELECT SUM(D..." />
+                <marker date="1453974400219" expanded="true" signature="4414:4516" placeholder="SELECT COUNT..." />
+                <marker date="1453974400219" expanded="true" signature="4587:4741" placeholder="SELECT SUM(D..." />
+                <marker date="1453974400219" expanded="true" signature="4787:4941" placeholder="SELECT SUM(D..." />
+                <marker date="1453974400219" expanded="true" signature="5024:5081" placeholder="SELECT COUNT..." />
+                <marker date="1453974400219" expanded="true" signature="5152:5261" placeholder="SELECT SUM(D..." />
+                <marker date="1453974400219" expanded="true" signature="5307:5416" placeholder="SELECT SUM(D..." />
+                <marker date="1453974400219" expanded="true" signature="5500:5665" placeholder="SELECT COUNT..." />
+                <marker date="1453974400219" expanded="true" signature="5736:5953" placeholder="SELECT SUM(D..." />
+                <marker date="1453974400219" expanded="true" signature="5999:6216" placeholder="SELECT SUM(D..." />
+                <marker date="1453974400219" expanded="true" signature="8433:8901" placeholder="SELECT G.typ..User..." />
+                <marker date="1453974400219" expanded="true" signature="10180:10677" placeholder="SELECT G.typ..User..." />
+                <marker date="1453974400219" expanded="true" signature="15174:15217" placeholder="SELECT ${$se..." />
+                <marker date="1453974400219" expanded="true" signature="15258:15320" placeholder="SELECT ${$se..." />
               </folding>
             </state>
           </provider>
@@ -854,29 +854,29 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/vertical.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.47513813">
-          <caret line="269" column="106" selection-start-line="269" selection-start-column="106" selection-end-line="269" selection-end-column="106" />
+        <state vertical-scroll-proportion="0.7237569">
+          <caret line="269" column="66" selection-start-line="269" selection-start-column="66" selection-end-line="269" selection-end-column="66" />
           <folding>
-            <marker date="1453974212619" expanded="true" signature="835:855" placeholder="SELECT id,na..states..." />
-            <marker date="1453974212619" expanded="true" signature="835:863" placeholder="SELECT id,na..Vertical..." />
-            <marker date="1453974212619" expanded="true" signature="835:981" placeholder="SELECT id,na..Vertical..." />
-            <marker date="1453974212619" expanded="true" signature="2501:2536" placeholder="SELECT name ..cities..." />
-            <marker date="1453974212619" expanded="true" signature="3802:3904" placeholder="SELECT COUNT..." />
-            <marker date="1453974212619" expanded="true" signature="3975:4129" placeholder="SELECT SUM(D..." />
-            <marker date="1453974212619" expanded="true" signature="4175:4329" placeholder="SELECT SUM(D..." />
-            <marker date="1453974212619" expanded="true" signature="4414:4516" placeholder="SELECT COUNT..." />
-            <marker date="1453974212619" expanded="true" signature="4587:4741" placeholder="SELECT SUM(D..." />
-            <marker date="1453974212619" expanded="true" signature="4787:4941" placeholder="SELECT SUM(D..." />
-            <marker date="1453974212619" expanded="true" signature="5024:5081" placeholder="SELECT COUNT..." />
-            <marker date="1453974212619" expanded="true" signature="5152:5261" placeholder="SELECT SUM(D..." />
-            <marker date="1453974212619" expanded="true" signature="5307:5416" placeholder="SELECT SUM(D..." />
-            <marker date="1453974212619" expanded="true" signature="5500:5665" placeholder="SELECT COUNT..." />
-            <marker date="1453974212619" expanded="true" signature="5736:5953" placeholder="SELECT SUM(D..." />
-            <marker date="1453974212619" expanded="true" signature="5999:6216" placeholder="SELECT SUM(D..." />
-            <marker date="1453974212619" expanded="true" signature="8431:8899" placeholder="SELECT G.typ..User..." />
-            <marker date="1453974212619" expanded="true" signature="10176:10673" placeholder="SELECT G.typ..User..." />
-            <marker date="1453974212619" expanded="true" signature="15170:15213" placeholder="SELECT ${$se..." />
-            <marker date="1453974212619" expanded="true" signature="15254:15316" placeholder="SELECT ${$se..." />
+            <marker date="1453974400219" expanded="true" signature="835:855" placeholder="SELECT id,na..states..." />
+            <marker date="1453974400219" expanded="true" signature="835:863" placeholder="SELECT id,na..Vertical..." />
+            <marker date="1453974400219" expanded="true" signature="835:981" placeholder="SELECT id,na..Vertical..." />
+            <marker date="1453974400219" expanded="true" signature="2501:2536" placeholder="SELECT name ..cities..." />
+            <marker date="1453974400219" expanded="true" signature="3802:3904" placeholder="SELECT COUNT..." />
+            <marker date="1453974400219" expanded="true" signature="3975:4129" placeholder="SELECT SUM(D..." />
+            <marker date="1453974400219" expanded="true" signature="4175:4329" placeholder="SELECT SUM(D..." />
+            <marker date="1453974400219" expanded="true" signature="4414:4516" placeholder="SELECT COUNT..." />
+            <marker date="1453974400219" expanded="true" signature="4587:4741" placeholder="SELECT SUM(D..." />
+            <marker date="1453974400219" expanded="true" signature="4787:4941" placeholder="SELECT SUM(D..." />
+            <marker date="1453974400219" expanded="true" signature="5024:5081" placeholder="SELECT COUNT..." />
+            <marker date="1453974400219" expanded="true" signature="5152:5261" placeholder="SELECT SUM(D..." />
+            <marker date="1453974400219" expanded="true" signature="5307:5416" placeholder="SELECT SUM(D..." />
+            <marker date="1453974400219" expanded="true" signature="5500:5665" placeholder="SELECT COUNT..." />
+            <marker date="1453974400219" expanded="true" signature="5736:5953" placeholder="SELECT SUM(D..." />
+            <marker date="1453974400219" expanded="true" signature="5999:6216" placeholder="SELECT SUM(D..." />
+            <marker date="1453974400219" expanded="true" signature="8433:8901" placeholder="SELECT G.typ..User..." />
+            <marker date="1453974400219" expanded="true" signature="10180:10677" placeholder="SELECT G.typ..User..." />
+            <marker date="1453974400219" expanded="true" signature="15174:15217" placeholder="SELECT ${$se..." />
+            <marker date="1453974400219" expanded="true" signature="15258:15320" placeholder="SELECT ${$se..." />
           </folding>
         </state>
       </provider>
