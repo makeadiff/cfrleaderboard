@@ -220,10 +220,10 @@ function show($key, $data, $title) {
 	<thead>
 		<tr>
 		<th width="5%"></th>
-		<th width="45%">Name</th>
-		<th width="35%">Amount Raised</th>
-		<?php if($key!='coach' and $key!='user') {
-			echo "<th width='15%'>%</th>";
+		<th width="25%">Name</th>
+		<th width="45%">Amount Raised</th>
+		<?php if($key!='user') {
+			echo "<th width='25%'>12k</th>";
 		}?>
 
 		</tr>
@@ -236,7 +236,7 @@ foreach ($data as $row) { ?>
 	<td width="5%"><?php if($count <= 3){ echo '<img src="./images/'.$count.'.png" height="15px" />'; } else echo ' '; ?></td>
 	<td width="60%" class="unit-name"><?php echo $count . '.  ' . $row['name'] ?></td>
 	<td width="25%"><?php echo money_format("%.0n", $row['amount']) ?></td>
-	<?php if($key!='coach' and $key!='user') {
+	<?php if($key!='user') {
 		echo "<td width='10%'>" . number_format(round((($row['user_count_12k']/$row['user_count']) * 100),0,PHP_ROUND_HALF_DOWN)) . "%</td>";
 	}?>
 </tr>

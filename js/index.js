@@ -28,7 +28,12 @@ function changeViewLevel(view_level_arg) {
 	if(typeof view_level_arg == "string") var view_level = view_level_arg;
 	else var view_level = $(this).val();
 
-	if(view_level == 'region') {
+	if(view_level == 'national') {
+		$("#state_id_area").hide();
+		$("#city_id_area").hide();
+		$("#group_id_area").hide();
+		$("#coach_id_area").hide();
+	}else if(view_level == 'region') {
 		$("#state_id_area").show();
 		$("#city_id_area").hide();
 		$("#group_id_area").hide();

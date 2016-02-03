@@ -326,7 +326,7 @@ function getData($key, $get_user_count = false) {
 					INNER JOIN roles R ON R.id=RM.role_id
 					INNER JOIN groups G ON G.id=manager.group_id
 					INNER JOIN cities C ON C.id=users.city_id
-					%donation_table%", "G.id", "AND R.id=9");
+					%donation_table%", "G.id", "AND R.id=9",false);
 
 		foreach($data as $key => $row) {
 			$data[$key]['user_count_12k'] = 0;
@@ -366,6 +366,38 @@ function getData($key, $get_user_count = false) {
 					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
 					INNER JOIN roles R ON R.id=RM.role_id
 					INNER JOIN cities C ON C.id=users.city_id", "manager.id", "AND R.id=9");
+
+		$user_data = getFromBothTables("users.id, %amount%, manager.id as manager_id", "users
+					%donation_table%
+					INNER JOIN reports_tos RT ON RT.user_id=users.id
+					INNER JOIN users AS manager ON RT.manager_id=manager.id
+					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
+					INNER JOIN roles R ON R.id=RM.role_id
+					INNER JOIN cities C ON C.id=users.city_id", "users.id", "AND R.id=9",false);
+
+		foreach($data as $key => $row) {
+			$data[$key]['user_count_12k'] = 0;
+		}
+
+		foreach($user_data as $row) {
+			if($row['amount'] >= 12000 && !empty($data[$row['manager_id']])) {
+				$data[$row['manager_id']]['user_count_12k'] ++;
+			}
+		}
+
+		$user_count_data = $sql->getById("SELECT manager.id, COUNT(users.id) AS count
+			FROM users
+			INNER JOIN reports_tos RT ON RT.user_id=users.id
+			INNER JOIN users manager ON manager.id=RT.manager_id
+			INNER JOIN user_role_maps RM ON RM.user_id=manager.id
+			INNER JOIN roles R ON R.id=RM.role_id
+			INNER JOIN cities C ON C.id=users.city_id
+			WHERE R.id=9 AND " . implode(" AND ", $user_checks)
+			. " GROUP BY manager.id");
+
+		foreach ($data as $key => $row) {
+			$data[$key]['user_count'] = $user_count_data[$row['id']];
+		}
 
 	} elseif($key == 'user') {
 		$data = getFromBothTables("users.id,CONCAT(users.first_name, ' ', users.last_name) AS name, %amount%", "users 
