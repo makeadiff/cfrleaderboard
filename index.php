@@ -249,34 +249,65 @@ function getData($key, $get_user_count = false) {
 					INNER JOIN users ON users.city_id=C.id
 					%donation_table%", "S.id");
 
-		if($get_user_count) {
-			$user_count_data = $sql->getById("SELECT S.id, COUNT(users.id) AS count 
-					FROM users 
-					INNER JOIN cities C ON C.id=users.city_id
-					INNER JOIN states S ON S.id=C.state_id
-					WHERE " . implode(" AND ", $user_checks)
-					. " GROUP BY S.id");
 
-			foreach ($data as $key => $row) {
-				$data[$key]['user_count'] = $user_count_data[$row['id']];
+		//To get the number of users who have donated above Rs. 12,000
+		$user_data = getFromBothTables("users.id,%amount%, S.id as state_id", "states S
+					INNER JOIN cities C ON C.state_id=S.id
+					INNER JOIN users ON users.city_id=C.id
+					%donation_table%", "users.id","",false);
+
+		foreach($data as $key => $row) {
+			$data[$key]['user_count_12k'] = 0;
+		}
+
+		foreach($user_data as $row) {
+			if($row['amount'] >= 12000) {
+				$data[$row['state_id']]['user_count_12k'] ++;
 			}
 		}
-	} elseif($key == 'city') {
+
+		$user_count_data = $sql->getById("SELECT S.id, COUNT(users.id) AS count
+				FROM users
+				INNER JOIN cities C ON C.id=users.city_id
+				INNER JOIN states S ON S.id=C.state_id
+				WHERE " . implode(" AND ", $user_checks)
+				. " GROUP BY S.id");
+
+		foreach ($data as $key => $row) {
+			$data[$key]['user_count'] = $user_count_data[$row['id']];
+		}
+
+	}elseif($key == 'city') {
 		$data = getFromBothTables("C.id,C.name, %amount%", "cities C
 					INNER JOIN users ON city_id=C.id
 					%donation_table%", "C.id");
 
-		if($get_user_count) {
-			$user_count_data = $sql->getById("SELECT C.id, COUNT(users.id) AS count 
-					FROM users 
-					INNER JOIN cities C ON C.id=users.city_id
-					WHERE " . implode(" AND ", $user_checks)
-					. " GROUP BY C.id");
 
-			foreach ($data as $key => $row) {
-				$data[$key]['user_count'] = $user_count_data[$row['id']];
+		//To get the number of users who have donated above Rs. 12,000
+		$user_data = getFromBothTables("users.id,%amount%, C.id as city_id", "cities C
+					INNER JOIN users ON users.city_id=C.id
+					%donation_table%", "users.id","",false);
+
+		foreach($data as $key => $row) {
+			$data[$key]['user_count_12k'] = 0;
+		}
+
+		foreach($user_data as $row) {
+			if($row['amount'] >= 12000 && !empty($data[$row['city_id']])) {
+				$data[$row['city_id']]['user_count_12k'] ++;
 			}
 		}
+
+		$user_count_data = $sql->getById("SELECT C.id, COUNT(users.id) AS count
+				FROM users
+				INNER JOIN cities C ON C.id=users.city_id
+				WHERE " . implode(" AND ", $user_checks)
+				. " GROUP BY C.id");
+
+		foreach ($data as $key => $row) {
+			$data[$key]['user_count'] = $user_count_data[$row['id']];
+		}
+
 
 	} elseif($key == 'group') {
 		$data = getFromBothTables("G.id,G.name, %amount%", "users
@@ -288,22 +319,42 @@ function getData($key, $get_user_count = false) {
 					INNER JOIN cities C ON C.id=users.city_id
 					%donation_table%", "G.id", "AND R.id=9");
 
-		if($get_user_count) {
-			$user_count_data = $sql->getById("SELECT G.id, COUNT(users.id) AS count 
-				FROM users 
-				INNER JOIN reports_tos RT ON RT.user_id=users.id
-				INNER JOIN users manager ON manager.id=RT.manager_id
-				INNER JOIN user_role_maps RM ON RM.user_id=manager.id
-				INNER JOIN roles R ON R.id=RM.role_id
-				INNER JOIN groups G ON G.id=manager.group_id
-				INNER JOIN cities C ON C.id=users.city_id
-				WHERE R.id=9 AND " . implode(" AND ", $user_checks)
-				. " GROUP BY G.id");
+		$user_data = getFromBothTables("users.id, %amount%, G.id as group_id", "users
+					INNER JOIN reports_tos RT ON RT.user_id=users.id
+					INNER JOIN users manager ON manager.id=RT.manager_id
+					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
+					INNER JOIN roles R ON R.id=RM.role_id
+					INNER JOIN groups G ON G.id=manager.group_id
+					INNER JOIN cities C ON C.id=users.city_id
+					%donation_table%", "G.id", "AND R.id=9");
 
-			foreach ($data as $key => $row) {
-				$data[$key]['user_count'] = $user_count_data[$row['id']];
+		foreach($data as $key => $row) {
+			$data[$key]['user_count_12k'] = 0;
+		}
+
+		foreach($user_data as $row) {
+			if($row['amount'] >= 12000 && !empty($data[$row['group_id']])) {
+				$data[$row['group_id']]['user_count_12k'] ++;
 			}
 		}
+
+
+
+		$user_count_data = $sql->getById("SELECT G.id, COUNT(users.id) AS count
+			FROM users
+			INNER JOIN reports_tos RT ON RT.user_id=users.id
+			INNER JOIN users manager ON manager.id=RT.manager_id
+			INNER JOIN user_role_maps RM ON RM.user_id=manager.id
+			INNER JOIN roles R ON R.id=RM.role_id
+			INNER JOIN groups G ON G.id=manager.group_id
+			INNER JOIN cities C ON C.id=users.city_id
+			WHERE R.id=9 AND " . implode(" AND ", $user_checks)
+			. " GROUP BY G.id");
+
+		foreach ($data as $key => $row) {
+			$data[$key]['user_count'] = $user_count_data[$row['id']];
+		}
+
 
 
 
@@ -329,13 +380,18 @@ function getData($key, $get_user_count = false) {
 
 	$mem->set("Infogen:index/data#$timeframe,$view_level,$state_id,$city_id,$group_id,$key", $data, $cache_expire);
 
-	return $data;
+ 	return $data;
 }
 
-function getFromBothTables($select, $tables, $group_by, $where = '') {
+function getFromBothTables($select, $tables, $group_by, $where = '',$set_order_and_limits = true) {
 	global $filter, $top_count, $sql, $checks;
-	
-	$order_and_limits = "ORDER BY amount DESC\nLIMIT 0, " . ($top_count * 20);
+
+	if($set_order_and_limits == true) {
+		$order_and_limits = "ORDER BY amount DESC\nLIMIT 0, " . ($top_count * 20);
+	}else {
+		$order_and_limits = "";
+	}
+
 
 	$query = "SELECT $select FROM $tables $filter $where GROUP BY $group_by $order_and_limits";
 	$donut_query = str_replace(array('%amount%', '%donation_table%'), array('SUM(D.donation_amount) AS amount', 'INNER JOIN donations D ON D.fundraiser_id=users.id'), $query);
@@ -351,13 +407,19 @@ function getFromBothTables($select, $tables, $group_by, $where = '') {
 		else $data[$id]= $extdon_data[$id];
 	}
 
-	usort($data, function($a, $b) {
+	uasort($data, function($a, $b) {
 		if($a['amount'] < $b['amount']) return 1;
 		if($a['amount'] > $b['amount']) return -1;
 		return 0;
 	});
 
-	return array_slice($data, 0, 8);
+	if($set_order_and_limits == true) {
+		return array_slice($data, 0, 8,true);
+	} else {
+		return $data;
+	}
+
+
 }
 
 $html = new HTML;
