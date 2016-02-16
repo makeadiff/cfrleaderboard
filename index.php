@@ -28,7 +28,7 @@ $mem->addServer("127.0.0.1", 11211);
 
 $year = 2015;
 $cache_expire = 60 * 60;
-$top_count = 8;
+$top_count = 30;
 $all_states = $sql->getById("SELECT id,name FROM states");
 $all_cities = $sql->getById("SELECT id,name FROM cities");
 $all_view_levels = array('national' => "National", 'region' => "Region", 'city' => "City", 'group' => "Center"); // , 'coach' => "Coach"
@@ -446,7 +446,7 @@ function getFromBothTables($select, $tables, $group_by, $where = '',$set_order_a
 	});
 
 	if($set_order_and_limits == true) {
-		return array_slice($data, 0, 8,true);
+		return array_slice($data, 0, 30,true);
 	} else {
 		return $data;
 	}

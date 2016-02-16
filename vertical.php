@@ -26,7 +26,7 @@ $mem->addServer("127.0.0.1", 11211);
 
 $year = 2015;
 $cache_expire = 60 * 60;
-$top_count = 8;
+$top_count = 30;
 
 //Ignoring verticals that are not being used anymore
 $all_verticals = $sql_madapp->getById("SELECT id,name FROM Vertical WHERE id <> 1 AND id <> 2 AND id <> 10 AND id <> 11 AND id <> 12 AND id <> 13 AND id <> 14 AND id <> 15 ORDER BY name");
@@ -431,7 +431,7 @@ function getFromBothTables($select, $tables, $group_by = '', $where = '') {
 		return 0;
 	});
 
-	return array_slice($data, 0, 8);
+	return array_slice($data, 0, 30);
 }
 
 $html = new HTML;

@@ -1,7 +1,15 @@
 var current_state_id, current_city_id, current_group_id;
 
 function init() {
-	$(".toggle-link").click(showMore)
+
+	var show_more_count = [];
+	show_more_count['region'] = 3;
+	show_more_count['city'] = 3;
+	show_more_count['center'] = 3;
+	show_more_count['coach'] = 3;
+	show_more_count['user'] = 3;
+
+	$(".toggle-link").click({show_more_count : show_more_count}, showMore)
 
 	$("#view_level").change(changeViewLevel);
 	$("#state_id").change(changeCity);
@@ -9,19 +17,31 @@ function init() {
 	$("#group_id").change(changeCoach);
 }
 
-function showMore() {
+function showMore(event) {
+	var show_more_count = event.data.show_more_count;
 	var key = this.id.replace(/show\-more\-/, '');
-	$("#top-" + key + " .hide-row").toggle('fade');
-
 	var link = $(this);
 
-	if(!link.hasClass("currently-active")) {
+	if(show_more_count[key] > 30) {
+		$("#top-" + key + " .hide-row").hide('fade');
+		show_more_count[key] = 3;
+		link.html(' <i class="tiny material-icons">add</i>See More');
+	} else {
+		$("#top-" + key + " .hide-row:lt(" + show_more_count[key] + ")").show('fade');
+		show_more_count[key] += 9;
+	}
+
+	if(show_more_count[key] > 30) {
+		link.html(' <i class="tiny material-icons">remove</i>See Less');
+	}
+
+	/*if(!link.hasClass("currently-active")) {
 		link.addClass("currently-active");
 		link.html(' <i class="tiny material-icons">remove</i>See Less');
 	} else {
 		link.removeClass("currently-active");
 		link.html(' <i class="tiny material-icons">add</i>See More');
-	}
+	}*/
 }
 
 function changeViewLevel(view_level_arg) {
