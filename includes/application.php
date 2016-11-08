@@ -1,6 +1,6 @@
 <?php
 if($_SERVER['HTTP_HOST'] == 'makeadiff.in') {
-	$sql_madapp= new Sql($config_data['db_host'], $config_data['db_user'], $config_data['db_password'], "Project_Madapp");
+	$sql_madapp= new Sql($config_data['db_host'], $config_data['db_user'], $config_data['db_password'], "makeadiff_cfrapp");
 } else {
 	$sql_madapp= new Sql("Project_Madapp");
 }

@@ -18,8 +18,13 @@ $mem->addServer("127.0.0.1", 11211);
 $year 			= 2016;
 $cache_expire 	= 60 * 60;
 $top_count 		= 30;
-$db_madapp 		= 'Project_Madapp';
-$db_donut 		= 'Project_Donut';
+if($_SERVER['HTTP_HOST'] == 'makeadiff.in') {
+	$db_madapp 		= 'makeadiff_madapp';
+	$db_donut 		= 'makeadiff_cfrapp';
+} else {
+	$db_madapp 		= 'Project_Madapp';
+	$db_donut 		= 'Project_Donut';
+}
 
 //Ignoring verticals that are not being used anymore
 $all_verticals = $sql_madapp->getById("SELECT id,name FROM Vertical WHERE id NOT IN (1,2,10,11,12,13,14,15) ORDER BY name");
