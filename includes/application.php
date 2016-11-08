@@ -1,4 +1,10 @@
 <?php
+if($_SERVER['HTTP_HOST'] == 'makeadiff.in') {
+	$sql_madapp= new Sql($config_data['db_host'], $config_data['db_user'], $config_data['db_password'], "Project_Madapp");
+} else {
+	$sql_madapp= new Sql("Project_Madapp");
+}
+
 
 $city_transilation = array(
 		// Madapp City ID 		=> Donut City ID
@@ -37,7 +43,7 @@ $state_transilation = array(
 	// Madapp Region ID 		=> Donut State ID
 	'1'	=> '3',
 	'2'	=> '6',
-	'3'		=> '4',
+	'3'	=> '4',
 	'4'	=> '5',
 	'5'	=> '7',
 

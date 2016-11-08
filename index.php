@@ -2,12 +2,6 @@
 require 'common.php';
 include("../donutleaderboard/_city_filter.php");
 
-if($_SERVER['HTTP_HOST'] == 'makeadiff.in') {
-	$sql_madapp= new Sql($config_data['db_host'], $config_data['db_user'], $config_data['db_password'], "makeadiff_madapp");
-} else {
-	$sql_madapp= new Sql("makeadiff_madapp");
-}
-
 $view_level = i($QUERY, 'view_level', 'national');
 $timeframe = intval(i($QUERY, 'timeframe', '0'));
 $view = i($QUERY, 'view', 'top');
