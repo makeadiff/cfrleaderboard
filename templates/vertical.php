@@ -64,7 +64,7 @@
 			<?php } ?>
 		</div> 
 
-		<div class="col s12 m6">
+		<!-- <div class="col s12 m6">
 			<?php if($all_levels['nt']['data']) { ?>
 			<div class="card">
 				<div class="card-image">
@@ -72,7 +72,7 @@
 					<?php showCard('nt'); ?>
 			</div>
 			<?php } ?>
-		</div>
+		</div> -->
 
 			<div class="col s12 m6">
 				<?php if($all_levels['fellow']['data']) { ?>

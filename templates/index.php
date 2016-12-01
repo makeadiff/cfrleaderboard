@@ -253,9 +253,6 @@ foreach ($data as $row) { ?>
 }
 
 
-
-
-
 function showCard($key) {
 	global $all_levels;
 	show($key, $all_levels[$key]['data'], $all_levels[$key]['title']);
