@@ -8,7 +8,7 @@ $view 		= i($QUERY, 'view', 'top');
 $action 	= i($QUERY, 'action', '');
 $vertical_id= i($QUERY, 'vertical_id', 0);
 
-// $QUERY['no_cache'] = 1;
+$QUERY['no_cache'] = 1;
 if($view_level != 'vertical') $vertical_id = 0;
 
 setlocale(LC_MONETARY, 'en_IN');
