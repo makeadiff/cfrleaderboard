@@ -1,5 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE HTML>
+<html>
 <head>
 	<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -22,9 +22,8 @@
 	<div class="navbar-fixed">
 		<nav>
 			<div class="nav-wrapper">
-				 <a href="#" class="brand-logo center-align">&nbsp; &nbsp;#LetMADBreathe</a>
-				 <ul id="nav-mobile" class="right hide-on-med-and-down">
-				 </ul>
+				<a href="#" class="brand-logo center-align">&nbsp; &nbsp; CFR Leaderboard</a>
+				<ul id="nav-mobile" class="right hide-on-med-and-down"></ul>
 			</div>
 		</nav>
 	</div>
@@ -39,8 +38,6 @@
 		showOption("vertical_id", $all_verticals, $vertical_id, 'Vertical');
 		?>
 
-
-
 		<div class="col offset-s4 s8 m3">
 			<br/><br/><br/>
 			<button class="btn waves-effect waves-light" type="submit" name="action">Submit
@@ -53,53 +50,27 @@
 	
 	<div class="row">
 
-
 		<div class="col s12 m6">
 			<?php if($all_levels['vertical']['data']) { ?>
 			<div class="card">
 				<div class="card-image">
-					<img src="images/region.jpg">
-					<?php showCard('vertical'); ?>
+				<img src="images/region.jpg">
+				<?php showCard('vertical'); ?>
 			</div>
 			<?php } ?>
 		</div> 
 
-		<!-- <div class="col s12 m6">
-			<?php if($all_levels['nt']['data']) { ?>
-			<div class="card">
-				<div class="card-image">
-					<img src="images/coach.jpg">
-					<?php showCard('nt'); ?>
-			</div>
-			<?php } ?>
-		</div> -->
-
-			<div class="col s12 m6">
-				<?php if($all_levels['fellow']['data']) { ?>
-				<div class="card">
-					<div class="card-image">
-						<img src="images/person.jpg">
-						<?php showCard('fellow'); ?>
-					</div>
-					<?php } ?>
-
-			</div>
-
-
-
-
-<!--		<div class="col s12 m6">
-			<?php /*if($all_levels['volunteer']['data']) { */?>
+		<div class="col s12 m6">
+			<?php if($all_levels['fellow']['data']) { ?>
 			<div class="card">
 				<div class="card-image">
 					<img src="images/person.jpg">
-					<?php /*showCard('volunteer'); */?>
-			</div>
-			<?php /*} */?>
+					<?php showCard('fellow'); ?>
+				</div>
+			<?php } ?>
 		</div>
--->
-		<?php if($timeframe == 0) { ?>
 
+		<?php if($timeframe == 0) { ?>
 			<div class="col s12 m6" title="Amount : <?php echo money_format("%.0n", $total_donation)?> Target : <?php echo money_format("%.0n", $total_target)?>" >
 				<?php if($all_levels['fellow']['data']) { ?>
 				<div class="card">
@@ -108,17 +79,16 @@
 						<span class="card-title img-title">Children Sponsored <?php echo $all_levels['children_sponsored_title']?></span>
 					</div>
 					<div class="card-content">
-						<p class="children_sponsored"><?php echo number_format(round($total_donation/12000,0,PHP_ROUND_HALF_DOWN)); ?> / <?php echo number_format(round($total_target/12000,0,PHP_ROUND_HALF_DOWN)); ?></p>
+						<p class="children_sponsored"><?php echo number_format(round($total_donation/12000,0,PHP_ROUND_HALF_DOWN)); ?> / 
+						<?php echo number_format(round($total_target/12000,0,PHP_ROUND_HALF_DOWN)); ?></p>
 					</div>
 
 				</div>
-					<?php } ?>
+				<?php } ?>
 			</div>
 		<?php } ?>
 
 	</div>
-
-
 
 <script type="text/javascript">
 	// $(document).ready(function() {

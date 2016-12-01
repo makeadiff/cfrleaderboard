@@ -41,7 +41,8 @@ if($action == 'Save Group') {
 }
 
 if($action == 'Fetch') {
-	$group_name = mysql_escape_string($all_groups[$group_id]['name']);
+	if(isset($all_groups[$group_id]['name'])) $group_name = $sql->escape($all_groups[$group_id]['name']);
+	else $group_name = "Any";
 
 	$all_city_users = $sql_madapp->getById("SELECT U.id,U.name FROM User U 
 				WHERE U.city_id=$madapp_city_id AND U.status='1' AND U.user_type='volunteer'

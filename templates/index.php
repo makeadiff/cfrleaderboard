@@ -1,5 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE HTML>
+<html>
 <head>
 	<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -22,7 +22,7 @@
 	<div class="navbar-fixed">
 		<nav>
 			<div class="nav-wrapper">
-				 <a href="#" class="brand-logo center-align">&nbsp; &nbsp;#LetMADBreathe</a>
+				 <a href="#" class="brand-logo center-align">&nbsp; &nbsp; CFR Leaderboard</a>
 				 <ul id="nav-mobile" class="right hide-on-med-and-down">
 				 </ul>
 			</div>
@@ -41,8 +41,6 @@
 		showOption("group_id", array(), $group_id, 'Center');
 		// showOption("coach_id", array(), $coach_id, 'Coach');
 		?>
-
-
 
 		<div class="col offset-s4 s8 m3">
 			<br/><br/><br/>
@@ -67,17 +65,6 @@
 		<?php } ?>
 
 		<div class="col s12 m6">
-			<?php if($all_levels['region']['data']) { ?>
-			<div class="card">
-				<div class="card-image">
-					<img src="images/region.jpg">
-					<?php showCard('region'); ?>
-			</div>
-			<?php } ?>
-		</div>
-
-
-				<div class="col s12 m6">
 			<?php if($all_levels['city']['data']) { ?>
 			<div class="card">
 				<div class="card-image">

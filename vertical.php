@@ -93,10 +93,10 @@ if(i($QUERY,'no_cache')) {
 	$total_donation = $mem->get("Infogen:index/total_donation#$timeframe,$view_level,$vertical_id");
 	$total_count = $mem->get("Infogen:index/total_count#$timeframe,$view_level,$vertical_id");
 }
+$total_target = 4000 * 12000;
 
-if(!$total_donation or !$total_count){
+if(!$total_donation or !$total_count) {
 	if ($view_level == 'national') {
-
 		$data = getFromBothTables("%amount%", "users
 					INNER JOIN reports_tos RT ON RT.user_id=users.id
 					INNER JOIN users AS manager ON RT.manager_id=manager.id
@@ -118,9 +118,7 @@ if(!$total_donation or !$total_count){
 						AND (G.type =  'national' OR G.type =  'strat' OR G.type =  'fellow')
 					GROUP BY G.type");
 
-
 	} elseif($view_level == 'vertical') {
-
 		$data = getFromBothTables("%amount%", "users
 					INNER JOIN reports_tos RT ON RT.user_id=users.id
 					INNER JOIN users AS manager ON RT.manager_id=manager.id
@@ -186,7 +184,6 @@ function getData($key, $get_user_count = false) {
 					INNER JOIN `$db_madapp`.Vertical V on V.id = G.vertical_id
 					%donation_table%", "users.id","AND (G.type ='national' OR G.type = 'strat') AND V.id != 6 AND R.id=9 AND UG.year = $year");
 
-
 	} elseif($key == 'fellow') {
 		$data = getFromBothTables("users.id,CONCAT(users.first_name, ' ', users.last_name) AS name, %amount%", "
 					users
@@ -199,9 +196,7 @@ function getData($key, $get_user_count = false) {
 					INNER JOIN `$db_madapp`.Vertical V on V.id = G.vertical_id
 					%donation_table%", "users.id","AND (G.type = 'fellow')AND V.id != 6 AND R.id=9 AND UG.year = $year");
 
-
 	} elseif($key == 'coach') {
-
 		$data = getFromBothTables("manager.id,CONCAT(manager.first_name, ' ', manager.last_name) AS name, %amount%", "
 					users
 					INNER JOIN reports_tos RT ON RT.user_id=users.id
@@ -213,10 +208,7 @@ function getData($key, $get_user_count = false) {
 					INNER JOIN `$db_madapp`.Vertical V on V.id = G.vertical_id
 					%donation_table%", "manager.id","AND (G.type = 'fellow') AND R.id=9 AND UG.year = $year");
 
-
-
 	} elseif($key == 'volunteer') {
-
 		$data = getFromBothTables("users.id,CONCAT(users.first_name, ' ', users.last_name) AS name, %amount%", "
 					users
 					INNER JOIN reports_tos RT ON RT.user_id=users.id

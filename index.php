@@ -274,8 +274,7 @@ function getData($key, $get_user_count = false) {
 	}elseif($key == 'city') {
 		$data = getFromBothTables("C.id,C.name, %amount%", "cities C
 					INNER JOIN users ON city_id=C.id
-					%donation_table%", "C.id");
-
+					%donation_table%", "C.id", 'AND C.id != 25'); // 25 is national team
 
 		//To get the number of users who have donated above Rs. 12,000
 		$user_data = getFromBothTables("users.id,%amount%, C.id as city_id", "cities C
@@ -311,7 +310,7 @@ function getData($key, $get_user_count = false) {
 					INNER JOIN roles R ON R.id=RM.role_id
 					INNER JOIN groups G ON G.id=manager.group_id
 					INNER JOIN cities C ON C.id=users.city_id
-					%donation_table%", "G.id", "AND R.id=9");
+					%donation_table%", "G.id", "AND R.id=9 AND G.name != 'Events'");
 
 		$user_data = getFromBothTables("users.id, %amount%, G.id as group_id", "users
 					INNER JOIN reports_tos RT ON RT.user_id=users.id
@@ -320,7 +319,7 @@ function getData($key, $get_user_count = false) {
 					INNER JOIN roles R ON R.id=RM.role_id
 					INNER JOIN groups G ON G.id=manager.group_id
 					INNER JOIN cities C ON C.id=users.city_id
-					%donation_table%", "G.id", "AND R.id=9",false);
+					%donation_table%", "G.id", "AND R.id=9 AND G.name != 'Events'",false);
 
 		foreach($data as $key => $row) {
 			$data[$key]['user_count_12k'] = 0;
@@ -331,8 +330,6 @@ function getData($key, $get_user_count = false) {
 				$data[$row['group_id']]['user_count_12k'] ++;
 			}
 		}
-
-
 
 		$user_count_data = $sql->getById("SELECT G.id, COUNT(users.id) AS count
 			FROM users
@@ -348,9 +345,6 @@ function getData($key, $get_user_count = false) {
 		foreach ($data as $key => $row) {
 			$data[$key]['user_count'] = $user_count_data[$row['id']];
 		}
-
-
-
 
 	} elseif($key == 'coach') {
 		$data = getFromBothTables("manager.id,CONCAT(manager.first_name, ' ', manager.last_name) AS name, %amount%", "users
