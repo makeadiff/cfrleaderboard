@@ -302,39 +302,6 @@ function getData($key, $get_user_count = false) {
 
 
 	} elseif($key == 'group') {
-		/*
-		 * Get a list of all centers in Madapp with amount raised by all volunteers in it - data from donut...
-		 *   [12] => Array
-		        (
-		            [id] => 12
-		            [name] => Sacred Hearts
-		            [amount] => 25900
-		            [user_count_12k] => 1
-		        )
-
-		    [60] => Array
-		        (
-		            [id] => 60
-		            [name] => Sevashram Trust
-		            [amount] => 21000
-		            [user_count_12k] => 1
-		        )
-		 *
-		 * Get a list of all users with the amount they raised - along with the ID of the center/vertical they belong to.
-		 *  [14422] => Array
-		        (
-		            [id] => 14422
-		            [amount] => 25900
-		            [group_id] => 12
-		        )
-		 *
-		 * List of centers with number of people in it...
-		 * 		[1] => 1
-			    [3] => 22
-			    [5] => 36
-			    [10] => 11
-		 */
-		// 
 
 		$data = getFromBothTables("G.id,G.name, %amount%", "users
 					INNER JOIN reports_tos RT ON RT.user_id=users.id
@@ -374,10 +341,6 @@ function getData($key, $get_user_count = false) {
 			INNER JOIN cities C ON C.id=users.city_id
 			WHERE R.id=9 AND " . implode(" AND ", $user_checks)
 			. " GROUP BY G.id");
-
-		dump($data, $user_data, $user_count_data);
-		exit;
-
 
 		foreach ($data as $key => $row) {
 			$data[$key]['user_count'] = $user_count_data[$row['id']];
