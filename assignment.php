@@ -19,6 +19,8 @@ $action = i($QUERY, 'action', '');
 $year = 2015;
 $group_name = '';
 $madapp_users_in_current_group = array();
+$all_city_users = array();
+$donut_users_in_current_group = array();
 
 // if(!$city_id) die("No city specified");
 
