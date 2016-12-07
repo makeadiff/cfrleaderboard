@@ -27,7 +27,8 @@ if($_SERVER['HTTP_HOST'] == 'makeadiff.in') {
 }
 
 //Ignoring verticals that are not being used anymore
-$all_verticals = $sql_madapp->getById("SELECT id,name FROM Vertical WHERE id NOT IN (1,6,10,11,12,13,14,15) ORDER BY name");
+$verticals_to_hide = array(6,10,11,12,13,14,15,16);
+$all_verticals = $sql_madapp->getById("SELECT id,name FROM Vertical WHERE id NOT IN ( " . implode(",", $verticals_to_hide) . ") ORDER BY name");
 
 $all_view_levels = array('national' => "National", 'vertical' => "Vertical"); // , 'coach' => "Coach"
 $all_timeframes = array('1' => 'Day', '7' => 'Week', '0' => 'Overall');
@@ -59,6 +60,7 @@ foreach ($all_levels as $key => $level_info) {
 	if(in_array($view_level, $level_info['show_in'])) {
 		$name = ucfirst($key);
 		if($name == 'Nt') $name = 'National Team';
+		if($name == 'Fellow') $name = 'Fundraiser';
 
 		$title = 'Top ' . $name;
 
@@ -150,7 +152,7 @@ if(!$total_donation or !$total_count) {
 }
 
 function getData($key, $get_user_count = false) {
-	global $timeframe,$view_level,$vertical_id, $mem, $QUERY, $cache_expire, $checks, $sql, $user_checks, $year, $db_madapp;
+	global $timeframe,$view_level,$vertical_id, $mem, $QUERY, $cache_expire, $checks, $sql, $user_checks, $year, $db_madapp, $verticals_to_hide;
 
 	if(i($QUERY,'no_cache')) {
 		$data = array();
@@ -167,7 +169,7 @@ function getData($key, $get_user_count = false) {
 						INNER JOIN `$db_madapp`.Vertical V ON V.id = G.vertical_id
 						WHERE U.status = 1 AND U.user_type = 'volunteer' AND UG.year = $year 
 							AND (G.type = 'national' OR G.type = 'strat' OR G.type = 'fellow') 
-							AND V.id != 6
+							AND V.id NOT IN (" . implode(",", $verticals_to_hide) . ")
 						GROUP BY U.id,V.id) IQ
 					ON IQ.uid = users.madapp_user_id
 					%donation_table%", "IQ.vid");
@@ -194,7 +196,7 @@ function getData($key, $get_user_count = false) {
 					INNER JOIN `$db_madapp`.UserGroup UG ON UG.user_id = users.madapp_user_id
 					INNER JOIN `$db_madapp`.Group G on G.id = UG.group_id
 					INNER JOIN `$db_madapp`.Vertical V on V.id = G.vertical_id
-					%donation_table%", "users.id","AND (G.type = 'fellow')AND V.id != 6 AND R.id=9 AND UG.year = $year");
+					%donation_table%", "users.id"," AND V.id != 6 AND R.id=9 AND UG.year = $year");
 
 	} elseif($key == 'coach') {
 		$data = getFromBothTables("manager.id,CONCAT(manager.first_name, ' ', manager.last_name) AS name, %amount%", "
