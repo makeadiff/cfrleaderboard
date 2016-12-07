@@ -1,11 +1,6 @@
 <?php
 require 'common.php';
 
-if($config['server_host'] != 'cli') die("Should be run as a command.");
-
-// DB change
-// ALTER TABLE `groups` ADD `type` ENUM('center','vertical','other') NOT NULL DEFAULT 'center' AFTER `city_id`, ADD `madapp_id` INT(11) UNSIGNED NOT NULL AFTER `type`; 
-// 
 $year = 2016;
 
 if(isset($_SERVER['HTTP_HOST']) and $_SERVER['HTTP_HOST'] == 'makeadiff.in') {
