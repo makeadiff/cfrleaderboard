@@ -82,7 +82,6 @@
 						<?php showCard('group'); ?>
 					</div>
 					<?php } ?>
-
 			</div>
 
 
@@ -126,14 +125,14 @@
 
 	</div>
 
-	<?php if($total_donation and $timeframe == 0) { ?>
+	<?php /* if($total_donation and $timeframe == 0) { ?>
 	<div class="row">
 		<div class="col s12 m12">
 			<div class="card">
 				<div class="card-content imagebox">
 					<div class="image_container">
 						<div class="popup">
-							<div class="container_fill" style="height:<?php echo $percentage_done ?>%; top:<?php echo 100 - $percentage_done ?>%"> <!-- Change the percentage Values here. -->
+							<div class="container_fill" style="height:<?php echo $percentage_done ?>%; top:<?php echo 100 - $percentage_done ?>%">
 							</div>
 							<img src="images/oxycyl.png" id="image_over" alt="Cylinder" >
 							<p id="cylinder-info" title="Target: <?php echo money_format("%.0n", $target_amount) ?>. Raised So Far : <?php echo money_format("%.0n", $total_donation) ?>. Total Volunteers : <?php echo number_format($total_user_count)?>"><?php echo $ecs_count_remaining ?> <br/>ECS<br>to target.</p>
@@ -176,7 +175,7 @@
 			</div>
 		</div>
 	</div>
-	<?php } ?>
+	<?php } */ ?>
 
 <script type="text/javascript">
 	// $(document).ready(function() {
@@ -232,7 +231,7 @@ foreach ($data as $row) { ?>
 } ?>	
 
 </table><br />
-<p class="activator" id="activator0"><a id='show-more-<?php echo $key ?>' class='toggle-link'> <i class="tiny material-icons">add</i>See More</a></p>
+<p class="activator"><a id='show-more-<?php echo $key ?>' class='toggle-link'> <i class="tiny material-icons">add</i>See More</a></p>
 
 </div>
 

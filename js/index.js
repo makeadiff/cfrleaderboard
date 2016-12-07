@@ -5,7 +5,7 @@ function init() {
 	var show_more_count = [];
 	show_more_count['region'] = 3;
 	show_more_count['city'] = 3;
-	show_more_count['center'] = 3;
+	show_more_count['group'] = 3;
 	show_more_count['coach'] = 3;
 	show_more_count['user'] = 3;
 
@@ -27,6 +27,7 @@ function showMore(event) {
 		show_more_count[key] = 3;
 		link.html(' <i class="tiny material-icons">add</i>See More');
 	} else {
+		console.log("#top-" + key + " .hide-row:lt(" + show_more_count[key] + ")");
 		$("#top-" + key + " .hide-row:lt(" + show_more_count[key] + ")").show('fade');
 		show_more_count[key] += 9;
 	}

@@ -303,14 +303,14 @@ function getData($key, $get_user_count = false) {
 
 	} elseif($key == 'group') {
 
-		$data = getFromBothTables("G.id,G.name, %amount%", "users
+		$data = getFromBothTables("G.id,CONCAT(G.name, ' (', C.name, ')') AS name, %amount%", "users
 					INNER JOIN reports_tos RT ON RT.user_id=users.id
 					INNER JOIN users manager ON manager.id=RT.manager_id
 					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
 					INNER JOIN roles R ON R.id=RM.role_id
 					INNER JOIN groups G ON G.id=manager.group_id
 					INNER JOIN cities C ON C.id=users.city_id
-					%donation_table%", "G.id", "AND R.id=9 AND G.name != 'Events'");
+					%donation_table%", "G.id", "AND R.id=9 AND G.type='center'");
 
 		$user_data = getFromBothTables("users.id, %amount%, G.id as group_id", "users
 					INNER JOIN reports_tos RT ON RT.user_id=users.id
