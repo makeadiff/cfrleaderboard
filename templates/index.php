@@ -220,8 +220,8 @@ $count = 1;
 foreach ($data as $row) { ?>
 <tr class="<?php if($count <= 3) echo 'show-row'; else echo 'hide-row'; ?>">
 	<td width="5%"><?php if($count <= 3){ echo '<img src="./images/'.$count.'.png" height="15px" />'; } else echo ' '; ?></td>
-	<td width="60%" class="unit-name"><?php echo $count . '.  ' . $row['name'] ?></td>
-	<td width="25%"><?php echo money_format("%.0n", $row['amount']) ?></td>
+	<td width="60%" class="unit-name" name="<?php echo $key ?>-name"><?php echo $count . '.  ' . $row['name'] ?></td>
+	<td width="25%" name="<?php echo $key ?>-raised"><?php echo money_format("%.0n", $row['amount']) ?></td>
 	<?php if($key!='user') {
 		echo "<td width='10%'>" . number_format(round((($row['user_count_12k']/$row['user_count']) * 100),0,PHP_ROUND_HALF_DOWN)) . "%</td>";
 	}?>
