@@ -6,8 +6,8 @@ if($_SERVER['HTTP_HOST'] == 'makeadiff.in') {
 	$sql_donut = new Sql($config_data['db_host'], $config_data['db_user'], $config_data['db_password'], "makeadiff_cfrapp");
 	$sql_madapp= new Sql($config_data['db_host'], $config_data['db_user'], $config_data['db_password'], "makeadiff_madapp");
 } else {
-	$sql_donut = new Sql("Project_Donut");
-	$sql_madapp= new Sql("Project_Madapp");
+	$sql_donut = new Sql("makeadiff_cfrapp");
+	$sql_madapp= new Sql("makeadiff_madapp");
 }
 
 // Argument Parsing.
