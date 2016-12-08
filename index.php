@@ -66,8 +66,7 @@ foreach ($all_levels as $key => $level_info) {
 			$group_name = $sql->getOne("SELECT name FROM groups WHERE id=$group_id");
 			$children_sponsored_title = " by " . $group_name;
 			$children_count = $sql_madapp->getOne("SELECT COUNT(*) FROM Student
-											INNER JOIN Center
-											ON Center.id = Student.center_id
+											INNER JOIN Center ON Center.id = Student.center_id
 											WHERE Student.status = 1 AND Center.name = '$group_name'");
 		} elseif($city_id) {
 			$city_name = $sql->getOne("SELECT name FROM cities WHERE id=$city_id");
@@ -75,10 +74,8 @@ foreach ($all_levels as $key => $level_info) {
 			$children_sponsored_title = " by " . $city_name;
 			$madapp_city_id = city_transilation_donut_to_madapp($city_id);
 			$children_count = $sql_madapp->getOne("SELECT COUNT(*) FROM Student
-											INNER JOIN Center
-											ON Center.id = Student.center_id
-											INNER JOIN City
-											ON City.id = Center.city_id
+											INNER JOIN Center ON Center.id = Student.center_id
+											INNER JOIN City ON City.id = Center.city_id
 											WHERE Student.status = 1 AND Center.status = 1 AND City.id = $madapp_city_id");
 		} elseif($state_id) {
 			$state_name = $sql->getOne("SELECT name FROM states WHERE id=$state_id");
@@ -86,12 +83,9 @@ foreach ($all_levels as $key => $level_info) {
 			$children_sponsored_title = " by " . $state_name;
 			$madapp_region_id = state_transilation_donut_to_madapp($state_id);
 			$children_count = $sql_madapp->getOne("SELECT COUNT(*) FROM Student
-											INNER JOIN Center
-											ON Center.id = Student.center_id
-											INNER JOIN City
-											ON City.id = Center.city_id
-											INNER JOIN Region
-											ON Region.id = City.region_id
+											INNER JOIN Center ON Center.id = Student.center_id
+											INNER JOIN City ON City.id = Center.city_id
+											INNER JOIN Region ON Region.id = City.region_id
 											WHERE Student.status = 1 AND Center.status = 1 AND Region.id = $madapp_region_id");
 		}else {
 			$children_sponsored_title = "Nationally";
@@ -179,18 +173,18 @@ if(!$total_user_count or !$total_donation) {
 	} elseif($view_level == 'group') {
 		$total_user_count = $sql->getOne("SELECT COUNT(users.id) AS count 
 			FROM users 
-			INNER JOIN reports_tos RT ON RT.user_id=users.id
+			LEFT JOIN reports_tos RT ON RT.user_id=users.id
 			INNER JOIN users manager ON manager.id=RT.manager_id
 			WHERE " . implode(" AND ", $user_checks));
 		$total_donation = $sql->getOne("SELECT SUM(D.donation_amount) AS sum
 			FROM users 
-			INNER JOIN reports_tos RT ON RT.user_id=users.id
+			LEFT JOIN reports_tos RT ON RT.user_id=users.id
 			INNER JOIN users manager ON manager.id=RT.manager_id
 			INNER JOIN donations D ON D.fundraiser_id=users.id
 			$filter");
 		$total_donation += $sql->getOne("SELECT SUM(D.amount) AS sum
 			FROM users 
-			INNER JOIN reports_tos RT ON RT.user_id=users.id
+			LEFT JOIN reports_tos RT ON RT.user_id=users.id
 			INNER JOIN users manager ON manager.id=RT.manager_id
 			INNER JOIN external_donations D ON D.fundraiser_id=users.id
 			$filter");
@@ -304,7 +298,7 @@ function getData($key, $get_user_count = false) {
 	} elseif($key == 'group') {
 
 		$data = getFromBothTables("G.id,CONCAT(G.name, ' (', C.name, ')') AS name, %amount%", "users
-					INNER JOIN reports_tos RT ON RT.user_id=users.id
+					LEFT JOIN reports_tos RT ON RT.user_id=users.id
 					INNER JOIN users manager ON manager.id=RT.manager_id
 					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
 					INNER JOIN roles R ON R.id=RM.role_id
@@ -313,7 +307,7 @@ function getData($key, $get_user_count = false) {
 					%donation_table%", "G.id", "AND R.id=9 AND G.type='center'");
 
 		$user_data = getFromBothTables("users.id, %amount%, G.id as group_id", "users
-					INNER JOIN reports_tos RT ON RT.user_id=users.id
+					LEFT JOIN reports_tos RT ON RT.user_id=users.id
 					INNER JOIN users manager ON manager.id=RT.manager_id
 					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
 					INNER JOIN roles R ON R.id=RM.role_id
@@ -333,7 +327,7 @@ function getData($key, $get_user_count = false) {
 
 		$user_count_data = $sql->getById("SELECT G.id, COUNT(users.id) AS count
 			FROM users
-			INNER JOIN reports_tos RT ON RT.user_id=users.id
+			LEFT JOIN reports_tos RT ON RT.user_id=users.id
 			INNER JOIN users manager ON manager.id=RT.manager_id
 			INNER JOIN user_role_maps RM ON RM.user_id=manager.id
 			INNER JOIN roles R ON R.id=RM.role_id
@@ -349,7 +343,7 @@ function getData($key, $get_user_count = false) {
 	} elseif($key == 'coach') {
 		$data = getFromBothTables("manager.id,CONCAT(manager.first_name, ' ', manager.last_name) AS name, %amount%", "users
 					%donation_table%
-					INNER JOIN reports_tos RT ON RT.user_id=users.id 
+					LEFT JOIN reports_tos RT ON RT.user_id=users.id 
 					INNER JOIN users AS manager ON RT.manager_id=manager.id
 					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
 					INNER JOIN roles R ON R.id=RM.role_id
@@ -357,7 +351,7 @@ function getData($key, $get_user_count = false) {
 
 		$user_data = getFromBothTables("users.id, %amount%, manager.id as manager_id", "users
 					%donation_table%
-					INNER JOIN reports_tos RT ON RT.user_id=users.id
+					LEFT JOIN reports_tos RT ON RT.user_id=users.id
 					INNER JOIN users AS manager ON RT.manager_id=manager.id
 					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
 					INNER JOIN roles R ON R.id=RM.role_id
@@ -375,7 +369,7 @@ function getData($key, $get_user_count = false) {
 
 		$user_count_data = $sql->getById("SELECT manager.id, COUNT(users.id) AS count
 			FROM users
-			INNER JOIN reports_tos RT ON RT.user_id=users.id
+			LEFT JOIN reports_tos RT ON RT.user_id=users.id
 			INNER JOIN users manager ON manager.id=RT.manager_id
 			INNER JOIN user_role_maps RM ON RM.user_id=manager.id
 			INNER JOIN roles R ON R.id=RM.role_id
@@ -390,12 +384,11 @@ function getData($key, $get_user_count = false) {
 	} elseif($key == 'user') {
 		$data = getFromBothTables("users.id,CONCAT(users.first_name, ' ', users.last_name) AS name, %amount%", "users 
 					INNER JOIN cities C ON users.city_id=C.id
-					INNER JOIN reports_tos RT ON RT.user_id=users.id 
+					LEFT JOIN reports_tos RT ON RT.user_id=users.id 
 					INNER JOIN users AS manager ON RT.manager_id=manager.id
 					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
 					INNER JOIN roles R ON R.id=RM.role_id
 					%donation_table%", "users.id", "AND R.id=9");
-
 	}
 
 	$mem->set("Infogen:index/data#$timeframe,$view_level,$state_id,$city_id,$group_id,$key", $data, $cache_expire);
@@ -438,8 +431,6 @@ function getFromBothTables($select, $tables, $group_by, $where = '',$set_order_a
 	} else {
 		return $data;
 	}
-
-
 }
 
 $html = new HTML;

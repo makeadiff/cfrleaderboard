@@ -100,7 +100,7 @@ $total_target = 4000 * 12000;
 if(!$total_donation or !$total_count) {
 	if ($view_level == 'national') {
 		$data = getFromBothTables("%amount%", "users
-					INNER JOIN reports_tos RT ON RT.user_id=users.id
+					LEFT JOIN reports_tos RT ON RT.user_id=users.id
 					INNER JOIN users AS manager ON RT.manager_id=manager.id
 					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
 					INNER JOIN roles R ON R.id=RM.role_id
@@ -122,7 +122,7 @@ if(!$total_donation or !$total_count) {
 
 	} elseif($view_level == 'vertical') {
 		$data = getFromBothTables("%amount%", "users
-					INNER JOIN reports_tos RT ON RT.user_id=users.id
+					LEFT JOIN reports_tos RT ON RT.user_id=users.id
 					INNER JOIN users AS manager ON RT.manager_id=manager.id
 					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
 					INNER JOIN roles R ON R.id=RM.role_id
@@ -177,7 +177,7 @@ function getData($key, $get_user_count = false) {
 	} elseif($key == 'nt') {
 		$data = getFromBothTables("users.id,CONCAT(users.first_name, ' ', users.last_name) AS name, %amount%", "
 					users
-					INNER JOIN reports_tos RT ON RT.user_id=users.id
+					LEFT JOIN reports_tos RT ON RT.user_id=users.id
 					INNER JOIN users AS manager ON RT.manager_id=manager.id
 					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
 					INNER JOIN roles R ON R.id=RM.role_id
@@ -189,7 +189,7 @@ function getData($key, $get_user_count = false) {
 	} elseif($key == 'fellow') {
 		$data = getFromBothTables("users.id,CONCAT(users.first_name, ' ', users.last_name) AS name, %amount%", "
 					users
-					INNER JOIN reports_tos RT ON RT.user_id=users.id
+					LEFT JOIN reports_tos RT ON RT.user_id=users.id
 					INNER JOIN users AS manager ON RT.manager_id=manager.id
 					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
 					INNER JOIN roles R ON R.id=RM.role_id
@@ -201,7 +201,7 @@ function getData($key, $get_user_count = false) {
 	} elseif($key == 'coach') {
 		$data = getFromBothTables("manager.id,CONCAT(manager.first_name, ' ', manager.last_name) AS name, %amount%", "
 					users
-					INNER JOIN reports_tos RT ON RT.user_id=users.id
+					LEFT JOIN reports_tos RT ON RT.user_id=users.id
 					INNER JOIN users AS manager ON RT.manager_id=manager.id
 					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
 					INNER JOIN roles R ON R.id=RM.role_id
@@ -213,7 +213,7 @@ function getData($key, $get_user_count = false) {
 	} elseif($key == 'volunteer') {
 		$data = getFromBothTables("users.id,CONCAT(users.first_name, ' ', users.last_name) AS name, %amount%", "
 					users
-					INNER JOIN reports_tos RT ON RT.user_id=users.id
+					LEFT JOIN reports_tos RT ON RT.user_id=users.id
 					INNER JOIN users AS manager ON RT.manager_id=manager.id
 					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
 					INNER JOIN roles R ON R.id=RM.role_id
