@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="79a4bab7-aa78-40b9-bd8d-848cd30a44f3" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scrap_data_for_fraise_dashboard.php" afterPath="$PROJECT_DIR$/scrap_data_for_fraise_dashboard.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="cfrleaderboard.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -84,11 +83,9 @@
       <file leaf-file-name="scrap_data_for_fraise_dashboard.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/scrap_data_for_fraise_dashboard.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.57591623">
-              <caret line="22" column="17" selection-start-line="22" selection-start-column="17" selection-end-line="22" selection-end-column="17" />
-              <folding>
-                <element signature="e#6#120#0#PHP" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="0.18324608">
+              <caret line="7" column="51" selection-start-line="7" selection-start-column="51" selection-end-line="7" selection-end-column="51" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -901,11 +898,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/scrap_data_for_fraise_dashboard.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.57591623">
-          <caret line="22" column="17" selection-start-line="22" selection-start-column="17" selection-end-line="22" selection-end-column="17" />
-          <folding>
-            <element signature="e#6#120#0#PHP" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="0.18324608">
+          <caret line="7" column="51" selection-start-line="7" selection-start-column="51" selection-end-line="7" selection-end-column="51" />
+          <folding />
         </state>
       </provider>
     </entry>
