@@ -125,58 +125,6 @@
 
 	</div>
 
-	<?php /* if($total_donation and $timeframe == 0) { ?>
-	<div class="row">
-		<div class="col s12 m12">
-			<div class="card">
-				<div class="card-content imagebox">
-					<div class="image_container">
-						<div class="popup">
-							<div class="container_fill" style="height:<?php echo $percentage_done ?>%; top:<?php echo 100 - $percentage_done ?>%">
-							</div>
-							<img src="images/oxycyl.png" id="image_over" alt="Cylinder" >
-							<p id="cylinder-info" title="Target: <?php echo money_format("%.0n", $target_amount) ?>. Raised So Far : <?php echo money_format("%.0n", $total_donation) ?>. Total Volunteers : <?php echo number_format($total_user_count)?>"><?php echo $ecs_count_remaining ?> <br/>ECS<br>to target.</p>
-							<?php if($oxygen_card_data) { ?>
-							<div id="table_data">
-								<table>
-									<thead>
-										<tr>
-										<th>Center</th>
-										<th>Current Status</th>
-										</tr>
-									</thead>
-									<?php foreach ($oxygen_card_data as $row) {
-										$unit_target_amount = (($row['user_count'] * 70 / 100) * 12000) + (floor($row['user_count'] * 5 / 100) * 100000);
-										$unit_remaining_amount = $unit_target_amount - $row['amount'];
-										$unit_percentage_done = 0;
-										if($unit_target_amount) $unit_percentage_done = round($row['amount'] / $unit_target_amount * 100, 2);
-										$unit_ecs_count_remaining = ceil($unit_remaining_amount / 6000);
-
-										?>
-									<tr>
-										<td><?php echo $row['name'] ?></td>
-										<td>
-											<div class="histo-container" title="Target: <?php echo $unit_target_amount ?>. Raised So Far : <?php echo $row['amount'] ?>. Total Volunteers : <?php echo $row['user_count'] ?>">
-												<p>&nbsp; &nbsp; &nbsp;<?php echo $unit_ecs_count_remaining ?> ECS to target.</p>
-												<div class="histogram" style="width:<?php echo $unit_percentage_done ?>%; float:left;">
-												
-												</div>        
-											</div>
-										</td>
-									</tr>
-										
-									<?php } ?>
-								</table>
-							</div>
-							<?php } ?>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<?php } */ ?>
-
 <script type="text/javascript">
 	// $(document).ready(function() {
 	// 	$('select').material_select();
@@ -210,6 +158,9 @@ function show($key, $data, $title) {
 		<th width="45%">Amount Raised</th>
 		<?php if($key!='user') {
 			echo "<th width='25%'>12k</th>";
+		}
+		if($key=='city') {
+			echo "<th width='25%'>Target</th>";
 		}?>
 
 		</tr>
@@ -217,14 +168,25 @@ function show($key, $data, $title) {
 	<tr><td colspan="2">&nbsp;</td></tr>
 <?php 
 $count = 1;
-foreach ($data as $row) { ?>
+foreach ($data as $row) { 
+	if(!isset($row['name'])) continue; ?>
 <tr class="<?php if($count <= 3) echo 'show-row'; else echo 'hide-row'; ?>">
 	<td width="5%"><?php if($count <= 3){ echo '<img src="./images/'.$count.'.png" height="15px" />'; } else echo ' '; ?></td>
 	<td width="60%" class="unit-name" name="<?php echo $key ?>-name"><?php echo $count . '.  ' . $row['name'] ?></td>
 	<td width="25%" name="<?php echo $key ?>-raised"><?php echo money_format("%.0n", $row['amount']) ?></td>
 	<?php if($key!='user') {
-		echo "<td width='10%'>" . number_format(round((($row['user_count_12k']/$row['user_count']) * 100),0,PHP_ROUND_HALF_DOWN)) . "%</td>";
-	}?>
+		echo "<td width='10%'>";
+		if(!isset($row['user_count_12k']) or $row['user_count'] == 0) echo "0";
+		else echo number_format(round((($row['user_count_12k']/$row['user_count']) * 100),0,PHP_ROUND_HALF_DOWN)) . "%";
+		echo "</td>";
+	} 
+	if($key == 'city') {
+		echo "<td width='10%'>";
+		if(!isset($row['target_percentage']) or $row['user_count'] == 0) echo "0";
+		else echo $row['target_percentage'] . "%";
+		echo "</td>";	
+	}
+	?>
 </tr>
 <?php 
 	$count++;

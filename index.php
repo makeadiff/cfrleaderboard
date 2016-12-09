@@ -52,6 +52,28 @@ $all_levels['group']['show_in']		= array('national', 'region', 'city');
 $all_levels['coach']['show_in']		= array('national', 'region', 'city', 'group');
 $all_levels['user']['show_in']		= array('national', 'region', 'city', 'group', 'coach');
 
+// Get the totals for the city card.
+$total_user_count = 0;
+$total_donation = 0;
+if(!$total_user_count or !$total_donation) {
+	if($view_level == 'national') {
+		$total_user_count = $sql->getOne("SELECT COUNT(users.id) AS count 
+			FROM users 
+			INNER JOIN cities C ON C.id=users.city_id
+			WHERE " . implode(" AND ", $user_checks));
+		$total_donation = $sql->getOne("SELECT SUM(D.donation_amount) AS sum
+			FROM users 
+			INNER JOIN cities C ON C.id=users.city_id
+			INNER JOIN donations D ON D.fundraiser_id=users.id
+			$filter");
+		$total_donation += $sql->getOne("SELECT SUM(D.amount) AS sum
+			FROM users 
+			INNER JOIN cities C ON C.id=users.city_id
+			INNER JOIN external_donations D ON D.fundraiser_id=users.id
+			$filter");
+	}
+}
+
 foreach ($all_levels as $key => $level_info) {
 	if(in_array($view_level, $level_info['show_in'])) {
 		$name = ucfirst($key);
@@ -116,89 +138,6 @@ $next_view_level = i($level_hirarchy, $key_pos + 1, 0);
 $oxygen_card_data = array();
 if($next_view_level) $oxygen_card_data = getData($next_view_level, true);
 
-//Get data for the Oxygen graphic
-if(i($QUERY,'no_cache')) {
-	$total_user_count = 0;
-	$total_donation = 0;
-} else {
-	$total_user_count = $mem->get("Infogen:index/total_user_count#$timeframe,$view_level,$state_id,$city_id,$group_id");
-	$total_donation = $mem->get("Infogen:index/total_donation#$timeframe,$view_level,$state_id,$city_id,$group_id");
-}
-if(!$total_user_count or !$total_donation) {
-	if($view_level == 'national') {
-		$total_user_count = $sql->getOne("SELECT COUNT(users.id) AS count 
-			FROM users 
-			INNER JOIN cities C ON C.id=users.city_id
-			WHERE " . implode(" AND ", $user_checks));
-		$total_donation = $sql->getOne("SELECT SUM(D.donation_amount) AS sum
-			FROM users 
-			INNER JOIN cities C ON C.id=users.city_id
-			INNER JOIN donations D ON D.fundraiser_id=users.id
-			$filter");
-		$total_donation += $sql->getOne("SELECT SUM(D.amount) AS sum
-			FROM users 
-			INNER JOIN cities C ON C.id=users.city_id
-			INNER JOIN external_donations D ON D.fundraiser_id=users.id
-			$filter");
-
-	} elseif($view_level == 'region') {
-		$total_user_count = $sql->getOne("SELECT COUNT(users.id) AS count 
-			FROM users 
-			INNER JOIN cities C ON C.id=users.city_id
-			WHERE " . implode(" AND ", $user_checks));
-		$total_donation = $sql->getOne("SELECT SUM(D.donation_amount) AS sum
-			FROM users 
-			INNER JOIN cities C ON C.id=users.city_id
-			INNER JOIN donations D ON D.fundraiser_id=users.id
-			$filter");
-		$total_donation += $sql->getOne("SELECT SUM(D.amount) AS sum
-			FROM users 
-			INNER JOIN cities C ON C.id=users.city_id
-			INNER JOIN external_donations D ON D.fundraiser_id=users.id
-			$filter");
-
-	} elseif($view_level == 'city') {
-		$total_user_count = $sql->getOne("SELECT COUNT(users.id) AS count 
-			FROM users 
-			WHERE " . implode(" AND ", $user_checks));
-		$total_donation = $sql->getOne("SELECT SUM(D.donation_amount) AS sum
-			FROM users 
-			INNER JOIN donations D ON D.fundraiser_id=users.id
-			$filter");
-		$total_donation += $sql->getOne("SELECT SUM(D.amount) AS sum
-			FROM users 
-			INNER JOIN external_donations D ON D.fundraiser_id=users.id
-			$filter");
-
-	} elseif($view_level == 'group') {
-		$total_user_count = $sql->getOne("SELECT COUNT(users.id) AS count 
-			FROM users 
-			LEFT JOIN reports_tos RT ON RT.user_id=users.id
-			INNER JOIN users manager ON manager.id=RT.manager_id
-			WHERE " . implode(" AND ", $user_checks));
-		$total_donation = $sql->getOne("SELECT SUM(D.donation_amount) AS sum
-			FROM users 
-			LEFT JOIN reports_tos RT ON RT.user_id=users.id
-			INNER JOIN users manager ON manager.id=RT.manager_id
-			INNER JOIN donations D ON D.fundraiser_id=users.id
-			$filter");
-		$total_donation += $sql->getOne("SELECT SUM(D.amount) AS sum
-			FROM users 
-			LEFT JOIN reports_tos RT ON RT.user_id=users.id
-			INNER JOIN users manager ON manager.id=RT.manager_id
-			INNER JOIN external_donations D ON D.fundraiser_id=users.id
-			$filter");
-	}
-
-	$mem->set("Infogen:index/total_user_count#$timeframe,$view_level,$state_id,$city_id,$group_id", $total_user_count, $cache_expire);
-	$mem->set("Infogen:index/total_donation#$timeframe,$view_level,$state_id,$city_id,$group_id", $total_donation, $cache_expire);
-}
-$target_amount = (($total_user_count * 70 / 100) * 12000) + (floor($total_user_count * 5 / 100) * 100000);
-$remaining_amount = $target_amount - $total_donation;
-$percentage_done = 0;
-if($target_amount) $percentage_done = round($total_donation / $target_amount * 100, 2);
-$ecs_count_remaining = ceil($remaining_amount / 6000);
-
 // Get the hirarchy
 if(i($QUERY,'no_cache')) $menu = array();
 else $menu = $mem->get("Infogen:index/menu");
@@ -222,7 +161,7 @@ if(!$menu) {
 }
 
 function getData($key, $get_user_count = false) {
-	global $timeframe,$view_level,$state_id,$city_id,$group_id, $mem, $QUERY, $cache_expire, $checks, $sql, $user_checks;
+	global $timeframe,$view_level,$state_id,$city_id,$group_id, $mem, $QUERY, $cache_expire, $checks, $sql, $user_checks, $total_donation, $total_user_count, $all_cities;
 
 	if(i($QUERY,'no_cache')) {
 		$data = array();
@@ -235,7 +174,6 @@ function getData($key, $get_user_count = false) {
 					INNER JOIN cities C ON C.state_id=S.id
 					INNER JOIN users ON users.city_id=C.id
 					%donation_table%", "S.id");
-
 
 		//To get the number of users who have donated above Rs. 12,000
 		$user_data = getFromBothTables("users.id,%amount%, S.id as state_id", "states S
@@ -264,7 +202,7 @@ function getData($key, $get_user_count = false) {
 			$data[$key]['user_count'] = $user_count_data[$row['id']];
 		}
 
-	}elseif($key == 'city') {
+	} elseif($key == 'city') {
 		$data = getFromBothTables("C.id,C.name, %amount%", "cities C
 					INNER JOIN users ON city_id=C.id
 					%donation_table%", "C.id", 'AND C.id != 25'); // 25 is national team
@@ -276,13 +214,24 @@ function getData($key, $get_user_count = false) {
 
 		foreach($data as $key => $row) {
 			$data[$key]['user_count_12k'] = 0;
+			$data[$key]['target_percentage'] = 0;
 		}
 
 		foreach($user_data as $row) {
-			if($row['amount'] >= 12000 && !empty($data[$row['city_id']])) {
-				$data[$row['city_id']]['user_count_12k'] ++;
+			$city_id = $row['city_id'];
+
+			if($row['amount'] >= 12000 && !empty($data[$city_id]) and isset($data[$city_id]['user_count_12k'])) {
+				$data[$city_id]['user_count_12k'] ++;
 			}
 		}
+
+		foreach ($all_cities as $city_id => $city_name) {
+			if(!isset($data[$city_id]['amount'])) continue;
+
+			$data[$city_id]['user_count_total'] = $sql->getOne("SELECT COUNT(id) FROM users WHERE is_deleted='0' AND city_id=$city_id");
+			$data[$city_id]['target_percentage'] = intval($data[$city_id]['amount'] / ($data[$city_id]['user_count_total'] * 12000) * 100);
+		}
+
 
 		$user_count_data = $sql->getById("SELECT C.id, COUNT(users.id) AS count
 				FROM users
@@ -291,7 +240,8 @@ function getData($key, $get_user_count = false) {
 				. " GROUP BY C.id");
 
 		foreach ($data as $key => $row) {
-			$data[$key]['user_count'] = $user_count_data[$row['id']];
+			if(isset($row['id']))
+				$data[$key]['user_count'] = $user_count_data[$row['id']];
 		}
 
 
