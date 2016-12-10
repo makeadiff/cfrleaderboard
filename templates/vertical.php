@@ -70,24 +70,6 @@
 			<?php } ?>
 		</div>
 
-		<?php if($timeframe == 0) { ?>
-			<div class="col s12 m6" title="Amount : <?php echo money_format("%.0n", $total_donation)?> Target : <?php echo money_format("%.0n", $total_target)?>" >
-				<?php if($all_levels['fellow']['data']) { ?>
-				<div class="card">
-					<div class="card-image">
-						<img src="images/child.jpg">
-						<span class="card-title img-title">Children Sponsored <?php echo $all_levels['children_sponsored_title']?></span>
-					</div>
-					<div class="card-content">
-						<p class="children_sponsored"><?php echo number_format(round($total_donation/12000,0,PHP_ROUND_HALF_DOWN)); ?> / 
-						<?php echo number_format(round($total_target/12000,0,PHP_ROUND_HALF_DOWN)); ?></p>
-					</div>
-
-				</div>
-				<?php } ?>
-			</div>
-		<?php } ?>
-
 	</div>
 
 <script type="text/javascript">
@@ -105,8 +87,6 @@
 
 </body>
 </html>
-
-
 <?php 
 function show($key, $data, $title) {
 ?>

@@ -11,21 +11,6 @@ $vertical_id= i($QUERY, 'vertical_id', 0);
 $QUERY['no_cache'] = 1;
 if($view_level != 'vertical') $vertical_id = 0;
 
-setlocale(LC_MONETARY, 'en_IN');
-$mem = new Memcached();
-$mem->addServer("127.0.0.1", 11211);
-
-$year 			= 2016;
-$cache_expire 	= 60 * 60;
-$top_count 		= 30;
-if($_SERVER['HTTP_HOST'] == 'makeadiff.in') {
-	$db_madapp 		= 'makeadiff_madapp';
-	$db_donut 		= 'makeadiff_cfrapp';
-} else {
-	$db_madapp 		= 'makeadiff_madapp';
-	$db_donut 		= 'makeadiff_cfrapp';
-}
-
 //Ignoring verticals that are not being used anymore
 $verticals_to_hide = array(6,10,11,12,13,14,15,16);
 $all_verticals = $sql_madapp->getById("SELECT id,name FROM Vertical WHERE id NOT IN ( " . implode(",", $verticals_to_hide) . ") ORDER BY name");
@@ -35,13 +20,9 @@ $all_timeframes = array('1' => 'Day', '7' => 'Week', '0' => 'Overall');
 
 $checks = array('is_deleted' => 'users.is_deleted=0');
 if($vertical_id and $view_level == 'vertical')	$checks['vertical_id'] = "G.vertical_id=$vertical_id";
-
 if($timeframe) $checks['timeframe'] = "D.created_at > DATE_SUB(NOW(), INTERVAL $timeframe DAY)";
 $user_checks = $checks;
 unset($user_checks['timeframe']);
-
-$filter = "WHERE $city_checks";
-if($checks) $filter .= " AND " . implode(" AND ", array_values($checks));
 
 $top_data = array();
 $bottom_data = array();
@@ -49,18 +30,14 @@ $top_title = '';
 $bottom_title = '';
 
 $array_template = array('title' => '', 'data' => array(), 'show_in' => array());
-$all_levels = array('vertical' => $array_template, 'nt' => $array_template, 'fellow' => $array_template, 'coach' => $array_template /*, 'volunteer' => $array_template*/);
+$all_levels = array('vertical' => $array_template, 'fellow' => $array_template);
 $all_levels['vertical']['show_in']	= array('national');
-$all_levels['nt']['show_in']		= array('national', 'vertical');
 $all_levels['fellow']['show_in']	= array('national', 'vertical');
-$all_levels['coach']['show_in']		= array('national', 'vertical');
-/*$all_levels['volunteer']['show_in']	= array('national', 'vertical');*/
 
 foreach ($all_levels as $key => $level_info) {
 	if(in_array($view_level, $level_info['show_in'])) {
-		$name = ucfirst($key);
-		if($name == 'Nt') $name = 'National Team';
-		if($name == 'Fellow') $name = 'Fundraiser';
+		if($key == 'fellow') $name = 'Fundraiser';
+		elseif($key == 'vertical') $name = "Vertical";
 
 		$title = 'Top ' . $name;
 
@@ -68,25 +45,18 @@ foreach ($all_levels as $key => $level_info) {
 			$vertical_name = $sql_madapp->getOne("SELECT name FROM Vertical WHERE id=$vertical_id");
 			$title .= " in $vertical_name";
 			$children_sponsored_title = " by " . $vertical_name;
-
 		} else {
 			$children_sponsored_title = "Nationally";
 		}
 
-		if($timeframe == '1') {
-			$title .= " on " . date("jS M");
-
-		} elseif($timeframe == '7') {
-			$title .= " for last week(" . date("jS M", strtotime("last week")) . ")";
-		}
+		if($timeframe == '1')  $title .= " on " . date("jS M");
+		elseif($timeframe == '7') $title .= " for last week(" . date("jS M", strtotime("last week")) . ")";
 
 		$all_levels[$key]['title'] = $title;
 		$all_levels[$key]['data'] = getData($key);
 		$all_levels['children_sponsored_title'] = $children_sponsored_title;
 	}
 }
-
-//Get data for children sponsored
 
 if(i($QUERY,'no_cache')) {
 	$total_donation = 0;
@@ -96,60 +66,6 @@ if(i($QUERY,'no_cache')) {
 	$total_count = $mem->get("Infogen:index/total_count#$timeframe,$view_level,$vertical_id");
 }
 $total_target = 4000 * 12000;
-
-if(!$total_donation or !$total_count) {
-	if ($view_level == 'national') {
-		$data = getFromBothTables("%amount%", "users
-					LEFT JOIN reports_tos RT ON RT.user_id=users.id
-					INNER JOIN users AS manager ON RT.manager_id=manager.id
-					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
-					INNER JOIN roles R ON R.id=RM.role_id
-					INNER JOIN `$db_madapp`.UserGroup UG ON UG.user_id = users.madapp_user_id
-					INNER JOIN `$db_madapp`.Group G on G.id = UG.group_id
-					INNER JOIN `$db_madapp`.Vertical V on V.id = G.vertical_id
-					%donation_table%", "","AND (G.type = 'national' OR G.type = 'strat' OR G.type = 'fellow') AND R.id=9 AND UG.year = $year");
-
-		$total_count = $sql_madapp->getById("SELECT G.type AS gtype, COUNT(*)
-					FROM `$db_madapp`.User U
-					INNER JOIN `$db_madapp`.UserGroup UG ON UG.user_id = U.id
-					INNER JOIN `$db_madapp`.`Group` G ON G.id = UG.group_id
-					INNER JOIN `$db_madapp`.Vertical V ON V.id = G.vertical_id
-					WHERE U.status =1
-						AND U.user_type =  'volunteer'
-						AND UG.year = $year
-						AND (G.type =  'national' OR G.type =  'strat' OR G.type =  'fellow')
-					GROUP BY G.type");
-
-	} elseif($view_level == 'vertical') {
-		$data = getFromBothTables("%amount%", "users
-					LEFT JOIN reports_tos RT ON RT.user_id=users.id
-					INNER JOIN users AS manager ON RT.manager_id=manager.id
-					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
-					INNER JOIN roles R ON R.id=RM.role_id
-					INNER JOIN `$db_madapp`.UserGroup UG ON UG.user_id = users.madapp_user_id
-					INNER JOIN `$db_madapp`.Group G on G.id = UG.group_id
-					INNER JOIN `$db_madapp`.Vertical V on V.id = G.vertical_id
-					%donation_table%", "","AND (G.type = 'national' OR G.type = 'strat' OR G.type = 'fellow') AND R.id=9 AND UG.year = $year");
-
-		$total_count = $sql_madapp->getById("SELECT G.type AS gtype, COUNT(*)
-					FROM `$db_madapp`.User U
-					INNER JOIN `$db_madapp`.UserGroup UG ON UG.user_id = U.id
-					INNER JOIN `$db_madapp`.`Group` G ON G.id = UG.group_id
-					INNER JOIN `$db_madapp`.Vertical V ON V.id = G.vertical_id
-					WHERE U.status =1
-					AND U.user_type =  'volunteer'
-					AND UG.year = $year
-					AND (G.type =  'national' OR G.type =  'strat' OR G.type =  'fellow')
-					AND V.id = $vertical_id
-					GROUP BY G.type");
- 	}
-
-	$total_donation = $data[0]['amount'] + isset($data[1]['amount']) ? $data[1]['amount'] : 0;
-
-	$total_target = ($total_count['national'] * 20 * 6000) + ($total_count['strat'] * 16 * 6000) +($total_count['fellow'] * 6 * 6000);
-	$mem->set("Infogen:index/total_donation#$timeframe,$view_level,$vertical_id", $total_donation, $cache_expire);
-	$mem->set("Infogen:index/total_count#$timeframe,$view_level,$vertical_id", $total_count, $cache_expire);
-}
 
 function getData($key, $get_user_count = false) {
 	global $timeframe,$view_level,$vertical_id, $mem, $QUERY, $cache_expire, $checks, $sql, $user_checks, $year, $db_madapp, $verticals_to_hide;
@@ -161,66 +77,39 @@ function getData($key, $get_user_count = false) {
 	}
 
 	if($key == 'vertical') {
-		$data = getFromBothTables("IQ.vid as id,IQ.vname as name, %amount%", "users
-					INNER JOIN
-					(SELECT U.id as uid,U.name,V.id as vid,V.name as vname FROM `$db_madapp`.User U
+		if($vertical_id) $checks['vertical_id'] = "IQ.vid = $vertical_id";
+		$data = getFromBothTables("IQ.vid AS id,IQ.vname AS name, %amount%", "
+					users
+					INNER JOIN 
+					(SELECT U.id AS uid,U.name,V.id AS vid,V.name AS vname 
+						FROM `$db_madapp`.User U
 						INNER JOIN `$db_madapp`.UserGroup UG ON UG.user_id = U.id
 						INNER JOIN `$db_madapp`.`Group` G ON G.id = UG.group_id
 						INNER JOIN `$db_madapp`.Vertical V ON V.id = G.vertical_id
-						WHERE U.status = 1 AND U.user_type = 'volunteer' AND UG.year = $year 
-							AND (G.type = 'national' OR G.type = 'strat' OR G.type = 'fellow') 
-							AND V.id NOT IN (" . implode(",", $verticals_to_hide) . ")
+						WHERE U.status = 1 AND U.user_type = 'volunteer' AND UG.year = $year
 						GROUP BY U.id,V.id) IQ
 					ON IQ.uid = users.madapp_user_id
 					%donation_table%", "IQ.vid");
-
-	} elseif($key == 'nt') {
-		$data = getFromBothTables("users.id,CONCAT(users.first_name, ' ', users.last_name) AS name, %amount%", "
-					users
-					LEFT JOIN reports_tos RT ON RT.user_id=users.id
-					INNER JOIN users AS manager ON RT.manager_id=manager.id
-					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
-					INNER JOIN roles R ON R.id=RM.role_id
-					INNER JOIN `$db_madapp`.UserGroup UG ON UG.user_id = users.madapp_user_id
-					INNER JOIN `$db_madapp`.Group G on G.id = UG.group_id
-					INNER JOIN `$db_madapp`.Vertical V on V.id = G.vertical_id
-					%donation_table%", "users.id","AND (G.type ='national' OR G.type = 'strat') AND V.id != 6 AND R.id=9 AND UG.year = $year");
+		// dump($data);
 
 	} elseif($key == 'fellow') {
-		$data = getFromBothTables("users.id,CONCAT(users.first_name, ' ', users.last_name) AS name, %amount%", "
+		$vertical_check = '';
+		if($vertical_id) {
+			$checks['vertical_id'] = "IQ.vid = $vertical_id";
+			$vertical_check = "AND V.id=$vertical_id";
+		}
+		$data = getFromBothTables("users.id, TRIM(CONCAT(users.first_name, ' ', users.last_name)) AS name, %amount%", "
 					users
-					LEFT JOIN reports_tos RT ON RT.user_id=users.id
-					INNER JOIN users AS manager ON RT.manager_id=manager.id
-					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
-					INNER JOIN roles R ON R.id=RM.role_id
-					INNER JOIN `$db_madapp`.UserGroup UG ON UG.user_id = users.madapp_user_id
-					INNER JOIN `$db_madapp`.Group G on G.id = UG.group_id
-					INNER JOIN `$db_madapp`.Vertical V on V.id = G.vertical_id
-					%donation_table%", "users.id"," AND V.id != 6 AND R.id=9 AND UG.year = $year");
-
-	} elseif($key == 'coach') {
-		$data = getFromBothTables("manager.id,CONCAT(manager.first_name, ' ', manager.last_name) AS name, %amount%", "
-					users
-					LEFT JOIN reports_tos RT ON RT.user_id=users.id
-					INNER JOIN users AS manager ON RT.manager_id=manager.id
-					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
-					INNER JOIN roles R ON R.id=RM.role_id
-					INNER JOIN `$db_madapp`.UserGroup UG ON UG.user_id = users.madapp_user_id
-					INNER JOIN `$db_madapp`.Group G on G.id = UG.group_id
-					INNER JOIN `$db_madapp`.Vertical V on V.id = G.vertical_id
-					%donation_table%", "manager.id","AND (G.type = 'fellow') AND R.id=9 AND UG.year = $year");
-
-	} elseif($key == 'volunteer') {
-		$data = getFromBothTables("users.id,CONCAT(users.first_name, ' ', users.last_name) AS name, %amount%", "
-					users
-					LEFT JOIN reports_tos RT ON RT.user_id=users.id
-					INNER JOIN users AS manager ON RT.manager_id=manager.id
-					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
-					INNER JOIN roles R ON R.id=RM.role_id
-					INNER JOIN `$db_madapp`.UserGroup UG ON UG.user_id = users.madapp_user_id
-					INNER JOIN `$db_madapp`.Group G on G.id = UG.group_id
-					INNER JOIN `$db_madapp`.Vertical V on V.id = G.vertical_id
-					%donation_table%", "users.id","AND (G.type = 'fellow') AND R.id=9 AND UG.year = $year");
+					INNER JOIN 
+					(SELECT U.id AS uid,U.name,V.id AS vid,V.name AS vname 
+						FROM `$db_madapp`.User U
+						INNER JOIN `$db_madapp`.UserGroup UG ON UG.user_id = U.id
+						INNER JOIN `$db_madapp`.`Group` G ON G.id = UG.group_id
+						INNER JOIN `$db_madapp`.Vertical V ON V.id = G.vertical_id
+						WHERE U.status = 1 AND U.user_type = 'volunteer' AND UG.year = $year $vertical_check
+						GROUP BY U.id,V.id) IQ
+					ON IQ.uid = users.madapp_user_id
+					%donation_table%", "users.id","");
 	}
 
 	$mem->set("Infogen:index/data#$timeframe,$view_level,$vertical_id,$key", $data, $cache_expire);
@@ -228,10 +117,14 @@ function getData($key, $get_user_count = false) {
 	return $data;
 }
 
+/// This is kind of horrible. But there was a lot of code repetation earlier - so I switched to this approch. Need as have to do the same check on two seperate tables.
 function getFromBothTables($select, $tables, $group_by = '', $where = '') {
-	global $filter, $top_count, $sql, $checks;
+	global $top_count, $sql, $checks, $city_checks;
 	
-	$order_and_limits = "ORDER BY amount DESC\nLIMIT 0, " . ($top_count * 20);
+	$order_and_limits = ''; //"ORDER BY amount DESC\nLIMIT 0, " . ($top_count * 20);
+
+	$filter = "WHERE $city_checks";
+	if($checks) $filter .= " AND " . implode(" AND ", array_values($checks));
 
 	if ($group_by == '') {
 		$query = "SELECT $select FROM $tables $filter $where $order_and_limits";
@@ -249,9 +142,9 @@ function getFromBothTables($select, $tables, $group_by = '', $where = '') {
 
 	foreach ($extdon_data as $id => $value) {
 		if(isset($data[$id])) $data[$id]['amount'] += $extdon_data[$id]['amount'];
-		else $data[$id]= $extdon_data[$id];
+		else $data[$id] = $extdon_data[$id];
 	}
-
+	
 	usort($data, function($a, $b) {
 		if($a['amount'] < $b['amount']) return 1;
 		if($a['amount'] > $b['amount']) return -1;
