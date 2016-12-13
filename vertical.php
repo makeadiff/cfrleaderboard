@@ -58,15 +58,6 @@ foreach ($all_levels as $key => $level_info) {
 	}
 }
 
-if(i($QUERY,'no_cache')) {
-	$total_donation = 0;
-	$total_count = 0;
-} else {
-	$total_donation = $mem->get("Infogen:index/total_donation#$timeframe,$view_level,$vertical_id");
-	$total_count = $mem->get("Infogen:index/total_count#$timeframe,$view_level,$vertical_id");
-}
-$total_target = 4000 * 12000;
-
 function getData($key, $get_user_count = false) {
 	global $timeframe,$view_level,$vertical_id, $mem, $QUERY, $cache_expire, $checks, $sql, $user_checks, $year, $db_madapp, $verticals_to_hide;
 

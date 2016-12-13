@@ -174,7 +174,7 @@ foreach ($data as $row) {
 	<td width="60%" class="unit-name" name="<?php echo $key ?>-name"><?php echo $count . '.  ' . $row['name'] ?></td>
 	<td width="25%" name="<?php echo $key ?>-raised"><?php echo money_format("%.0n", $row['amount']) ?></td>
 	<?php if($key!='user') {
-		echo "<td width='10%'>";
+		echo "<td width='10%' title='{$row['user_count_12k']}/{$row['user_count']}'>";
 		if(!isset($row['user_count_12k']) or $row['user_count'] == 0) echo "0";
 		else echo number_format(round((($row['user_count_12k']/$row['user_count']) * 100),0,PHP_ROUND_HALF_DOWN)) . "%";
 		echo "</td>";
