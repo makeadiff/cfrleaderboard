@@ -5,7 +5,7 @@ include("../donutleaderboard/_city_filter.php");
 $page_title = 'Participation Dashboard';
 
 $html = new HTML;
-$all_cities = $sql->getById("SELECT id,name FROM cities ORDER BY name");
+$all_cities = $sql->getById("SELECT id,name FROM cities WHERE id NOT IN (25, 43) ORDER BY name");
 $all_cities[0] = 'All';
 $all_groups = $sql->getById("SELECT id,name,city_id FROM groups ORDER BY FIELD(type, 'center', 'vertical'), name");
 
@@ -88,8 +88,8 @@ foreach ($unit_template as $unit_id => $unit_name) {
 	$data[$unit_id]['total_user_count'] = $sql->getOne("SELECT COUNT(id) FROM users WHERE $unit_type_field = $unit_id AND is_deleted='0'");
 	$data[$unit_id]['target'] = $data[$unit_id]['total_user_count'] * 12000;
 
-	$data[$unit_id]['target_met_percent'] = @round(($data[$unit_id]['total'] / $data[$unit_id]['target']) * 100, 2);
-	$data[$unit_id]['participation_percent'] = @round(($data[$unit_id]['participation'] / $data[$unit_id]['total_user_count']) * 100, 2);
+	$data[$unit_id]['target_met_percent'] = @round(($data[$unit_id]['total'] / $data[$unit_id]['target']) * 100, 0);
+	$data[$unit_id]['participation_percent'] = @round(($data[$unit_id]['participation'] / $data[$unit_id]['total_user_count']) * 100, 0);
 }
 
 
