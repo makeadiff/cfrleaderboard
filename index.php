@@ -31,7 +31,7 @@ $all_timeframes = array('1' => 'Day', '7' => 'Week', '0' => 'Overall');
 $checks = array('is_deleted' => 'users.is_deleted=0');
 if($state_id and $view_level == 'region')	$checks['state_id'] = "C.state_id=$state_id";
 if($group_id and $view_level == 'group')	$checks['group_id'] = "manager.group_id=$group_id";
-if($city_id  and $view_level == 'city')		$checks['city_id'] = "users.city_id=$city_id";
+if($city_id  and $view_level == 'city')		$checks['city_id']  = "users.city_id=$city_id";
 if($timeframe) $checks['timeframe'] = "D.created_at > DATE_SUB(NOW(), INTERVAL $timeframe DAY)";
 $user_checks = $checks;
 unset($user_checks['timeframe']);
@@ -109,7 +109,7 @@ foreach ($all_levels as $key => $level_info) {
 											INNER JOIN City ON City.id = Center.city_id
 											INNER JOIN Region ON Region.id = City.region_id
 											WHERE Student.status = 1 AND Center.status = 1 AND Region.id = $madapp_region_id");
-		}else {
+		} else {
 			$children_sponsored_title = "Nationally";
 			$children_count = $sql_madapp->getOne("SELECT COUNT(*) FROM Student
 											INNER JOIN Center
@@ -125,7 +125,6 @@ foreach ($all_levels as $key => $level_info) {
 		}
 
 		$all_levels[$key]['title'] = $title;
-		$all_levels[$key]['area'] =
 		$all_levels[$key]['data'] = getData($key);
 		$all_levels['children_sponsored_title'] = $children_sponsored_title;
 		$all_levels['children_count'] = $children_count;
@@ -218,18 +217,18 @@ function getData($key, $get_user_count = false) {
 		}
 
 		foreach($user_data as $row) {
-			$city_id = $row['city_id'];
+			$this_city_id = $row['city_id'];
 
-			if($row['amount'] >= 12000 && !empty($data[$city_id]) and isset($data[$city_id]['user_count_12k'])) {
-				$data[$city_id]['user_count_12k'] ++;
+			if($row['amount'] >= 12000 && !empty($data[$this_city_id]) and isset($data[$this_city_id]['user_count_12k'])) {
+				$data[$this_city_id]['user_count_12k'] ++;
 			}
 		}
 
-		foreach ($all_cities as $city_id => $city_name) {
-			if(!isset($data[$city_id]['amount'])) continue;
+		foreach ($all_cities as $this_city_id => $city_name) {
+			if(!isset($data[$this_city_id]['amount'])) continue;
 
-			$data[$city_id]['user_count_total'] = $sql->getOne("SELECT COUNT(id) FROM users WHERE is_deleted='0' AND city_id=$city_id");
-			$data[$city_id]['target_percentage'] = intval($data[$city_id]['amount'] / ($data[$city_id]['user_count_total'] * 12000) * 100);
+			$data[$this_city_id]['user_count_total'] = $sql->getOne("SELECT COUNT(id) FROM users WHERE is_deleted='0' AND city_id=$this_city_id");
+			$data[$this_city_id]['target_percentage'] = intval($data[$this_city_id]['amount'] / ($data[$this_city_id]['user_count_total'] * 12000) * 100);
 		}
 
 
