@@ -92,6 +92,8 @@ foreach ($unit_template as $unit_id => $unit_name) {
 	$data[$unit_id]['participation_percent'] = @round(($data[$unit_id]['participation'] / $data[$unit_id]['total_user_count']) * 100, 0);
 }
 
+// :HARDCODE: Some cities have inaccurate user counts. Fixing that the easy but bad way...
+$data[3]['total_user_count'] = 158;
 
 // dump($unit_template, $data);
 render();
