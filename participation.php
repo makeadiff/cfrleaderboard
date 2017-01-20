@@ -46,11 +46,13 @@ $query = "SELECT  users.id AS user_id, $unit_type, %amount_total%
 
 $donut_query = str_replace( array('%amount_total%', '%amount%', '%donation_table%'), 
 							array('SUM(D.donation_amount) AS amount', 'D.donation_amount AS amount', 'donations D'), $query);
-$donut_data = $sql->getAll($donut_query);
+$donut_data = $sql->getById($donut_query);
 
 $extdon_query = str_replace(array('%amount_total%', '%amount%', '%donation_table%'), 
 							array('SUM(D.amount) AS amount', 'D.amount', 'external_donations D'), $query);
-$extdon_data = $sql->getAll($extdon_query);
+$extdon_data = $sql->getById($extdon_query);
+
+// dump($donut_query, $extdon_query);
 
 // Initialize final data table.
 $data = array();
@@ -77,9 +79,18 @@ foreach ($unit_template as $unit_id => $unit_name) {
 	$data[$unit_id]['unit_name'] = $unit_name;
 }
 
+// Make sure all fundraisers are unique -  Even if the same guy raised money as donut and NACH, make sure he appears only once.
+$all_donations_by_user = $donut_data;
+foreach ($extdon_data as $user_id => $row) {
+	if(isset($all_donations_by_user[$user_id])) {
+		$all_donations_by_user[$user_id]['amount'] += $row['amount'];
+	} else {
+		$all_donations_by_user[$user_id] = $row;
+	}
+}
+
 // Add all the data from both tables to the data array.
-foreach ($donut_data as $row) addToData($row);
-foreach ($extdon_data as $row) addToData($row);
+foreach ($all_donations_by_user as $row) addToData($row);
 
 // Now do the aggregation calculations.
 foreach ($unit_template as $unit_id => $unit_name) {

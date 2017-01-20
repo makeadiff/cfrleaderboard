@@ -15,7 +15,9 @@ $html->buildInput("action", '&nbsp;', 'submit', 'Search', array('class' => 'btn 
 <?php if($data) { ?>
 <table class="table table-striped">
 <tr><th>Name</th><th>Amount</th><th>Participation</th><th>12K</th><th>30K</th><th>Target</th></tr>
-<?php foreach ($data as $row) { ?>
+<?php foreach ($data as $row) { 
+	if(!isset($row['unit_name'])) continue;
+	?>
 <tr>
 	<td>
 	<?php if(!$city_id) { ?><a href="participation.php?city_id=<?php echo $row['unit_id'] ?>&donation_status=any&action=Filter"><?php } ?>
