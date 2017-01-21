@@ -96,7 +96,11 @@ foreach ($all_donations_by_user as $row) addToData($row);
 foreach ($unit_template as $unit_id => $unit_name) {
 	if(!$unit_id) continue;
 
-	$data[$unit_id]['total_user_count'] = $sql->getOne("SELECT COUNT(id) FROM users WHERE $unit_type_field = $unit_id AND is_deleted='0'");
+	if($unit_type_field == 'city_id') {
+		$data[$unit_id]['total_user_count'] = $sql_madapp->getOne("SELECT COUNT(id) FROM User WHERE city_id=".city_transilation_donut_to_madapp($unit_id)." AND user_type='volunteer' AND status='1'");
+	} else {
+		$data[$unit_id]['total_user_count'] = $sql->getOne("SELECT COUNT(id) FROM users WHERE $unit_type_field = $unit_id AND is_deleted='0'");
+	}
 	$data[$unit_id]['target'] = $data[$unit_id]['total_user_count'] * 12000;
 
 	$data[$unit_id]['target_met_percent'] = @round(($data[$unit_id]['total'] / $data[$unit_id]['target']) * 100, 0);

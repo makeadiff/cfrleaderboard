@@ -133,6 +133,8 @@ function getFromBothTables($select, $tables, $group_by = '', $where = '') {
 	$extdon_query = str_replace(array('%amount%', '%donation_table%'), array('SUM(D.amount) AS amount', 'INNER JOIN external_donations D ON D.fundraiser_id=users.id'), $query);
 	$extdon_data = $sql->getById($extdon_query);
 
+	dump($donut_query, $extdon_query);
+
 	$data = $donut_data;
 
 	foreach ($extdon_data as $id => $value) {
