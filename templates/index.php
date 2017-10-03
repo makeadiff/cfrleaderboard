@@ -85,7 +85,7 @@
 			</div>
 
 
-		<div class="col s12 m6">
+<!-- 		<div class="col s12 m6">
 			<?php if($all_levels['coach']['data']) { ?>
 			<div class="card">
 				<div class="card-image">
@@ -94,6 +94,7 @@
 				</div>
 				<?php } ?>
 			</div>
+		</div> -->
 
 		<div class="col s12 m6">
 			<?php if($all_levels['user']['data']) { ?>
