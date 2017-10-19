@@ -20,9 +20,9 @@ setlocale(LC_MONETARY, 'en_IN');
 $mem = new Memcached();
 $mem->addServer("127.0.0.1", 11211);
 
-$year = 2015;
+$year = 2017;
 $cache_expire = 60 * 60;
-$top_count = 30;
+$top_count = 30
 $all_states = $sql->getById("SELECT id,name FROM states");
 $all_cities = $sql->getById("SELECT id,name FROM cities");
 $all_view_levels = array('national' => "National", 'region' => "Region", 'city' => "City", 'group' => "Center"); // , 'coach' => "Coach"
@@ -246,23 +246,33 @@ function getData($key, $get_user_count = false) {
 
 	} elseif($key == 'group') {
 
+		// $data = getFromBothTables("G.id,CONCAT(G.name, ' (', C.name, ')') AS name, %amount%", "users
+		// 			LEFT JOIN reports_tos RT ON RT.user_id=users.id
+		// 			INNER JOIN users manager ON manager.id=RT.manager_id
+		// 			INNER JOIN user_role_maps RM ON RM.user_id=manager.id
+		// 			INNER JOIN roles R ON R.id=RM.role_id
+		// 			INNER JOIN groups G ON G.id=manager.group_id
+		// 			INNER JOIN cities C ON C.id=users.city_id
+		// 			%donation_table%", "G.id", "AND R.id=9 AND G.type='center'");
+
+		// $user_data = getFromBothTables("users.id, %amount%, G.id as group_id", "users
+		// 			LEFT JOIN reports_tos RT ON RT.user_id=users.id
+		// 			INNER JOIN users manager ON manager.id=RT.manager_id
+		// 			INNER JOIN user_role_maps RM ON RM.user_id=manager.id
+		// 			INNER JOIN roles R ON R.id=RM.role_id
+		// 			INNER JOIN groups G ON G.id=manager.group_id
+		// 			INNER JOIN cities C ON C.id=users.city_id
+		// 			%donation_table%", "G.id", "AND R.id=9 AND G.name != 'Events'",false);
+
 		$data = getFromBothTables("G.id,CONCAT(G.name, ' (', C.name, ')') AS name, %amount%", "users
-					LEFT JOIN reports_tos RT ON RT.user_id=users.id
-					INNER JOIN users manager ON manager.id=RT.manager_id
-					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
-					INNER JOIN roles R ON R.id=RM.role_id
-					INNER JOIN groups G ON G.id=manager.group_id
+					INNER JOIN groups G ON G.id=users.group_id
 					INNER JOIN cities C ON C.id=users.city_id
-					%donation_table%", "G.id", "AND R.id=9 AND G.type='center'");
+					%donation_table%", "G.id", "AND G.type='center'");
 
 		$user_data = getFromBothTables("users.id, %amount%, G.id as group_id", "users
-					LEFT JOIN reports_tos RT ON RT.user_id=users.id
-					INNER JOIN users manager ON manager.id=RT.manager_id
-					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
-					INNER JOIN roles R ON R.id=RM.role_id
-					INNER JOIN groups G ON G.id=manager.group_id
+					INNER JOIN groups G ON G.id=users.group_id
 					INNER JOIN cities C ON C.id=users.city_id
-					%donation_table%", "G.id", "AND R.id=9 AND G.name != 'Events'",false);
+					%donation_table%", "G.id", "AND G.name != 'Events'",false);
 
 		foreach($data as $key => $row) {
 			$data[$key]['user_count_12k'] = 0;
@@ -276,17 +286,16 @@ function getData($key, $get_user_count = false) {
 
 		$user_count_data = $sql->getById("SELECT G.id, COUNT(users.id) AS count
 			FROM users
-			LEFT JOIN reports_tos RT ON RT.user_id=users.id
-			INNER JOIN users manager ON manager.id=RT.manager_id
-			INNER JOIN user_role_maps RM ON RM.user_id=manager.id
+			INNER JOIN user_role_maps RM ON RM.user_id=users.id
 			INNER JOIN roles R ON R.id=RM.role_id
-			INNER JOIN groups G ON G.id=manager.group_id
+			INNER JOIN groups G ON G.id=users.group_id
 			INNER JOIN cities C ON C.id=users.city_id
 			WHERE R.id=9 AND " . implode(" AND ", $user_checks)
 			. " GROUP BY G.id");
 
 		foreach ($data as $key => $row) {
-			$data[$key]['user_count'] = $user_count_data[$row['id']];
+			if(!empty($user_count_data[$row['id']])) $data[$key]['user_count'] = $user_count_data[$row['id']];
+			else  $data[$key]['user_count'] = 0;
 		}
 
 	} elseif($key == 'coach') {
