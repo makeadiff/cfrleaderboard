@@ -2,7 +2,8 @@
 if(isset($_SERVER['HTTP_HOST']) and $_SERVER['HTTP_HOST'] == 'makeadiff.in') {
 	$sql_madapp= new Sql($config_data['db_host'], $config_data['db_user'], $config_data['db_password'], "makeadiff_madapp");
 } else {
-	$sql_madapp= new Sql("Project_Madapp");
+	// var_dump($config_data);
+	$sql_madapp= new Sql('127.0.0.1', $config_data['db_user'], $config_data['db_password'], "makeadiff_madapp");
 }
 
 

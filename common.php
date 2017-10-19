@@ -14,6 +14,6 @@ if($_SERVER['HTTP_HOST'] == 'makeadiff.in') {
 	$db_madapp 		= 'makeadiff_madapp';
 	$db_donut 		= 'makeadiff_cfrapp';
 } else {
-	$db_madapp 		= 'Project_Madapp';
-	$db_donut 		= 'Project_Donut';
+	$db_madapp 		= 'makeadiff_madapp';
+	$db_donut 		= 'makeadiff_cfrapp';
 }

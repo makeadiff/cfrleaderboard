@@ -57,17 +57,17 @@ $total_user_count = 0;
 $total_donation = 0;
 if(!$total_user_count or !$total_donation) {
 	if($view_level == 'national') {
-		$total_user_count = $sql->getOne("SELECT COUNT(users.id) AS count 
-			FROM users 
+		$total_user_count = $sql->getOne("SELECT COUNT(users.id) AS count
+			FROM users
 			INNER JOIN cities C ON C.id=users.city_id
 			WHERE " . implode(" AND ", $user_checks));
 		$total_donation = $sql->getOne("SELECT SUM(D.donation_amount) AS sum
-			FROM users 
+			FROM users
 			INNER JOIN cities C ON C.id=users.city_id
 			INNER JOIN donations D ON D.fundraiser_id=users.id
 			$filter");
 		$total_donation += $sql->getOne("SELECT SUM(D.amount) AS sum
-			FROM users 
+			FROM users
 			INNER JOIN cities C ON C.id=users.city_id
 			INNER JOIN external_donations D ON D.fundraiser_id=users.id
 			$filter");
@@ -292,7 +292,7 @@ function getData($key, $get_user_count = false) {
 	} elseif($key == 'coach') {
 		$data = getFromBothTables("manager.id,CONCAT(manager.first_name, ' ', manager.last_name) AS name, %amount%", "users
 					%donation_table%
-					LEFT JOIN reports_tos RT ON RT.user_id=users.id 
+					LEFT JOIN reports_tos RT ON RT.user_id=users.id
 					INNER JOIN users AS manager ON RT.manager_id=manager.id
 					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
 					INNER JOIN roles R ON R.id=RM.role_id
@@ -331,9 +331,9 @@ function getData($key, $get_user_count = false) {
 		}
 
 	} elseif($key == 'user') {
-		$data = getFromBothTables("users.id,CONCAT(users.first_name, ' ', users.last_name) AS name, %amount%", "users 
+		$data = getFromBothTables("users.id,CONCAT(users.first_name, ' ', users.last_name) AS name, %amount%", "users
 					INNER JOIN cities C ON users.city_id=C.id
-					LEFT JOIN reports_tos RT ON RT.user_id=users.id 
+					LEFT JOIN reports_tos RT ON RT.user_id=users.id
 					INNER JOIN users AS manager ON RT.manager_id=manager.id
 					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
 					INNER JOIN roles R ON R.id=RM.role_id
@@ -388,4 +388,3 @@ render('index.php', false);
 /*function money_format($format,$amount){
 		return '<i class="fa fa-inr"></i>'.$amount;
 }*/
-

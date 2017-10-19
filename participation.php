@@ -44,11 +44,11 @@ $query = "SELECT  users.id AS user_id, $unit_type, %amount_total%
 			$where
 			GROUP BY users.id";
 
-$donut_query = str_replace( array('%amount_total%', '%amount%', '%donation_table%'), 
+$donut_query = str_replace( array('%amount_total%', '%amount%', '%donation_table%'),
 							array('SUM(D.donation_amount) AS amount', 'D.donation_amount AS amount', 'donations D'), $query);
 $donut_data = $sql->getById($donut_query);
 
-$extdon_query = str_replace(array('%amount_total%', '%amount%', '%donation_table%'), 
+$extdon_query = str_replace(array('%amount_total%', '%amount%', '%donation_table%'),
 							array('SUM(D.amount) AS amount', 'D.amount', 'external_donations D'), $query);
 $extdon_data = $sql->getById($extdon_query);
 
@@ -57,9 +57,9 @@ $extdon_data = $sql->getById($extdon_query);
 // Initialize final data table.
 $data = array();
 $template_array = array(
-					'unit_id'	=> 0, 
-					'unit_name' => '', 
-					'total'		=> 0, 
+					'unit_id'	=> 0,
+					'unit_name' => '',
+					'total'		=> 0,
 					'12k'		=> 0,
 					'30k'		=> 0,
 					'participation' => 0,
@@ -120,4 +120,3 @@ function addToData($row) {
 
 	$data[$unit_id]['participation']++;
 }
-
