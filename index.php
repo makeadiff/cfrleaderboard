@@ -22,7 +22,7 @@ $mem->addServer("127.0.0.1", 11211);
 
 $year = 2017;
 $cache_expire = 60 * 60;
-$top_count = 30
+$top_count = 30;
 $all_states = $sql->getById("SELECT id,name FROM states");
 $all_cities = $sql->getById("SELECT id,name FROM cities");
 $all_view_levels = array('national' => "National", 'region' => "Region", 'city' => "City", 'group' => "Center"); // , 'coach' => "Coach"
@@ -342,11 +342,7 @@ function getData($key, $get_user_count = false) {
 	} elseif($key == 'user') {
 		$data = getFromBothTables("users.id,CONCAT(users.first_name, ' ', users.last_name) AS name, %amount%", "users
 					INNER JOIN cities C ON users.city_id=C.id
-					LEFT JOIN reports_tos RT ON RT.user_id=users.id
-					INNER JOIN users AS manager ON RT.manager_id=manager.id
-					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
-					INNER JOIN roles R ON R.id=RM.role_id
-					%donation_table%", "users.id", "AND R.id=9");
+					%donation_table%", "users.id");
 	}
 
 	$mem->set("Infogen:index/data#$timeframe,$view_level,$state_id,$city_id,$group_id,$key", $data, $cache_expire);

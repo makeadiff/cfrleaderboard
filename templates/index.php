@@ -9,7 +9,7 @@
 	<link rel="stylesheet" type="text/css" href="css/index.css" />
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	
+
 	<link rel="icon" href="favicon.ico" />
 	<script type="text/javascript" src="js/jQuery2.js"></script>
 	<script type="text/javascript" src="js/materialize.min.js"></script>
@@ -31,11 +31,11 @@
 
 	<div class="container">
 
-	<div class="row">  
+	<div class="row">
 		<form method="post" action="">
 		<?php
 		showOption("view_level", $all_view_levels, $view_level, "View Level");
-		showOption("timeframe", $all_timeframes, $timeframe, "Timeframe"); 
+		showOption("timeframe", $all_timeframes, $timeframe, "Timeframe");
 		showOption("state_id", $all_states, $state_id, 'Region');
 		showOption("city_id", $all_cities, $city_id, 'City');
 		showOption("group_id", array(), $group_id, 'Center');
@@ -51,7 +51,7 @@
 
 		</form>
 	</div>
-	
+
 	<div class="row">
 		<?php if(!$total_donation) { ?>
 		<div class="col s12 m6">
@@ -64,35 +64,35 @@
 		</div>
 		<?php } ?>
 
+		<?php if($all_levels['city']['data']) { ?>
 		<div class="col s12 m6">
-			<?php if($all_levels['city']['data']) { ?>
 			<div class="card">
 				<div class="card-image">
 					<img src="images/city.jpg">
 					<?php showCard('city'); ?>
+				</div>
 			</div>
-			<?php } ?>
-		</div>
+		<?php } ?>
 
-			<div class="col s12 m6">
-				<?php if($all_levels['group']['data']) { ?>
-				<div class="card">
-					<div class="card-image">
-						<img src="images/group.png">
-						<?php showCard('group'); ?>
-					</div>
-					<?php } ?>
-			</div>
-
+		<?php if($all_levels['group']['data']) { ?>
 		<div class="col s12 m6">
-			<?php if($all_levels['user']['data']) { ?>
+			<div class="card">
+				<div class="card-image">
+					<img src="images/group.png">
+					<?php showCard('group'); ?>
+				</div>
+			</div>
+		<?php } ?>
+
+		<?php if($all_levels['user']['data']) { ?>
+		<div class="col s12 m6">
 			<div class="card">
 				<div class="card-image">
 					<img src="images/person.jpg">
 					<?php showCard('user'); ?>
 			</div>
-			<?php } ?>
 		</div>
+		<?php } ?>
 
 		<?php if($total_donation and $timeframe == 0) { ?>
 
@@ -105,11 +105,13 @@
 					</div>
 					<div class="card-content">
 						<p class="children_sponsored"><?php echo number_format(round($total_donation/12000,0,PHP_ROUND_HALF_DOWN)); ?> / <?php echo number_format($all_levels['children_count']); ?></p>
+						<p class="center">Amount : <?php echo money_format("%.0n", $total_donation)?></p>
 					</div>
 
 				</div>
 					<?php } ?>
 			</div>
+
 		<?php } ?>
 	</div>
 
@@ -120,9 +122,9 @@
 var menu = <?php echo json_encode($menu); ?>;
 function pageInit() {
 <?php
-if($view_level == 'region') { echo "changeViewLevel('region');"; } 
-if($view_level == 'city') { echo "changeViewLevel('city');changeCity('$state_id');$('#city_id').val($city_id);"; } 
-if($view_level == 'group') { echo "changeViewLevel('group');changeCity('$state_id');changeGroup('$city_id');$('#group_id').val($group_id);"; } 
+if($view_level == 'region') { echo "changeViewLevel('region');"; }
+if($view_level == 'city') { echo "changeViewLevel('city');changeCity('$state_id');$('#city_id').val($city_id);"; }
+if($view_level == 'group') { echo "changeViewLevel('group');changeCity('$state_id');changeGroup('$city_id');$('#group_id').val($group_id);"; }
 ?>
 }
 $(pageInit);
@@ -130,7 +132,7 @@ $(pageInit);
 
 </body>
 </html>
-<?php 
+<?php
 function show($key, $data, $title) {
 ?>
 	<span class="card-title img-title"><?php echo $title ?></span>
@@ -152,9 +154,9 @@ function show($key, $data, $title) {
 		</tr>
 	</thead>
 	<tr><td colspan="2">&nbsp;</td></tr>
-<?php 
+<?php
 $count = 1;
-foreach ($data as $row) { 
+foreach ($data as $row) {
 	if(!isset($row['name'])) continue; ?>
 <tr class="<?php if($count <= 3) echo 'show-row'; else echo 'hide-row'; ?>">
 	<td width="5%"><?php if($count <= 3){ echo '<img src="./images/'.$count.'.png" height="15px" />'; } else echo ' '; ?></td>
@@ -165,18 +167,18 @@ foreach ($data as $row) {
 		if(!isset($row['user_count_12k']) or $row['user_count'] == 0) echo "0";
 		else echo number_format(round((($row['user_count_12k']/$row['user_count']) * 100),0,PHP_ROUND_HALF_DOWN)) . "%";
 		echo "</td>";
-	} 
+	}
 	if($key == 'city') {
 		echo "<td width='10%'>";
 		if(!isset($row['target_percentage']) or $row['user_count'] == 0) echo "0";
 		else echo $row['target_percentage'] . "%";
-		echo "</td>";	
+		echo "</td>";
 	}
 	?>
 </tr>
-<?php 
+<?php
 	$count++;
-} ?>	
+} ?>
 
 </table><br />
 <p class="activator"><a id='show-more-<?php echo $key ?>' class='toggle-link'> <i class="tiny material-icons">add</i>See More</a></p>

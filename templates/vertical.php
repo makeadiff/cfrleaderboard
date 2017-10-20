@@ -9,7 +9,7 @@
 	<link rel="stylesheet" type="text/css" href="css/index.css" />
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	
+
 	<link rel="icon" href="favicon.ico" />
 	<script type="text/javascript" src="js/jQuery2.js"></script>
 	<script type="text/javascript" src="js/materialize.min.js"></script>
@@ -30,11 +30,11 @@
 
 	<div class="container">
 
-	<div class="row">  
+	<div class="row">
 		<form method="post" action="">
 		<?php
 		showOption("view_level", $all_view_levels, $view_level, "View Level");
-		showOption("timeframe", $all_timeframes, $timeframe, "Timeframe"); 
+		showOption("timeframe", $all_timeframes, $timeframe, "Timeframe");
 		showOption("vertical_id", $all_verticals, $vertical_id, 'Vertical');
 		?>
 
@@ -47,7 +47,7 @@
 
 		</form>
 	</div>
-	
+
 	<div class="row">
 
 		<div class="col s12 m6">
@@ -58,7 +58,7 @@
 				<?php showCard('vertical'); ?>
 			</div>
 			<?php } ?>
-		</div> 
+		</div>
 
 		<div class="col s12 m6">
 			<?php if($all_levels['fellow']['data']) { ?>
@@ -87,7 +87,7 @@
 
 </body>
 </html>
-<?php 
+<?php
 function show($key, $data, $title) {
 ?>
 	<span class="card-title img-title"><?php echo $title ?></span>
@@ -102,7 +102,7 @@ function show($key, $data, $title) {
 		</tr>
 	</thead>
 	<tr><td colspan="2">&nbsp;</td></tr>
-<?php 
+<?php
 $count = 1;
 foreach ($data as $row) { ?>
 <tr class="<?php if($count <= 3) echo 'show-row'; else echo 'hide-row'; ?>">
@@ -110,9 +110,9 @@ foreach ($data as $row) { ?>
 	<td width="65%" class="unit-name"><?php echo $count . '.  ' . $row['name'] ?></td>
 	<td width="30%"><?php echo money_format("%.0n", $row['amount']) ?></td>
 </tr>
-<?php 
+<?php
 	$count++;
-} ?>	
+} ?>
 
 </table><br />
 <p class="activator" id="activator0"><a id='show-more-<?php echo $key ?>' class='toggle-link'> <i class="tiny material-icons">add</i>See More</a></p>
