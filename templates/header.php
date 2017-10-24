@@ -7,8 +7,8 @@
          <li>Vetical Dashboard</li>
        </ul> -->
        <ul id="nav-mobile" class="right hide-on-med-and-down">
-         <li>City Dashboard&nbsp; &nbsp;</li>
-         <li>Vetical Dashboard&nbsp; &nbsp;</li>
+         <li><a href="./index.php">City Dashboard</a>&nbsp; &nbsp;</li>
+         <li><a href="./vartical.php">Vetical Dashboard</a>&nbsp; &nbsp;</li>
        </ul>
     </div>
   </nav>
