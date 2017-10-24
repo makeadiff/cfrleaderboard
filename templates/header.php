@@ -8,7 +8,7 @@
        </ul> -->
        <ul id="nav-mobile" class="right hide-on-med-and-down">
          <li><a href="./index.php">City Dashboard</a>&nbsp; &nbsp;</li>
-         <li><a href="./vartical.php">Vetical Dashboard</a>&nbsp; &nbsp;</li>
+         <li><a href="./vertical.php">Vetical Dashboard</a>&nbsp; &nbsp;</li>
        </ul>
     </div>
   </nav>
