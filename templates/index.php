@@ -19,15 +19,8 @@
 </head>
 
 <body>
-	<div class="navbar-fixed">
-		<nav>
-			<div class="nav-wrapper">
-				 <a href="#" class="brand-logo center-align">&nbsp; &nbsp; CFR Leaderboard</a>
-				 <ul id="nav-mobile" class="right hide-on-med-and-down">
-				 </ul>
-			</div>
-		</nav>
-	</div>
+
+	<?php include('header.php') ?>
 
 	<div class="container">
 
@@ -36,7 +29,7 @@
 		<?php
 		showOption("view_level", $all_view_levels, $view_level, "View Level");
 		showOption("timeframe", $all_timeframes, $timeframe, "Timeframe");
-		showOption("state_id", $all_states, $state_id, 'Region');
+		// showOption("state_id", $all_states, $state_id, 'Region');
 		showOption("city_id", $all_cities, $city_id, 'City');
 		showOption("group_id", array(), $group_id, 'Center');
 		// showOption("coach_id", array(), $coach_id, 'Coach');
@@ -105,7 +98,7 @@
 					</div>
 					<div class="card-content">
 						<p class="children_sponsored"><?php echo number_format(round($total_donation/12000,0,PHP_ROUND_HALF_DOWN)); ?> / <?php echo number_format($all_levels['children_count']); ?></p>
-						<p class="center">Amount : <?php echo money_format("%.0n", $total_donation)?></p>
+						<p class="children_sponsored"><?php echo money_format("%.0n", $total_donation)?></p>
 					</div>
 
 				</div>
@@ -158,9 +151,9 @@ function show($key, $data, $title) {
 $count = 1;
 foreach ($data as $row) {
 	if(!isset($row['name'])) continue; ?>
-<tr class="<?php if($count <= 3) echo 'show-row'; else echo 'hide-row'; ?>">
+	<tr class="<?php if($count <= 3) echo 'show-row'; else echo 'hide-row'; ?>">
 	<td width="5%"><?php if($count <= 3){ echo '<img src="./images/'.$count.'.png" height="15px" />'; } else echo ' '; ?></td>
-	<td width="60%" class="unit-name" name="<?php echo $key ?>-name"><?php echo $count . '.  ' . $row['name'] ?></td>
+	<td width="60%" class="unit-name" name="<?php echo $key ?>-name"><?php echo $count . '.  ' . ucwords(strtolower($row['name'])) ?></td>
 	<td width="25%" name="<?php echo $key ?>-raised"><?php echo money_format("%.0n", $row['amount']) ?></td>
 	<?php if($key!='user') {
 		echo "<td width='10%' title='{$row['user_count_12k']}/{$row['user_count']}'>";

@@ -25,11 +25,11 @@ $cache_expire = 60 * 60;
 $top_count = 30;
 $all_states = $sql->getById("SELECT id,name FROM states");
 $all_cities = $sql->getById("SELECT id,name FROM cities");
-$all_view_levels = array('national' => "National", 'region' => "Region", 'city' => "City", 'group' => "Center"); // , 'coach' => "Coach"
+$all_view_levels = array('national' => "National", 'city' => "City", 'group' => "Center"); // , 'coach' => "Coach"
 $all_timeframes = array('1' => 'Day', '7' => 'Week', '0' => 'Overall');
 
 $checks = array('is_deleted' => 'users.is_deleted=0');
-if($state_id and $view_level == 'region')	$checks['state_id'] = "C.state_id=$state_id";
+// if($state_id and $view_level == 'region')	$checks['state_id'] = "C.state_id=$state_id";
 if($group_id and $view_level == 'group')	$checks['group_id'] = "manager.group_id=$group_id";
 if($city_id  and $view_level == 'city')		$checks['city_id']  = "users.city_id=$city_id";
 if($timeframe) $checks['timeframe'] = "D.created_at > DATE_SUB(NOW(), INTERVAL $timeframe DAY)";
@@ -46,7 +46,7 @@ $bottom_title = '';
 
 $array_template = array('title' => '', 'data' => array(), 'show_in' => array());
 $all_levels = array('region' => $array_template, 'city' => $array_template, 'group' => $array_template, 'coach' => $array_template, 'user' => $array_template);
-$all_levels['region']['show_in']	= array('national');
+// $all_levels['region']['show_in']	= array('national');
 $all_levels['city']['show_in']		= array('national', 'region');
 $all_levels['group']['show_in']		= array('national', 'region', 'city');
 $all_levels['coach']['show_in']		= array('national', 'region', 'city', 'group');
@@ -107,8 +107,8 @@ foreach ($all_levels as $key => $level_info) {
 			$children_count = $sql_madapp->getOne("SELECT COUNT(*) FROM Student
 											INNER JOIN Center ON Center.id = Student.center_id
 											INNER JOIN City ON City.id = Center.city_id
-											INNER JOIN Region ON Region.id = City.region_id
-											WHERE Student.status = 1 AND Center.status = 1 AND Region.id = $madapp_region_id");
+											-- INNER JOIN Region ON Region.id = City.region_id
+											WHERE Student.status = 1 AND Center.status = 1 /*AND Region.id = $madapp_region_id*/");
 		} else {
 			$children_sponsored_title = "Nationally";
 			$children_count = $sql_madapp->getOne("SELECT COUNT(*) FROM Student
@@ -143,7 +143,7 @@ else $menu = $mem->get("Infogen:index/menu");
 
 if(!$menu) {
 	foreach ($all_states as $this_state_id => $state_name) {
-		$all_cities_in_state = $sql->getById("SELECT id, name FROM cities WHERE state_id=$this_state_id");
+		$all_cities_in_state = $sql->getById("SELECT id, name FROM cities ORDER BY name");
 		$menu[$this_state_id] = array('name' => $state_name, 'id' => $this_state_id, 'cities' => array());
 
 		foreach ($all_cities_in_state as $this_city_id => $city_name) {

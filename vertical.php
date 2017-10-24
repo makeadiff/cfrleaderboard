@@ -71,8 +71,8 @@ function getData($key, $get_user_count = false) {
 		if($vertical_id) $checks['vertical_id'] = "IQ.vid = $vertical_id";
 		$data = getFromBothTables("IQ.vid AS id,IQ.vname AS name, %amount%", "
 					users
-					INNER JOIN 
-					(SELECT U.id AS uid,U.name,V.id AS vid,V.name AS vname 
+					INNER JOIN
+					(SELECT U.id AS uid,U.name,V.id AS vid,V.name AS vname
 						FROM `$db_madapp`.User U
 						INNER JOIN `$db_madapp`.UserGroup UG ON UG.user_id = U.id
 						INNER JOIN `$db_madapp`.`Group` G ON G.id = UG.group_id
@@ -93,8 +93,8 @@ function getData($key, $get_user_count = false) {
 		}
 		$data = getFromBothTables("users.id, TRIM(CONCAT(users.first_name, ' ', users.last_name)) AS name, %amount%", "
 					users
-					INNER JOIN 
-					(SELECT U.id AS uid,U.name,V.id AS vid,V.name AS vname 
+					INNER JOIN
+					(SELECT U.id AS uid,U.name,V.id AS vid,V.name AS vname
 						FROM `$db_madapp`.User U
 						INNER JOIN `$db_madapp`.UserGroup UG ON UG.user_id = U.id
 						INNER JOIN `$db_madapp`.`Group` G ON G.id = UG.group_id
@@ -115,7 +115,7 @@ function getData($key, $get_user_count = false) {
 /// This is kind of horrible. But there was a lot of code repetation earlier - so I switched to this approch. Need as have to do the same check on two seperate tables.
 function getFromBothTables($select, $tables, $group_by = '', $where = '') {
 	global $top_count, $sql, $checks, $city_checks;
-	
+
 	$order_and_limits = ''; //"ORDER BY amount DESC\nLIMIT 0, " . ($top_count * 20);
 
 	$filter = "WHERE $city_checks";
@@ -139,7 +139,7 @@ function getFromBothTables($select, $tables, $group_by = '', $where = '') {
 		if(isset($data[$id])) $data[$id]['amount'] += $extdon_data[$id]['amount'];
 		else $data[$id] = $extdon_data[$id];
 	}
-	
+
 	usort($data, function($a, $b) {
 		if($a['amount'] < $b['amount']) return 1;
 		if($a['amount'] > $b['amount']) return -1;

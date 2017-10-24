@@ -19,14 +19,7 @@
 </head>
 
 <body>
-	<div class="navbar-fixed">
-		<nav>
-			<div class="nav-wrapper">
-				<a href="#" class="brand-logo center-align">&nbsp; &nbsp; CFR Leaderboard</a>
-				<ul id="nav-mobile" class="right hide-on-med-and-down"></ul>
-			</div>
-		</nav>
-	</div>
+	<?php include('header.php') ?>
 
 	<div class="container">
 
