@@ -87,7 +87,7 @@
 		</div>
 		<?php } ?>
 
-		<?php if($total_donation and $timeframe == 0) { ?>
+		<?php /* if($total_donation and $timeframe == 0) { ?>
 
 			<div class="col s12 m6" title="Amount : <?php echo money_format("%.0n", $total_donation)?>">
 				<?php if($all_levels['user']['data']) { ?>
@@ -105,7 +105,7 @@
 					<?php } ?>
 			</div>
 
-		<?php } ?>
+		<?php } */ ?>
 	</div>
 
 <script type="text/javascript">
