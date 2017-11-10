@@ -24,7 +24,7 @@ $year = 2017;
 $cache_expire = 60 * 60;
 $top_count = 30;
 $all_states = $sql->getById("SELECT id,name FROM states");
-$all_cities = $sql->getById("SELECT id,name FROM cities");
+$all_cities = $sql->getById("SELECT id,name FROM cities ORDER BY name");
 $all_view_levels = array('national' => "National", 'city' => "City", 'group' => "Center"); // , 'coach' => "Coach"
 $all_timeframes = array('1' => 'Day', '7' => 'Week', '0' => 'Overall');
 

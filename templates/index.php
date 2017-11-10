@@ -87,17 +87,17 @@
 		</div>
 		<?php } ?>
 
-		<?php /* if($total_donation and $timeframe == 0) { ?>
+		<?php if($total_donation and $timeframe == 0) { ?>
 
 			<div class="col s12 m6" title="Amount : <?php echo money_format("%.0n", $total_donation)?>">
 				<?php if($all_levels['user']['data']) { ?>
 				<div class="card">
 					<div class="card-image">
 						<img src="images/child.jpg">
-						<span class="card-title img-title">Children Sponsored <?php echo $all_levels['children_sponsored_title']?></span>
+						<span class="card-title img-title">Total money raised...</span>
 					</div>
 					<div class="card-content">
-						<p class="children_sponsored"><?php echo number_format(round($total_donation/12000,0,PHP_ROUND_HALF_DOWN)); ?> / <?php echo number_format($all_levels['children_count']); ?></p>
+						<!-- <p class="children_sponsored"><?php echo number_format(round($total_donation/12000,0,PHP_ROUND_HALF_DOWN)); ?> / <?php echo number_format($all_levels['children_count']); ?></p> -->
 						<p class="children_sponsored"><?php echo money_format("%.0n", $total_donation)?></p>
 					</div>
 
@@ -105,7 +105,7 @@
 					<?php } ?>
 			</div>
 
-		<?php } */ ?>
+		<?php } ?>
 	</div>
 
 <script type="text/javascript">
