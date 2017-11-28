@@ -68,7 +68,7 @@ function changeViewLevel(view_level_arg) {
 
 		changeCity("3");
 		$('#state_id').val(3);
-	
+
 	} else if(view_level == 'group') {
 		$("#state_id_area").show();
 		$("#city_id_area").show();
@@ -92,7 +92,7 @@ function changeViewLevel(view_level_arg) {
 		$('#state_id').val(3);
 		$('#city_id').val(3);
 		$('#group_id').val(3);
-		
+
 	}
 }
 

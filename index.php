@@ -181,12 +181,12 @@ function getData($key, $get_user_count = false) {
 					%donation_table%", "users.id","",false);
 
 		foreach($data as $key => $row) {
-			$data[$key]['user_count_12k'] = 0;
+			$data[$key]['user_count_participated'] = 0;
 		}
 
 		foreach($user_data as $row) {
-			if($row['amount'] >= 12000) {
-				$data[$row['state_id']]['user_count_12k'] ++;
+			if($row['amount'] > 0) {
+				$data[$row['state_id']]['user_count_participated'] ++;
 			}
 		}
 
@@ -202,33 +202,62 @@ function getData($key, $get_user_count = false) {
 		}
 
 	} elseif($key == 'city') {
-		$data = getFromBothTables("C.id,C.name, %amount%", "cities C
-					INNER JOIN users ON city_id=C.id
-					%donation_table%", "C.id", 'AND C.id != 25'); // 25 is national team
+
+		$data = getFromBothTables("C.id,C.name, %amount%",
+					"cities C
+						INNER JOIN users ON city_id=C.id
+						%donation_table%",
+					"C.id",
+					'AND C.id != 25'); // 25 is national team
+
+			// INNER JOIN
+			// (SELECT U.id as uid, U.name
+			// 	FROM `makeadiff_madapp`.User U
+			// 	WHERE U.status = 1
+			// 	AND U.user_type = 'volunteer'
+			// ) IQ
+			// ON IQ.uid = users.madapp_user_id
 
 		//To get the number of users who have donated above Rs. 12,000
-		$user_data = getFromBothTables("users.id,%amount%, C.id as city_id", "cities C
-					INNER JOIN users ON users.city_id=C.id
-					%donation_table%", "users.id","",false);
+		$user_data = getFromBothTables("users.id,%amount%,
+					C.id as city_id",
+					"cities C
+						INNER JOIN `makeadiff_cfrapp`.users ON users.city_id=C.id
+					%donation_table%",
+					"users.id","",false);
 
 		foreach($data as $key => $row) {
-			$data[$key]['user_count_12k'] = 0;
+			$data[$key]['user_count_participated'] = 0;
 			$data[$key]['target_percentage'] = 0;
+			$data[$key]['participation_percentage'] = 0;
+			$data[$key]['donor_count'] = 0;
 		}
 
 		foreach($user_data as $row) {
 			$this_city_id = $row['city_id'];
 
-			if($row['amount'] >= 12000 && !empty($data[$this_city_id]) and isset($data[$this_city_id]['user_count_12k'])) {
-				$data[$this_city_id]['user_count_12k'] ++;
+			if($row['amount'] > 0 && !empty($data[$this_city_id]) and isset($data[$this_city_id]['user_count_participated'])) {
+				$data[$this_city_id]['user_count_participated'] ++;
 			}
 		}
 
 		foreach ($all_cities as $this_city_id => $city_name) {
 			if(!isset($data[$this_city_id]['amount'])) continue;
 
-			$data[$this_city_id]['user_count_total'] = $sql->getOne("SELECT COUNT(id) FROM users WHERE is_deleted='0' AND city_id=$this_city_id");
+			$data[$this_city_id]['user_count_total'] = $sql->getOne("
+								SELECT COUNT(id)
+								FROM users
+								INNER JOIN
+								(SELECT U.id as uid, U.name
+									FROM `makeadiff_madapp`.User U
+									WHERE U.status = 1
+									AND U.user_type = 'volunteer'
+								) IQ
+								ON IQ.uid = users.madapp_user_id
+								WHERE is_deleted='0' AND city_id=$this_city_id"
+								);
 			$data[$this_city_id]['target_percentage'] = intval($data[$this_city_id]['amount'] / ($data[$this_city_id]['user_count_total'] * 12000) * 100);
+			$data[$this_city_id]['participation_percentage'] = intval($data[$this_city_id]['user_count_participated'] / ($data[$this_city_id]['user_count_total']) * 100);
 		}
 
 
@@ -275,12 +304,12 @@ function getData($key, $get_user_count = false) {
 					%donation_table%", "G.id", "AND G.name != 'Events'",false);
 
 		foreach($data as $key => $row) {
-			$data[$key]['user_count_12k'] = 0;
+			$data[$key]['user_count_participated'] = 0;
 		}
 
 		foreach($user_data as $row) {
 			if($row['amount'] >= 12000 && !empty($data[$row['group_id']])) {
-				$data[$row['group_id']]['user_count_12k'] ++;
+				$data[$row['group_id']]['user_count_participated'] ++;
 			}
 		}
 
@@ -316,12 +345,12 @@ function getData($key, $get_user_count = false) {
 					INNER JOIN cities C ON C.id=users.city_id", "users.id", "AND R.id=9",false);
 
 		foreach($data as $key => $row) {
-			$data[$key]['user_count_12k'] = 0;
+			$data[$key]['user_count_participated'] = 0;
 		}
 
 		foreach($user_data as $row) {
 			if($row['amount'] >= 12000 && !empty($data[$row['manager_id']])) {
-				$data[$row['manager_id']]['user_count_12k'] ++;
+				$data[$row['manager_id']]['user_count_participated'] ++;
 			}
 		}
 
@@ -361,16 +390,19 @@ function getFromBothTables($select, $tables, $group_by, $where = '',$set_order_a
 
 
 	$query = "SELECT $select FROM $tables $filter $where GROUP BY $group_by $order_and_limits";
-	$donut_query = str_replace(array('%amount%', '%donation_table%'), array('SUM(D.donation_amount) AS amount', 'INNER JOIN donations D ON D.fundraiser_id=users.id'), $query);
+	$donut_query = str_replace(array('%amount%', '%donation_table%'), array('SUM(D.donation_amount) AS amount, COUNT(DISTINCT D.donour_id) AS donor_count', 'INNER JOIN donations D ON D.fundraiser_id=users.id'), $query);
 	$donut_data = $sql->getById($donut_query);
 
-	$extdon_query = str_replace(array('%amount%', '%donation_table%'), array('SUM(D.amount) AS amount', 'INNER JOIN external_donations D ON D.fundraiser_id=users.id'), $query);
+	$extdon_query = str_replace(array('%amount%', '%donation_table%'), array('SUM(D.amount) AS amount, COUNT(DISTINCT D.donor_id) as donor_count', 'INNER JOIN external_donations D ON D.fundraiser_id=users.id'), $query);
 	$extdon_data = $sql->getById($extdon_query);
 
 	$data = $donut_data;
 
 	foreach ($extdon_data as $id => $value) {
-		if(isset($data[$id])) $data[$id]['amount'] += $extdon_data[$id]['amount'];
+		if(isset($data[$id])){
+			$data[$id]['amount'] += $extdon_data[$id]['amount'];
+			$data[$id]['donor_count'] += $extdon_data[$id]['donor_count'];
+		}
 		else $data[$id]= $extdon_data[$id];
 	}
 

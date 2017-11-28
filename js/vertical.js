@@ -51,6 +51,3 @@ function changeViewLevel(view_level_arg) {
 
 	}
 }
-
-
-

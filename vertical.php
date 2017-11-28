@@ -146,7 +146,7 @@ function getFromBothTables($select, $tables, $group_by = '', $where = '') {
 		return 0;
 	});
 
-	return array_slice($data, 0, 30);
+	return $data;
 }
 
 $html = new HTML;
