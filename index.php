@@ -272,6 +272,7 @@ function getData($key, $get_user_count = false) {
 				$data[$key]['user_count'] = $user_count_data[$row['id']];
 		}
 
+		usort($data,"compare_participation");
 
 	} elseif($key == 'group') {
 
@@ -417,6 +418,13 @@ function getFromBothTables($select, $tables, $group_by, $where = '',$set_order_a
 	} else {
 		return $data;
 	}
+}
+
+function compare_participation($a,$b){
+	if($a['participation_percentage']==$b['participation_percentage']){
+		return 0;
+	}
+	return ($a['participation_percentage'] < $b['participation_percentage']) ? 1 : -1;
 }
 
 $html = new HTML;
