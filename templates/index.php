@@ -97,6 +97,7 @@
 						<span class="card-title img-title">Amount Donuted <?php echo $all_levels['children_sponsored_title']?></span>
 					</div>
 					<div class="card-content">
+
 						<p class="children_sponsored"><?php echo money_format("%.0n", $total_donation)?></p>
 					</div>
 
