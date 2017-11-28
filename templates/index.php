@@ -146,9 +146,9 @@ function show($key, $data, $title) {
 				echo "<th width='25%'>%Volunteer<br/>Participation</th>";
 			}
 			if($key=='city') {
-				echo "<th width='25%'>%Potential<br/>Met</th>";
+				echo "<th width='20%'>%Potential<br/>Met</th>";
 			}?>
-			<th width="30%">Amount<br/>Donuted</th>
+			<th width="35%">Amount<br/>Donuted</th>
 			<?php if($key=='user') {
 				echo "<th width='25%'>Donor Count</th>";
 			}
