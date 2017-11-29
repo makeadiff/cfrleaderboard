@@ -55,11 +55,19 @@ $all_levels['user']['show_in']		= array('national', 'region', 'city', 'group', '
 // Get the totals for the city card.
 $total_user_count = 0;
 $total_donation = 0;
+$total_volunteer_particpated = 0;
 if(!$total_user_count or !$total_donation) {
 	if($view_level == 'national') {
 		$total_user_count = $sql->getOne("SELECT COUNT(users.id) AS count
 			FROM users
 			INNER JOIN cities C ON C.id=users.city_id
+			INNER JOIN
+			(SELECT U.id as uid, U.name
+			FROM `makeadiff_madapp`.User U
+			WHERE U.status = 1
+			AND U.user_type = 'volunteer'
+			) IQ
+			ON IQ.uid = users.madapp_user_id
 			WHERE " . implode(" AND ", $user_checks));
 		$total_donation = $sql->getOne("SELECT SUM(D.donation_amount) AS sum
 			FROM users
@@ -71,6 +79,20 @@ if(!$total_user_count or !$total_donation) {
 			INNER JOIN cities C ON C.id=users.city_id
 			INNER JOIN external_donations D ON D.fundraiser_id=users.id
 			$filter");
+		$user_data = getFromBothTables("users.id,%amount%,
+					users.id",
+					"users
+						INNER JOIN cities ON users.city_id=cities.id
+					%donation_table%",
+					"users.id","",false);
+
+			// var_dump($user_data);
+			foreach ($user_data as $data) {
+				if($data['amount']>0){
+					$total_volunteer_particpated++;
+				}
+			}
+
 	}
 }
 

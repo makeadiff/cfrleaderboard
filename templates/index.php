@@ -99,6 +99,22 @@
 					<div class="card-content">
 
 						<p class="children_sponsored"><?php echo money_format("%.0n", $total_donation)?></p>
+						<table>
+							<thead>
+								<tr>
+									<th width="35%">% Volunteer Participation</th>
+									<th width="35%">Total Potential</th>
+									<th width="30%">% Potential Achieved</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><?php echo number_format(round(($total_volunteer_particpated/($total_user_count)*100),0,PHP_ROUND_HALF_DOWN))."%" ?></td>
+									<td><?php echo money_format("%.0n",$total_user_count*12000) ?></td>
+									<td><?php echo number_format(round(($total_donation/($total_user_count*12000)*100),0,PHP_ROUND_HALF_DOWN))."%" ?></td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 
 				</div>
@@ -146,7 +162,7 @@ function show($key, $data, $title) {
 				echo "<th width='25%'>%Volunteer<br/>Participation</th>";
 			}
 			if($key=='city') {
-				echo "<th width='20%'>%Potential<br/>Met</th>";
+				echo "<th width='20%'>%Potential<br/>Achieved</th>";
 			}?>
 			<th width="35%">Amount<br/>Donuted</th>
 			<?php if($key=='user') {
@@ -165,10 +181,10 @@ foreach ($data as $row) {
   <td width="30%" class="unit-name" name="<?php echo $key ?>-name"><?php echo $count . '.  ' . ucwords(strtolower($row['name'])) ?></td>
 
 	<?php if($key!='user') {
-		echo "<td width='10%' title='{$row['user_count_participated']}/{$row['user_count_total']}'>";
+		echo "<td width='10%' title='{$row['user_count_participated']}/{$row['user_count_total']}'><strong>";
 		if(!isset($row['user_count_participated']) or $row['user_count_total'] == 0) echo "0";
 		else echo number_format(round($row['participation_percentage'],0,PHP_ROUND_HALF_DOWN)) . "%";
-		echo "</td>";
+		echo "</strong></td>";
 	}
 	if($key == 'city') {
 		echo "<td width='15%'>";
