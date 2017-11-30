@@ -24,13 +24,13 @@ function siteInit() {
 	$("a.confirm").click(function(e) { //If a link has a confirm class, confrm the action
 		var action = (this.title) ? this.title : "do this";
 		action = action.substr(0,1).toLowerCase() + action.substr(1); //Lowercase the first char.
-		
+
 		if(!confirm("Are you sure you want to " + action + "?")) {
 			e.stopPropagation();
 		}
 	});
 
-	// Show selected city's centers. 
+	// Show selected city's centers.
 	$("#madapp_city_id").change(function() {
 		var select = "<select id='group_id'>";
 		var city_id = this.value;
@@ -48,4 +48,3 @@ function siteInit() {
 }
 $ = jQuery.noConflict();
 jQuery(window).load(siteInit);
-

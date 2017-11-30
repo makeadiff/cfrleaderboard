@@ -15,6 +15,7 @@ $QUERY['no_cache'] = 1;
 if($view_level != 'group' and $view_level != 'city' and $view_level != 'region') $state_id = 0;
 if($view_level != 'group' and $view_level != 'city') $city_id = 0;
 if($view_level != 'group') $group_id = 0;
+// if($view_level != 'national') $group_id = 0;
 
 setlocale(LC_MONETARY, 'en_IN');
 $mem = new Memcached();
@@ -48,9 +49,10 @@ $array_template = array('title' => '', 'data' => array(), 'show_in' => array());
 $all_levels = array('region' => $array_template, 'city' => $array_template, 'group' => $array_template, 'coach' => $array_template, 'user' => $array_template);
 // $all_levels['region']['show_in']	= array('national');
 $all_levels['city']['show_in']		= array('national', 'region');
-$all_levels['group']['show_in']		= array('national', 'region', 'city');
+$all_levels['group']['show_in']		= array('region', /*'city'*/);
 $all_levels['coach']['show_in']		= array('national', 'region', 'city', 'group');
 $all_levels['user']['show_in']		= array('national', 'region', 'city', 'group', 'coach');
+$all_levels['fellow']['show_in']	= array('city');
 
 // Get the totals for the city card.
 $total_user_count = 0;

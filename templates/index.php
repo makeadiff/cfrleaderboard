@@ -68,13 +68,13 @@
 		<?php } ?>
 
 		<?php if($all_levels['group']['data']) { ?>
-		<!-- <div class="col s12 m6">
+		<div class="col s12 m6">
 			<div class="card">
 				<div class="card-image">
 					<img src="images/group.png">
-					<?php //showCard('group'); ?>
+					<?php showCard('group'); ?>
 				</div>
-			</div> -->
+			</div>
 		<?php } ?>
 
 		<?php if($all_levels['user']['data']) { ?>
@@ -86,6 +86,16 @@
 			</div>
 		</div>
 		<?php } ?>
+
+		<?php //if($all_levels['fellow']['data']) { ?>
+		<!--<div class="col s12 m6">
+			<div class="card">
+				<div class="card-image">
+					<img src="images/person.jpg">
+					<?php //showCard('fellow'); ?>
+			</div>
+		</div> -->
+		<?php //} ?>
 
 		<?php if($total_donation and $timeframe == 0) { ?>
 
@@ -178,9 +188,15 @@ foreach ($data as $row) {
 	if(!isset($row['name'])) continue; ?>
 	<tr class="<?php if($count <= 3) echo 'show-row'; else echo 'hide-row'; ?>">
 	<td width="5%"><?php if($count <= 3){ echo '<img src="./images/'.$count.'.png" height="15px" />'; } else echo ' '; ?></td>
-  <td width="30%" class="unit-name" name="<?php echo $key ?>-name"><?php echo $count . '.  ' . ucwords(strtolower($row['name'])) ?></td>
-
-	<?php if($key!='user') {
+	<?php
+		if($key!='city'){
+			echo '<td width="30%" class="unit-name" name="'. $key.'-name">'.$count. '.  ' . ucwords(strtolower($row['name'])).'</td>';
+		}
+		else{
+			echo '<td width="30%" class="unit-name" name="'. $key.'-name">'.$count. '.  <a href="./?view_level=city&city_id='.$row['id'].'">' . ucwords(strtolower($row['name'])).'</a></td>';
+		}
+	?>
+	<?php if($key!='user' && $key!='group') {
 		echo "<td width='10%' title='{$row['user_count_participated']}/{$row['user_count_total']}'><strong>";
 		if(!isset($row['user_count_participated']) or $row['user_count_total'] == 0) echo "0";
 		else echo number_format(round($row['participation_percentage'],0,PHP_ROUND_HALF_DOWN)) . "%";
