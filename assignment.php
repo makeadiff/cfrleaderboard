@@ -46,27 +46,27 @@ if($action == 'Fetch') {
 	if(isset($all_groups[$group_id]['name'])) $group_name = $sql->escape($all_groups[$group_id]['name']);
 	else $group_name = "Any";
 
-	$all_city_users = $sql_madapp->getById("SELECT U.id,U.name FROM User U 
+	$all_city_users = $sql_madapp->getById("SELECT U.id,U.name FROM User U
 				WHERE U.city_id=$madapp_city_id AND U.status='1' AND U.user_type='volunteer'
 				ORDER BY U.name");
-	
+
 	$donut_users_in_current_group = $sql_donut->getById("SELECT id, CONCAT(first_name, ' ', last_name) AS name FROM users
 				WHERE group_id=$group_id
 				ORDER BY name");
 
 	if(in_array($group_name, $all_verticals)) {
-		$madapp_users_in_current_group = $sql_madapp->getById("SELECT U.id,U.name FROM User U 
+		$madapp_users_in_current_group = $sql_madapp->getById("SELECT U.id,U.name FROM User U
 				INNER JOIN UserGroup UG ON UG.user_id=U.id
 				INNER JOIN `Group` G ON G.id=UG.group_id
 				INNER JOIN Vertical V ON V.id=G.vertical_id
 				WHERE V.name='$group_name' AND U.city_id=$madapp_city_id AND U.status='1' AND U.user_type='volunteer' AND UG.year=$year");
 	} else {
-		$madapp_users_in_current_group = $sql_madapp->getById("SELECT U.id,U.name,C.name AS center FROM User U 
+		$madapp_users_in_current_group = $sql_madapp->getById("SELECT U.id,U.name,C.name AS center FROM User U
 				INNER JOIN UserBatch UB ON UB.user_id=U.id
 				INNER JOIN Batch B ON B.id=UB.batch_id
 				INNER JOIN Center C ON C.id=B.center_id
 				WHERE C.name='$group_name' AND C.city_id=$madapp_city_id AND U.status='1' AND U.user_type='volunteer' AND B.year=$year");
-		
+
 	}
 }
 

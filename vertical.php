@@ -12,7 +12,7 @@ $QUERY['no_cache'] = 1;
 if($view_level != 'vertical') $vertical_id = 0;
 
 //Ignoring verticals that are not being used anymore
-$verticals_to_hide = array(6,10,11,12,13,14,15,16);
+$verticals_to_hide = array(6,10,11,12,13,14,15,16,7);
 $all_verticals = $sql_madapp->getById("SELECT id,name FROM Vertical WHERE id NOT IN ( " . implode(",", $verticals_to_hide) . ") ORDER BY name");
 
 $all_view_levels = array('national' => "National", 'vertical' => "Vertical"); // , 'coach' => "Coach"

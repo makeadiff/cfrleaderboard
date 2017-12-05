@@ -46,13 +46,14 @@ $top_title = '';
 $bottom_title = '';
 
 $array_template = array('title' => '', 'data' => array(), 'show_in' => array());
-$all_levels = array('region' => $array_template, 'city' => $array_template, 'group' => $array_template, 'coach' => $array_template, 'user' => $array_template);
+$all_levels = array('region' => $array_template, 'city' => $array_template, 'group' => $array_template, 'coach' => $array_template, 'user' => $array_template, 'volunteer' => $array_template,'fellow' => $array_template );
 // $all_levels['region']['show_in']	= array('national');
 $all_levels['city']['show_in']		= array('national', 'region');
 $all_levels['group']['show_in']		= array('region', /*'city'*/);
 $all_levels['coach']['show_in']		= array('national', 'region', 'city', 'group');
 $all_levels['user']['show_in']		= array('national', 'region', 'city', 'group', 'coach');
 $all_levels['fellow']['show_in']	= array('city');
+$all_levels['volunteer']['show_in']	= array('city');
 
 // Get the totals for the city card.
 $total_user_count = 0;
@@ -104,7 +105,11 @@ foreach ($all_levels as $key => $level_info) {
 		if($name == 'User') $name = 'Fundraiser';
 		if($name == 'Group') $name = 'Center';
 
+
 		$title = 'Top ' . $name;
+
+		if($name == 'Fellow') $title = 'Fellow Participation';
+		if($name == 'Volunteer') $title = 'Volunteer Participation';
 
 		if($group_id) {
 			$city_name = $sql->getOne("SELECT name FROM cities WHERE id=$city_id");
@@ -243,7 +248,7 @@ function getData($key, $get_user_count = false) {
 			// ON IQ.uid = users.madapp_user_id
 
 		//To get the number of users who have donated above Rs. 12,000
-		$user_data = getFromBothTables("users.id,%amount%,
+		$user_data = getFromBothTables("DISTINCT users.id,%amount%,
 					C.id as city_id",
 					"cities C
 						INNER JOIN `makeadiff_cfrapp`.users ON users.city_id=C.id
@@ -269,17 +274,17 @@ function getData($key, $get_user_count = false) {
 			if(!isset($data[$this_city_id]['amount'])) continue;
 
 			$data[$this_city_id]['user_count_total'] = $sql->getOne("
-								SELECT COUNT(id)
+								SELECT DISTINCT COUNT(madapp_user_id)
 								FROM users
 								INNER JOIN
-								(SELECT U.id as uid, U.name
+								(SELECT DISTINCT U.id as uid, U.name
 									FROM `makeadiff_madapp`.User U
 									WHERE U.status = 1
 									AND U.user_type = 'volunteer'
 								) IQ
 								ON IQ.uid = users.madapp_user_id
-								WHERE is_deleted='0' AND city_id=$this_city_id"
-								);
+								WHERE is_deleted=0 AND city_id=$this_city_id
+								");
 			$data[$this_city_id]['target_percentage'] = intval($data[$this_city_id]['amount'] / ($data[$this_city_id]['user_count_total'] * 12000) * 100);
 			$data[$this_city_id]['participation_percentage'] = intval($data[$this_city_id]['user_count_participated'] / ($data[$this_city_id]['user_count_total']) * 100);
 		}
@@ -396,15 +401,71 @@ function getData($key, $get_user_count = false) {
 	} elseif($key == 'user') {
 		$data = getFromBothTables("users.id,CONCAT(users.first_name, ' ', users.last_name) AS name, %amount%", "users
 					INNER JOIN cities C ON users.city_id=C.id
-					%donation_table%", "users.id");
+					INNER JOIN
+					(SELECT DISTINCT U.id as uid, U.name
+						FROM `makeadiff_madapp`.User U
+						WHERE U.status = 1
+						AND U.user_type = 'volunteer'
+					) IQ
+					ON IQ.uid = users.madapp_user_id
+					%donation_table%", "users.id",'',true,$key);
+
+	} elseif($key == 'fellow') {
+		$data = getFromBothTables("users.id,CONCAT(users.first_name, ' ', users.last_name) AS name, %amount%", "users
+					INNER JOIN cities C ON users.city_id=C.id
+					INNER JOIN
+					(SELECT DISTINCT U.id as uid, U.name
+						FROM `makeadiff_madapp`.User U
+						INNER JOIN `makeadiff_madapp`.UserGroup UG on U.id = UG.user_id
+						INNER JOIN `makeadiff_madapp`.`Group` G on G.id = UG.group_id
+						WHERE U.status = 1
+						AND U.user_type = 'volunteer'
+						AND G.type = 'fellow'
+						AND UG.year = 2017
+					) IQ
+					ON IQ.uid = users.madapp_user_id
+					%donation_table%", "users.id",'','',$key);
+
+
+	} elseif($key == 'volunteer') {
+		$data = getFromBothTables("users.id,CONCAT(users.first_name, ' ', users.last_name) AS name, %amount%", "users
+					INNER JOIN cities C ON users.city_id=C.id
+					INNER JOIN
+					(SELECT DISTINCT U.id as uid, U.name
+						FROM `makeadiff_madapp`.User U
+						INNER JOIN `makeadiff_madapp`.UserGroup UG on U.id = UG.user_id
+						INNER JOIN `makeadiff_madapp`.`Group` G on G.id = UG.group_id
+						WHERE U.status = 1
+						AND U.user_type = 'volunteer'
+						AND G.type = 'volunteer'
+					) IQ
+					ON IQ.uid = users.madapp_user_id
+					%donation_table%", "users.id",'','',$key);
 	}
 
-	$mem->set("Infogen:index/data#$timeframe,$view_level,$state_id,$city_id,$group_id,$key", $data, $cache_expire);
+	$partcipated_count = 0;
+	$total_count = 0;
+	$id = 0;
 
+	foreach ($data as $value) {
+		$total_count++;
+		if($value['amount']>0)
+			$partcipated_count++;
+		$id = $value['id'];
+	}
+
+	$data[$id]['partcipated_count'] = $partcipated_count;
+	$data[$id]['total_count'] = $total_count;
+	$data[$id]['participation_percentage'] = $partcipated_count/$total_count*100;
+
+	// dump($data);
+
+	$mem->set("Infogen:index/data#$timeframe,$view_level,$state_id,$city_id,$group_id,$key", $data, $cache_expire);
+	// print_r($data);
  	return $data;
 }
 
-function getFromBothTables($select, $tables, $group_by, $where = '',$set_order_and_limits = true) {
+function getFromBothTables($select, $tables, $group_by, $where = '',$set_order_and_limits = true,$key='') {
 	global $filter, $top_count, $sql, $checks;
 
 	if($set_order_and_limits == true) {
@@ -413,23 +474,111 @@ function getFromBothTables($select, $tables, $group_by, $where = '',$set_order_a
 		$order_and_limits = "";
 	}
 
-
 	$query = "SELECT $select FROM $tables $filter $where GROUP BY $group_by $order_and_limits";
-	$donut_query = str_replace(array('%amount%', '%donation_table%'), array('SUM(D.donation_amount) AS amount, COUNT(DISTINCT D.donour_id) AS donor_count', 'INNER JOIN donations D ON D.fundraiser_id=users.id'), $query);
+	$donut_query = str_replace(array('%amount%', '%donation_table%'), array('COALESCE(SUM(D.donation_amount),0) AS amount, COALESCE(COUNT(DISTINCT D.donour_id),0) AS donor_count', 'LEFT OUTER JOIN donations D ON D.fundraiser_id=users.id'), $query);
 	$donut_data = $sql->getById($donut_query);
 
-	$extdon_query = str_replace(array('%amount%', '%donation_table%'), array('SUM(D.amount) AS amount, COUNT(DISTINCT D.donor_id) as donor_count', 'INNER JOIN external_donations D ON D.fundraiser_id=users.id'), $query);
+	$extdon_query = str_replace(array('%amount%', '%donation_table%'), array('COALESCE(SUM(D.amount),0) AS amount, COALESCE(COUNT(DISTINCT D.donor_id),0) as donor_count', 'LEFT OUTER JOIN external_donations D ON D.fundraiser_id=users.id'), $query);
 	$extdon_data = $sql->getById($extdon_query);
 
-	$data = $donut_data;
 
-	foreach ($extdon_data as $id => $value) {
-		if(isset($data[$id])){
-			$data[$id]['amount'] += $extdon_data[$id]['amount'];
-			$data[$id]['donor_count'] += $extdon_data[$id]['donor_count'];
+
+	if($key=='volunteer' || $key=='fellow'){ //Getting All Volunteer Data
+		switch ($key) {
+			case 'user':
+				$volunteer_data = "SELECT users.id,users.id as ID,CONCAT(users.first_name, ' ', users.last_name) AS name
+													 FROM users
+													 INNER JOIN cities C ON users.city_id = C.id
+													 WHERE ".implode(" AND ", $checks).
+													 " GROUP BY users.madapp_user_id";
+				break;
+			case 'volunteer':
+				$volunteer_data = "SELECT users.id,users.id as ID,CONCAT(users.first_name, ' ', users.last_name) AS name
+												  	FROM users
+											  	 	INNER JOIN cities C ON users.city_id = C.id
+													 	INNER JOIN
+								 						(SELECT DISTINCT U.id as uid, U.name
+								 							FROM `makeadiff_madapp`.User U
+								 							INNER JOIN `makeadiff_madapp`.UserGroup UG on U.id = UG.user_id
+								 							INNER JOIN `makeadiff_madapp`.`Group` G on G.id = UG.group_id
+								 							WHERE U.status = 1
+								 							AND U.user_type = 'volunteer'
+								 							AND G.type = 'volunteer'
+								 						) IQ
+														ON IQ.uid = users.madapp_user_id
+														WHERE ".implode(" AND ", $checks).
+														" GROUP BY users.madapp_user_id";
+				break;
+			case 'fellow':
+				$volunteer_data = "SELECT users.id,users.id as ID,CONCAT(users.first_name, ' ', users.last_name) AS name
+														FROM users
+														INNER JOIN cities C ON users.city_id = C.id
+														INNER JOIN
+														(SELECT DISTINCT U.id as uid, U.name
+															FROM `makeadiff_madapp`.User U
+															INNER JOIN `makeadiff_madapp`.UserGroup UG on U.id = UG.user_id
+															INNER JOIN `makeadiff_madapp`.`Group` G on G.id = UG.group_id
+															WHERE U.status = 1
+															AND U.user_type = 'volunteer'
+															AND G.type = 'fellow'
+														) IQ
+														ON IQ.uid = users.madapp_user_id
+														WHERE ".implode(" AND ", $checks).
+														" GROUP BY users.madapp_user_id";
+				break;
+			default:
+				$volunteer_data = "SELECT users.id,users.id as ID,CONCAT(users.first_name, ' ', users.last_name) AS name
+												 	FROM users
+												 	INNER JOIN cities C ON users.city_id = C.id
+												  WHERE ".implode(" AND ", $checks).
+													" GROUP BY users.madapp_user_id";
+				break;
 		}
-		else $data[$id]= $extdon_data[$id];
+
+		$volunteer_data = $sql->getById($volunteer_data);
+
+
+		$data = array();
+
+		foreach ($volunteer_data as $user_data) {
+			$data[$user_data['id']]['id']=$user_data['id'];
+			$data[$user_data['id']]['amount']=0;
+			$data[$user_data['id']]['name']=$user_data['name'];
+			$data[$user_data['id']]['donor_count']=0;
+			$data[$user_data['id']]['partcipated_count']=0;
+			$data[$user_data['id']]['total_count']=0;
+			$data[$user_data['id']]['participation_percentage']=0;
+		}
+
+		foreach ($extdon_data as $id => $value) {
+			if(isset($data[$id])){
+				$data[$id]['amount'] += $extdon_data[$id]['amount'];
+				$data[$id]['donor_count'] += $extdon_data[$id]['donor_count'];
+			}
+			else $data[$id]= $extdon_data[$id];
+		}
+
+		foreach ($donut_data as $id => $value) {
+			if(isset($data[$id])){
+				$data[$id]['amount'] += $donut_data[$id]['amount'];
+				$data[$id]['donor_count'] += $donut_data[$id]['donor_count'];
+			}
+			else $data[$id]= $extdon_data[$id];
+		}
 	}
+	else{
+		$data = $donut_data;
+		foreach ($extdon_data as $id => $value) {
+			if(isset($data[$id])){
+				$data[$id]['amount'] += $extdon_data[$id]['amount'];
+				$data[$id]['donor_count'] += $extdon_data[$id]['donor_count'];
+			}
+			else $data[$id]= $extdon_data[$id];
+		}
+	}
+
+
+	// var_dump($data);
 
 	uasort($data, function($a, $b) {
 		if($a['amount'] < $b['amount']) return 1;
@@ -437,11 +586,11 @@ function getFromBothTables($select, $tables, $group_by, $where = '',$set_order_a
 		return 0;
 	});
 
-	if($set_order_and_limits == true) {
-		return array_slice($data, 0, 30,true);
-	} else {
+	// if($set_order_and_limits == true) {
+	// 	return array_slice($data, 0, 30,true);
+	// } else {
 		return $data;
-	}
+	// }
 }
 
 function compare_participation($a,$b){

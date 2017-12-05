@@ -22,6 +22,13 @@
 	top:15px !important;
 }
 
+p.participation{
+	text-align: center;
+	background: #ed1849;
+	color: #fff !important;
+	padding: 5px;
+}
+
 #cylinder-info {
 	top: 40%;
 	left: 85px;

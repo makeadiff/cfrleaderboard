@@ -8,6 +8,8 @@ function init() {
 	show_more_count['group'] = 3;
 	show_more_count['coach'] = 3;
 	show_more_count['user'] = 3;
+	show_more_count['fellow'] = 3;
+	show_more_count['volunteer'] = 3;
 
 	$(".toggle-link").click({show_more_count : show_more_count}, showMore)
 
@@ -32,9 +34,9 @@ function showMore(event) {
 		show_more_count[key] += 9;
 	}
 
-	if(show_more_count[key] > 30) {
-		link.html(' <i class="tiny material-icons">remove</i>See Less');
-	}
+	// if(show_more_count[key] > 30) {
+	// 	link.html(' <i class="tiny material-icons">remove</i>See Less');
+	// }
 
 	/*if(!link.hasClass("currently-active")) {
 		link.addClass("currently-active");

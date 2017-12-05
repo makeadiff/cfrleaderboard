@@ -27,7 +27,7 @@
 		<form method="post" action="">
 		<?php
 		showOption("view_level", $all_view_levels, $view_level, "View Level");
-		showOption("timeframe", $all_timeframes, $timeframe, "Timeframe");
+		// showOption("timeframe", $all_timeframes, $timeframe, "Timeframe");
 		showOption("vertical_id", $all_verticals, $vertical_id, 'Vertical');
 		?>
 
