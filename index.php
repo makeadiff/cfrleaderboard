@@ -60,7 +60,7 @@ $total_user_count = 0;
 $total_donation = 0;
 $total_volunteer_particpated = 0;
 if(!$total_user_count or !$total_donation) {
-	if($view_level == 'national') {
+	if($view_level == 'national' || $view_level == 'city') {
 		$total_user_count = $sql->getOne("SELECT COUNT(users.id) AS count
 			FROM users
 			INNER JOIN cities C ON C.id=users.city_id
