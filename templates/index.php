@@ -173,7 +173,7 @@ function show($key, $data, $title) {
 <?php
 	if($key=='volunteer' || $key=='fellow'){
 		foreach ($data as $value) {
-			if($value['total_count']!=0){
+			if(isset($value['total_count']) && $value['total_count']!=0){
 				echo '<p class="participation">Participation Percentage: ';
 				echo number_format(round($value['participation_percentage'],0,PHP_ROUND_HALF_DOWN));
 				echo '% ('.$value['partcipated_count'].'/'.$value['total_count'].') </p>';

@@ -443,24 +443,26 @@ function getData($key, $get_user_count = false) {
 					%donation_table%", "users.id",'','',$key);
 	}
 
-	$partcipated_count = 0;
-	$total_count = 0;
-	$id = 0;
 
-	foreach ($data as $value) {
-		$total_count++;
-		if($value['amount']>0)
-			$partcipated_count++;
-		$id = $value['id'];
+	if($key=='volunteer' || $key=='fellow'){
+		$partcipated_count = 0;
+		$total_count = 0;
+		$id = 0;
+
+		foreach ($data as $value) {
+			$total_count++;
+			if($value['amount']>0)
+				$partcipated_count++;
+			$id = $value['id'];
+		}
+
+		$data[$id]['partcipated_count'] = $partcipated_count;
+		$data[$id]['total_count'] = $total_count;
+		if($total_count!=0)
+			$data[$id]['participation_percentage'] = ($partcipated_count/$total_count)*100;
+		else
+			$data[$id]['participation_percentage'] = 0;
 	}
-
-	$data[$id]['partcipated_count'] = $partcipated_count;
-	$data[$id]['total_count'] = $total_count;
-	if($total_count!=0)
-		$data[$id]['participation_percentage'] = ($partcipated_count/$total_count)*100;
-	else
-		$data[$id]['participation_percentage'] = 0;
-
 	// dump($data);
 
 	$mem->set("Infogen:index/data#$timeframe,$view_level,$state_id,$city_id,$group_id,$key", $data, $cache_expire);
