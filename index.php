@@ -65,13 +65,14 @@ if(!$total_user_count or !$total_donation) {
 			FROM users
 			INNER JOIN cities C ON C.id=users.city_id
 			INNER JOIN
-			(SELECT U.id as uid, U.name
-			FROM `makeadiff_madapp`.User U
-			WHERE U.status = 1
-			AND U.user_type = 'volunteer'
-			) IQ
+				(SELECT U.id as uid, U.name
+				FROM `makeadiff_madapp`.User U
+				WHERE U.status = 1
+				AND U.user_type = 'volunteer'
+				) IQ
 			ON IQ.uid = users.madapp_user_id
 			WHERE " . implode(" AND ", $user_checks));
+
 		$total_donation = $sql->getOne("SELECT SUM(D.donation_amount) AS sum
 			FROM users
 			INNER JOIN cities C ON C.id=users.city_id

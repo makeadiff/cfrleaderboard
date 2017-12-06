@@ -113,7 +113,7 @@
 
 		<?php if($total_donation and $timeframe == 0) { ?>
 
-			<div class="col s12 m6" title="Amount : <?php echo money_format("%.0n", $total_donation)?>">
+			<div class="col s12 m6">
 				<?php if($all_levels['user']['data']) { ?>
 				<div class="card">
 					<div class="card-image">
@@ -133,7 +133,7 @@
 							</thead>
 							<tbody>
 								<tr>
-									<td><?php echo number_format(round(($total_volunteer_particpated/($total_user_count)*100),0,PHP_ROUND_HALF_DOWN))."%" ?></td>
+									<td title="<?php echo $total_volunteer_particpated.'/'.$total_user_count; ?>"><?php echo number_format(round(($total_volunteer_particpated/($total_user_count)*100),0,PHP_ROUND_HALF_DOWN))."%" ?></td>
 									<td><?php echo money_format("%.0n",$total_user_count*12000) ?></td>
 									<td><?php echo number_format(round(($total_donation/($total_user_count*12000)*100),0,PHP_ROUND_HALF_DOWN))."%" ?></td>
 								</tr>
