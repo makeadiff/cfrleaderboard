@@ -90,8 +90,15 @@ function show($key, $data, $title) {
 	<thead>
 		<tr>
 		<th width="5%"></th>
-		<th width="45%">Name</th>
-		<th width="50%">Amount Raised</th>
+		<th width="40%">Name</th>
+		<?php if($key=='vertical'){?>
+		<th width="15%">% Fellow Participation</th>
+		<th width="15%">% Potential Achieved</th>
+		<?php }?>
+		<th width="30%" style="text-align:right">Amount Raised</th>
+		<?php if($key=='fellow'){?>
+		<th width="20%" style="text-align:right">Donor Count</th>
+		<?php }?>
 		</tr>
 	</thead>
 	<tr><td colspan="2">&nbsp;</td></tr>
@@ -100,8 +107,31 @@ $count = 1;
 foreach ($data as $row) { ?>
 <tr class="<?php if($count <= 3) echo 'show-row'; else echo 'hide-row'; ?>">
 	<td width="5%"><?php if($count <= 3){ echo '<img src="./images/'.$count.'.png" height="15px" />'; } else echo ' '; ?></td>
-	<td width="65%" class="unit-name"><?php echo $count . '.  ' . $row['name'] ?></td>
-	<td width="30%"><?php echo money_format("%.0n", $row['amount']) ?></td>
+
+	<?php
+		if($key!='vertical'){
+			echo '<td width="30%" class="unit-name" name="'. $key.'-name">'.$count. '.  '. ucwords(strtolower($row['name'])).'</td>';
+		}
+		else{
+			echo '<td width="40%" class="unit-name" name="'. $key.'-name">'.$count. '.  <a href="./vertical.php?view_level=vertical&vertical_id='.$row['id'].'">' . ucwords(strtolower($row['name'])).'</a></td>';
+		}
+	?>
+
+	<?php if($key=='vertical') {
+		echo "<td width='15%' title='{$row['user_count_participated']}/{$row['user_count_total']}'><strong>";
+		if(!isset($row['user_count_participated']) or $row['user_count_total'] == 0) echo "0";
+		else echo number_format(round($row['participation_percentage'],0,PHP_ROUND_HALF_DOWN)) . "%";
+		echo "</strong></td>";
+
+		echo "<td width='15%'>";
+		if(!isset($row['target_percentage']) or $row['user_count_total'] == 0) echo "0";
+		else echo $row['target_percentage'] . "%";
+		echo "</td>";
+	}?>
+	<td width="25%" style="text-align:right"><?php echo money_format("%.0n", $row['amount']) ?></td>
+	<?php if($key=='fellow'){?>
+		<td width="30%" style="text-align:right"><?php echo $row['donor_count'] ?></td>
+	<?php } ?>
 </tr>
 <?php
 	$count++;

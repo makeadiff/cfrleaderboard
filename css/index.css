@@ -60,8 +60,13 @@ p.participation{
 	#table_data{
 		top:105%;
 		position: absolute;
-		width: 100%;
+		/*width: 100%;*/
 		left: 0;
+		font-size: 12px;
+	}
+
+	table th{
+		font-size: 10px;
 	}
 
 }

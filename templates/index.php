@@ -182,26 +182,26 @@ function show($key, $data, $title) {
 	}
 ?>
 <div class="card-content" id='top-<?php echo $key ?>'>
-<table>
+<table width='100%'>
 	<thead>
 		<tr>
 			<th width="5%"></th>
 			<?php if($key!='user') {
-				echo "<th width='25%'>Name</th>";
+				echo "<th>Name</th>";
 			}
 			else{
-				echo "<th width='50%'>Name</th>";
+				echo "<th>Name</th>";
 			}
 			?>
 			<?php if($key!='user' && $key!='fellow' && $key!='volunteer') {
-				echo "<th width='25%'>%Volunteer<br/>Participation</th>";
+				echo "<th>%Volunteer<br/>Participation</th>";
 			}
 			if($key=='city') {
-				echo "<th width='20%'>%Potential<br/>Achieved</th>";
+				echo "<th>%Potential<br/>Achieved</th>";
 			}?>
-			<th width="35%">Amount<br/>Donuted</th>
+			<th style="text-align:right">Amount<br/>Donuted</th>
 			<?php if($key=='user' || $key=='fellow' || $key=='volunteer') {
-				echo "<th width='25%'>Donor Count</th>";
+				echo "<th style='text-align:right'>Donor Count</th>";
 			}
 			?>
 		</tr>
@@ -215,29 +215,29 @@ foreach ($data as $row) {
 	<td width="5%"><?php if($count <= 3){ echo '<img src="./images/'.$count.'.png" height="15px" />'; } else echo ' '; ?></td>
 	<?php
 		if($key!='city'){
-			echo '<td width="50%" class="unit-name" name="'. $key.'-name">'.$count. '.  ' . ucwords(strtolower($row['name'])).'</td>';
+			echo '<td class="unit-name" name="'. $key.'-name">'.$count. '.  ' . ucwords(strtolower($row['name'])).'</td>';
 		}
 		else{
-			echo '<td width="30%" class="unit-name" name="'. $key.'-name">'.$count. '.  <a href="./?view_level=city&city_id='.$row['id'].'">' . ucwords(strtolower($row['name'])).'</a></td>';
+			echo '<td class="unit-name" name="'. $key.'-name">'.$count. '.  <a href="./?view_level=city&city_id='.$row['id'].'">' . ucwords(strtolower($row['name'])).'</a></td>';
 		}
 	?>
 	<?php if($key!='user' && $key!='group' && $key!='fellow' && $key!='volunteer') {
-		echo "<td width='10%' title='{$row['user_count_participated']}/{$row['user_count_total']}'><strong>";
+		echo "<td title='{$row['user_count_participated']}/{$row['user_count_total']}'><strong>";
 		if(!isset($row['user_count_participated']) or $row['user_count_total'] == 0) echo "0";
 		else echo number_format(round($row['participation_percentage'],0,PHP_ROUND_HALF_DOWN)) . "%";
 		echo "</strong></td>";
 	}
 	if($key == 'city') {
-		echo "<td width='15%'>";
+		echo "<td>";
 		if(!isset($row['target_percentage']) or $row['user_count_total'] == 0) echo "0";
 		else echo $row['target_percentage'] . "%";
 		echo "</td>";
 	}
 	?>
-	<td width="25%" name="<?php echo $key ?>-raised"><?php echo money_format("%.0n", $row['amount']) ?></td>
+	<td style="text-align:right" name="<?php echo $key ?>-raised"><?php echo money_format("%.0n", $row['amount']) ?></td>
 	<?php
 	if($key=='user' || $key=='fellow' || $key=='volunteer') {
-		echo "<td width='25%'>";
+		echo "<td style='text-align:right'>";
 		if(!isset($row['donor_count']) or $row['donor_count'] == 0) echo "0";
 		else echo $row['donor_count'];
 		echo "</td>";

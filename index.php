@@ -286,6 +286,7 @@ function getData($key, $get_user_count = false) {
 								ON IQ.uid = users.madapp_user_id
 								WHERE is_deleted=0 AND city_id=$this_city_id
 								");
+
 			$data[$this_city_id]['target_percentage'] = intval($data[$this_city_id]['amount'] / ($data[$this_city_id]['user_count_total'] * 12000) * 100);
 			$data[$this_city_id]['participation_percentage'] = intval($data[$this_city_id]['user_count_participated'] / ($data[$this_city_id]['user_count_total']) * 100);
 		}
@@ -303,6 +304,8 @@ function getData($key, $get_user_count = false) {
 		}
 
 		usort($data,"compare_participation");
+
+		// dump($data);
 
 	} elseif($key == 'group') {
 
@@ -324,7 +327,7 @@ function getData($key, $get_user_count = false) {
 		// 			INNER JOIN cities C ON C.id=users.city_id
 		// 			%donation_table%", "G.id", "AND R.id=9 AND G.name != 'Events'",false);
 
-		$data = getFromBothTables("G.id,CONCAT(G.name, ' (', C.name, ')') AS name, %amount%", "users
+		$data = getFromBothTables("G.id,G.name AS name, %amount%", "users
 					INNER JOIN groups G ON G.id=users.group_id
 					INNER JOIN cities C ON C.id=users.city_id
 					%donation_table%", "G.id", "AND G.type='center'");
@@ -339,7 +342,7 @@ function getData($key, $get_user_count = false) {
 		}
 
 		foreach($user_data as $row) {
-			if($row['amount'] >= 12000 && !empty($data[$row['group_id']])) {
+			if($row['amount'] > 0 && !empty($data[$row['group_id']])) {
 				$data[$row['group_id']]['user_count_participated'] ++;
 			}
 		}
@@ -427,6 +430,7 @@ function getData($key, $get_user_count = false) {
 					ON IQ.uid = users.madapp_user_id
 					%donation_table%", "users.id",'','',$key);
 
+					// dump($data);
 
 	} elseif($key == 'volunteer') {
 		$data = getFromBothTables("users.id,CONCAT(users.first_name, ' ', users.last_name) AS name, %amount%", "users

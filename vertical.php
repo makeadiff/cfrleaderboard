@@ -33,6 +33,7 @@ $array_template = array('title' => '', 'data' => array(), 'show_in' => array());
 $all_levels = array('vertical' => $array_template, 'fellow' => $array_template);
 $all_levels['vertical']['show_in']	= array('national');
 $all_levels['fellow']['show_in']	= array('national', 'vertical');
+$all_levels['participation']['show_in']	= array('vertical');
 
 foreach ($all_levels as $key => $level_info) {
 	if(in_array($view_level, $level_info['show_in'])) {
@@ -69,21 +70,65 @@ function getData($key, $get_user_count = false) {
 
 	if($key == 'vertical') {
 		if($vertical_id) $checks['vertical_id'] = "IQ.vid = $vertical_id";
-		$data = getFromBothTables("IQ.vid AS id,IQ.vname AS name, %amount%", "
+		$values = getFromBothTables("IQ.vid AS id,IQ.vname AS name, COUNT(DISTINCT users.id,' ') as user_count_participated, %amount%", "
 					users
 					INNER JOIN
-					(SELECT U.id AS uid,U.name,V.id AS vid,V.name AS vname
+					(SELECT U.id AS uid,U.name as name,V.id AS vid,V.name AS vname
 						FROM `$db_madapp`.User U
 						INNER JOIN `$db_madapp`.UserGroup UG ON UG.user_id = U.id
 						INNER JOIN `$db_madapp`.`Group` G ON G.id = UG.group_id
 						INNER JOIN `$db_madapp`.Vertical V ON V.id = G.vertical_id
 						WHERE U.status = 1 AND U.user_type = 'volunteer' AND UG.year = $year
-						AND (G.type =  'national' OR G.type =  'strat' OR G.type =  'fellow')
+						AND (G.type = 'national' OR G.type =  'strat' OR G.type =  'fellow')
 						AND V.id NOT IN ( " . implode(",", $verticals_to_hide) . ")
 						GROUP BY U.id,V.id) IQ
 					ON IQ.uid = users.madapp_user_id
 					%donation_table%", "IQ.vid");
+
+		$data = array();
+		foreach($values as $value) {
+			$key = $value['id'];
+			$data[$key]['id']=$key;
+			$data[$key]['name']=$value['name'];
+			$data[$key]['user_count_participated']=$value['user_count_participated'];
+			$data[$key]['amount']=$value['amount'];
+			$data[$key]['target_percentage'] = 0;
+			$data[$key]['participation_percentage'] = 0;
+			$data[$key]['user_count_total'] = 0;
+		}
+
 		// dump($data);
+
+		$all_verticals = $sql->getById("SELECT id,name FROM `makeadiff_madapp`.Vertical WHERE id NOT IN ( " . implode(",", $verticals_to_hide) . ") ORDER BY name");
+		// dump($all_verticals);
+
+		foreach ($all_verticals as $this_vertical_id => $vertical_name) {
+			if(!isset($data[$this_vertical_id]['amount'])) continue;
+			$vertical_check = "AND V.id=$this_vertical_id";
+			$data_user = $sql->getById("SELECT users.id, TRIM(CONCAT(users.first_name, ' ', users.last_name)) AS name
+						FROM users
+						INNER JOIN
+						(SELECT U.id AS uid,U.name,V.id AS vid,V.name AS vname
+							FROM `$db_madapp`.User U
+							INNER JOIN `$db_madapp`.UserGroup UG ON UG.user_id = U.id
+							INNER JOIN `$db_madapp`.`Group` G ON G.id = UG.group_id
+							INNER JOIN `$db_madapp`.Vertical V ON V.id = G.vertical_id
+							WHERE U.status = 1 AND U.user_type = 'volunteer' AND UG.year = $year $vertical_check
+							AND (G.type =  'strat' OR G.type =  'fellow')
+							AND V.id NOT IN ( " . implode(",", $verticals_to_hide) . ")
+							GROUP BY U.id,V.id) IQ
+						ON IQ.uid = users.madapp_user_id
+						GROUP BY users.madapp_user_id");
+
+			$data[$this_vertical_id]['user_count_total'] = count($data_user);
+
+			$data[$this_vertical_id]['target_percentage'] = intval($data[$this_vertical_id]['amount'] / ($data[$this_vertical_id]['user_count_total'] * 12000) * 100);
+			$data[$this_vertical_id]['participation_percentage'] = intval($data[$this_vertical_id]['user_count_participated'] / ($data[$this_vertical_id]['user_count_total']) * 100);
+		}
+
+		// dump($data);
+
+		usort($data,"compare_participation");
 
 	} elseif($key == 'fellow') {
 		$vertical_check = '';
@@ -112,7 +157,7 @@ function getData($key, $get_user_count = false) {
 	return $data;
 }
 
-/// This is kind of horrible. But there was a lot of code repetation earlier - so I switched to this approch. Need as have to do the same check on two seperate tables.
+// This is kind of horrible. But there was a lot of code repetation earlier - so I switched to this approch. Need as have to do the same check on two seperate tables.
 function getFromBothTables($select, $tables, $group_by = '', $where = '') {
 	global $top_count, $sql, $checks, $city_checks;
 
@@ -127,16 +172,26 @@ function getFromBothTables($select, $tables, $group_by = '', $where = '') {
 		$query = "SELECT $select FROM $tables $filter $where GROUP BY $group_by $order_and_limits";
 	}
 
-	$donut_query = str_replace(array('%amount%', '%donation_table%'), array('SUM(D.donation_amount) AS amount', 'INNER JOIN donations D ON D.fundraiser_id=users.id'), $query);
+	$donut_query = str_replace(array('%amount%', '%donation_table%'), array('SUM(D.donation_amount) AS amount, COALESCE(COUNT(DISTINCT D.donour_id),0) AS donor_count, GROUP_CONCAT(users.id,",") as user_ids', 'INNER JOIN donations D ON D.fundraiser_id=users.id'), $query);
 	$donut_data = $sql->getById($donut_query);
 
-	$extdon_query = str_replace(array('%amount%', '%donation_table%'), array('SUM(D.amount) AS amount', 'INNER JOIN external_donations D ON D.fundraiser_id=users.id'), $query);
+	$extdon_query = str_replace(array('%amount%', '%donation_table%'), array('SUM(D.amount) AS amount, COALESCE(COUNT(DISTINCT D.donor_id),0) AS donor_count, GROUP_CONCAT(users.id,",") as user_ids', 'INNER JOIN external_donations D ON D.fundraiser_id=users.id'), $query);
 	$extdon_data = $sql->getById($extdon_query);
 
 	$data = $donut_data;
 
 	foreach ($extdon_data as $id => $value) {
-		if(isset($data[$id])) $data[$id]['amount'] += $extdon_data[$id]['amount'];
+		if(isset($data[$id])) {
+			$data[$id]['amount'] += $extdon_data[$id]['amount'];
+			$data[$id]['donor_count'] += $extdon_data[$id]['donor_count'];
+			$data[$id]['user_ids'] .= $extdon_data[$id]['user_ids'];
+
+			$ids = explode(',',$data[$id]['user_ids']);
+			sort($ids);
+			$ids = array_filter(array_unique($ids));
+
+			$data[$id]['user_count_participated']=count($ids);
+		}
 		else $data[$id] = $extdon_data[$id];
 	}
 
@@ -148,6 +203,15 @@ function getFromBothTables($select, $tables, $group_by = '', $where = '') {
 
 	return $data;
 }
+
+function compare_participation($a,$b){
+	if($a['participation_percentage']==$b['participation_percentage']){
+		return 0;
+	}
+	return ($a['participation_percentage'] < $b['participation_percentage']) ? 1 : -1;
+}
+
+
 
 $html = new HTML;
 render('vertical.php', false);
