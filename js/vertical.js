@@ -17,8 +17,8 @@ function showMore(event) {
 	var key = this.id.replace(/show\-more\-/, '');
 	var link = $(this);
 
-	if(show_more_count[key] > 30) {
-		$("#top-" + key + " .hide-row").hide('fade');
+	if(show_more_count[key] > 50) {
+		// $("#top-" + key + " .hide-row").hide('fade');
 		show_more_count[key] = 3;
 		link.html(' <i class="tiny material-icons">add</i>See More');
 	} else {
@@ -26,7 +26,7 @@ function showMore(event) {
 		show_more_count[key] += 9;
 	}
 
-	if(show_more_count[key] > 30) {
+	if(show_more_count[key] > 50) {
 		link.html(' <i class="tiny material-icons">remove</i>See Less');
 	}
 

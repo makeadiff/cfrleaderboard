@@ -189,7 +189,8 @@ function getFromBothTables($select, $tables, $group_by = '', $where = '') {
 			$ids = explode(',',$data[$id]['user_ids']);
 			sort($ids);
 			$ids = array_filter(array_unique($ids));
-
+			// echo $data[$id]['name'];
+			// dump($ids);
 			$data[$id]['user_count_participated']=count($ids);
 		}
 		else $data[$id] = $extdon_data[$id];
