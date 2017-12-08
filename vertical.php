@@ -79,7 +79,7 @@ function getData($key, $get_user_count = false) {
 						INNER JOIN `$db_madapp`.`Group` G ON G.id = UG.group_id
 						INNER JOIN `$db_madapp`.Vertical V ON V.id = G.vertical_id
 						WHERE U.status = 1 AND U.user_type = 'volunteer' AND UG.year = $year
-						AND (G.type = 'national' OR G.type =  'strat' OR G.type =  'fellow')
+						AND (G.type =  'strat' OR G.type =  'fellow')
 						AND V.id NOT IN ( " . implode(",", $verticals_to_hide) . ")
 						GROUP BY U.id,V.id) IQ
 					ON IQ.uid = users.madapp_user_id
