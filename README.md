@@ -16,7 +16,7 @@ Key data includes,
 
 ## Dependencies and Set Up
 Clone the repository called [Donutleaderboard][]
-Set up both the repository in the <pre>apps</pre> folder within the <pre><code>public_html</code></pre> folder
+Set up both the repository in the folder called <pre>public_html/apps</pre>
 
 ## Upcoming Features
 * Donated vs Deposited Data in a chart view.
