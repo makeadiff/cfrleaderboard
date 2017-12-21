@@ -14,8 +14,9 @@ Key data includes,
 - City/Vertical Potential vs Actual Met
 - Volunteer Leaderboard for City, Vertical and National Level
 
-## Dependencies
+## Dependencies and Set Up
 Clone the repository called [Donutleaderboard][]
+Set up both the repository in the <pre><code>apps</code></pre> folder within the <pre><code>public_html</code></pre> folder
 
 ## Upcoming Features
 * Donated vs Deposited Data in a chart view.
