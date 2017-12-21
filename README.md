@@ -15,9 +15,9 @@ Key data includes,
 - Volunteer Leaderboard for City, Vertical and National Level
 
 ## Dependencies
-Clone the repository called [Donutleaderboard][https://github.com/makeadiff/donutleaderboard]
+Clone the repository called [Donutleaderboard][]
 
 ## Upcoming Features
 * Donated vs Deposited Data in a chart view.
 
-
+[Donutleaderboard]: https://github.com/makeadiff/donutleaderboard
