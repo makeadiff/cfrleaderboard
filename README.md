@@ -15,10 +15,12 @@ Key data includes,
 - Volunteer Leaderboard for City, Vertical and National Level
 
 ## Dependencies and Set Up
-Clone the repository called [Donutleaderboard][]
-Set up both the repository in the folder called <pre>public_html/apps</pre>
+* Clone the repository called [Donutleaderboard][]. Set up both the repository in the folder called <pre>public_html/apps</pre>
+* [Iframe][]
+* Memcached
 
 ## Upcoming Features
 * Donated vs Deposited Data in a chart view.
 
 [Donutleaderboard]: https://github.com/makeadiff/donutleaderboard
+[Iframe]: https://github.com/binnyva/iframe
