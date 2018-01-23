@@ -45,17 +45,8 @@
 		</form>
 	</div>
 
+
 	<div class="row">
-		<?php if(!$total_donation) { ?>
-		<!-- <div class="col s12 m6">
-			<div class="card">
-				<div class="card-image">
-					<img src="images/warning.png">
-					<span class="card-title img-title">No data for the selected options</span>
-				</div>
-			</div>
-		</div> -->
-		<?php } ?>
 
 		<?php if($all_levels['city']['data']) { ?>
 		<div class="col s12 m6">
@@ -110,6 +101,16 @@
 		</div>
 		<?php } ?>
 
+		<?php //if($all_levels['nonparticipative']['data']) { ?>
+		<!-- <div class="col s12 m6">
+			<div class="card">
+				<div class="card-image">
+					<img src="images/region.jpg"> -->
+					<?php //showCard('nonparticipative'); ?>
+			<!-- </div>
+		</div> -->
+		<?php //} ?>
+
 
 		<?php if($total_donation and $timeframe == 0) { ?>
 
@@ -133,7 +134,7 @@
 							</thead>
 							<tbody>
 								<tr>
-									<td title="<?php echo $total_volunteer_particpated.'/'.$total_user_count; ?>"><?php echo number_format(round(($total_volunteer_particpated/($total_user_count)*100),0,PHP_ROUND_HALF_DOWN))."%" ?></td>
+									<td title="<?php echo $total_volunteer_particpated.'/'.$total_user_count; ?>"><?php echo number_format(round(($total_volunteer_particpated/($total_user_count)*100),1))."%" ?></td>
 									<td><?php echo money_format("%.0n",$total_user_count*12000) ?></td>
 									<td><?php echo number_format(round(($total_donation/($total_user_count*12000)*100),0,PHP_ROUND_HALF_DOWN))."%" ?></td>
 								</tr>
@@ -179,6 +180,14 @@ function show($key, $data, $title) {
 				echo '% ('.$value['partcipated_count'].'/'.$value['total_count'].') </p>';
 			}
 		}
+	}else if($key=='nonparticipative'){
+		foreach ($data as $value) {
+			if(isset($value['total_count']) && $value['total_count']!=0){
+				echo '<p class="participation">% Non Participative: ';
+				echo number_format(round($value['participation_percentage'],0,PHP_ROUND_HALF_DOWN));
+				echo '% ('.$value['partcipated_count'].'/'.$value['total_count'].') </p>';
+			}
+		}
 	}
 ?>
 <div class="card-content" id='top-<?php echo $key ?>'>
@@ -193,13 +202,16 @@ function show($key, $data, $title) {
 				echo "<th>Name</th>";
 			}
 			?>
-			<?php if($key!='user' && $key!='fellow' && $key!='volunteer') {
+			<?php if($key!='user' && $key!='fellow' && $key!='volunteer' && $key!='nonparticipative') {
 				echo "<th>%Volunteer<br/>Participation</th>";
 			}
 			if($key=='city') {
 				echo "<th>%Potential<br/>Achieved</th>";
-			}?>
-			<th style="text-align:right">Amount<br/>Donuted</th>
+			}
+			if($key!='nonparticipative') {
+				echo "<th style='text-align:right'>Amount<br/>Donuted</th>";
+			}
+			?>
 			<?php if($key=='user' || $key=='fellow' || $key=='volunteer') {
 				echo "<th style='text-align:right'>Donor Count</th>";
 			}
@@ -221,10 +233,10 @@ foreach ($data as $row) {
 			echo '<td class="unit-name" name="'. $key.'-name">'.$count. '.  <a href="./?view_level=city&city_id='.$row['id'].'">' . ucwords(strtolower($row['name'])).'</a></td>';
 		}
 	?>
-	<?php if($key!='user' && $key!='group' && $key!='fellow' && $key!='volunteer') {
+	<?php if($key!='user' && $key!='group' && $key!='fellow' && $key!='volunteer' && $key!='nonparticipative') {
 		echo "<td title='{$row['user_count_participated']}/{$row['user_count_total']}'><strong>";
 		if(!isset($row['user_count_participated']) or $row['user_count_total'] == 0) echo "0";
-		else echo number_format(round($row['participation_percentage'],0,PHP_ROUND_HALF_DOWN)) . "%";
+		else echo number_format(round($row['participation_percentage'],2)) . "%";
 		echo "</strong></td>";
 	}
 	if($key == 'city') {
@@ -234,7 +246,9 @@ foreach ($data as $row) {
 		echo "</td>";
 	}
 	?>
-	<td style="text-align:right" name="<?php echo $key ?>-raised"><?php echo money_format("%.0n", $row['amount']) ?></td>
+	<?php if($key!='nonparticipative'){
+		echo '<td style="text-align:right" name="'.$key.'-raised">'.money_format("%.0n", $row['amount']).'</td>';
+	}?>
 	<?php
 	if($key=='user' || $key=='fellow' || $key=='volunteer') {
 		echo "<td style='text-align:right'>";
@@ -249,7 +263,7 @@ foreach ($data as $row) {
 } ?>
 
 </table><br />
-<p class="activator"><a id='show-more-<?php echo $key ?>' class='toggle-link'> <i class="tiny material-icons">add</i>See More</a></p>
+<p class="activator"><a id='show-more-<?php echo $key.'-'.count($data) ?>' class='toggle-link'> <i class="tiny material-icons">add</i>See More</a></p>
 
 </div>
 

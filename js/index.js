@@ -10,6 +10,7 @@ function init() {
 	show_more_count['user'] = 3;
 	show_more_count['fellow'] = 3;
 	show_more_count['volunteer'] = 3;
+	show_more_count['nonparticipative'] = 3;
 
 	$(".toggle-link").click({show_more_count : show_more_count}, showMore)
 
@@ -21,22 +22,44 @@ function init() {
 
 function showMore(event) {
 	var show_more_count = event.data.show_more_count;
-	var key = this.id.replace(/show\-more\-/, '');
+	var string = this.id.replace(/show\-more\-/, '');
+	var parameters = string.split('-');
+	var key = parameters[0];
+	var count = parameters[1];
 	var link = $(this);
 
-	if(show_more_count[key] > 30) {
-		$("#top-" + key + " .hide-row").hide('fade');
-		show_more_count[key] = 3;
-		link.html(' <i class="tiny material-icons">add</i>See More');
-	} else {
-		console.log("#top-" + key + " .hide-row:lt(" + show_more_count[key] + ")");
-		$("#top-" + key + " .hide-row:lt(" + show_more_count[key] + ")").show('fade');
-		show_more_count[key] += 9;
+
+	if(key=='user'){
+		if(show_more_count[key] > 30) {
+			$("#top-" + key + " .hide-row").hide('fade');
+			show_more_count[key] = 3;
+			link.html(' <i class="tiny material-icons">add</i>See More');
+		} else {
+			console.log("#top-" + key + " .hide-row:lt(" + show_more_count[key] + ")");
+			$("#top-" + key + " .hide-row:lt(" + show_more_count[key] + ")").show('fade');
+			show_more_count[key] += 6;
+		}
+	}else{
+		if(show_more_count[key]-15 > count) {
+			$("#top-" + key + " .hide-row").hide('fade');
+			show_more_count[key] = 3;
+			link.html(' <i class="tiny material-icons">add</i>See More');
+		} else {
+			console.log("#top-" + key + " .hide-row:lt(" + show_more_count[key] + ")");
+			$("#top-" + key + " .hide-row:lt(" + show_more_count[key] + ")").show('fade');
+			show_more_count[key] += 15;
+		}
 	}
 
-	// if(show_more_count[key] > 30) {
-	// 	link.html(' <i class="tiny material-icons">remove</i>See Less');
-	// }
+	if(key != 'user'){
+		if(show_more_count[key]-15 > count) {
+			link.html(' <i class="tiny material-icons">remove</i>See Less');
+		}
+	}else{
+		if(show_more_count[key] > 20) {
+			link.html(' <i class="tiny material-icons">remove</i>See Less');
+		}
+	}
 
 	/*if(!link.hasClass("currently-active")) {
 		link.addClass("currently-active");
