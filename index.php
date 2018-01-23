@@ -2,6 +2,7 @@
 require 'common.php';
 include("../donutleaderboard/_city_filter.php");
 
+
 $view_level = i($QUERY, 'view_level', 'national');
 $timeframe = intval(i($QUERY, 'timeframe', '0'));
 $view = i($QUERY, 'view', 'top');
@@ -15,7 +16,7 @@ $group_id = i($QUERY, 'group_id', 0);
 if($view_level != 'group' and $view_level != 'city' and $view_level != 'region') $state_id = 0;
 if($view_level != 'group' and $view_level != 'city') $city_id = 0;
 if($view_level != 'group') $group_id = 0;
-if($view_level != 'national') $group_id = 0;
+// if($view_level != 'national') $group_id = 0;
 
 setlocale(LC_MONETARY, 'en_IN');
 $mem = new Memcached();
