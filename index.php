@@ -11,7 +11,7 @@ $state_id = i($QUERY, 'state_id', 0);
 $city_id = i($QUERY, 'city_id', 0);
 $group_id = i($QUERY, 'group_id', 0);
 
-// $QUERY['no_cache'] = 1;
+$QUERY['no_cache'] = 1;
 
 if($view_level != 'group' and $view_level != 'city' and $view_level != 'region') $state_id = 0;
 if($view_level != 'group' and $view_level != 'city') $city_id = 0;
