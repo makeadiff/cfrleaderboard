@@ -138,7 +138,7 @@ foreach ($data as $row) { ?>
 } ?>
 
 </table><br />
-<p class="activator" id="activator0"><a id='show-more-<?php echo $key ?>' class='toggle-link'> <i class="tiny material-icons">add</i>See More</a></p>
+<p class="activator" id="activator0"><a id='show-more-<?php echo $key.'-'.count($data) ?>' class='toggle-link'> <i class="tiny material-icons">add</i>See More</a></p>
 
 </div>
 

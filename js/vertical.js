@@ -14,10 +14,13 @@ function init() {
 
 function showMore(event) {
 	var show_more_count = event.data.show_more_count;
-	var key = this.id.replace(/show\-more\-/, '');
+	var string = this.id.replace(/show\-more\-/, '');
+	var parameters = string.split('-');
+	var key = parameters[0];
+	var count = parameters[1];
 	var link = $(this);
 
-	if(show_more_count[key] > 50) {
+	if(show_more_count[key] > count) {
 		// $("#top-" + key + " .hide-row").hide('fade');
 		show_more_count[key] = 3;
 		link.html(' <i class="tiny material-icons">add</i>See More');
@@ -26,7 +29,7 @@ function showMore(event) {
 		show_more_count[key] += 9;
 	}
 
-	if(show_more_count[key] > 50) {
+	if(show_more_count[key] > count) {
 		link.html(' <i class="tiny material-icons">remove</i>See Less');
 	}
 

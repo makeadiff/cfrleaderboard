@@ -2,6 +2,7 @@
 require 'common.php';
 include("../donutleaderboard/_city_filter.php");
 
+
 $view_level = i($QUERY, 'view_level', 'national');
 $timeframe = intval(i($QUERY, 'timeframe', '0'));
 $view = i($QUERY, 'view', 'top');
@@ -19,6 +20,7 @@ if($view_level != 'group') $group_id = 0;
 
 setlocale(LC_MONETARY, 'en_IN');
 $mem = new Memcached();
+// $mem = new Mem(); //If error, Change this (Mem) to Memcached
 $mem->addServer("127.0.0.1", 11211);
 
 $cache_expire = 60 * 60;
@@ -45,14 +47,15 @@ $top_title = '';
 $bottom_title = '';
 
 $array_template = array('title' => '', 'data' => array(), 'show_in' => array());
-$all_levels = array('region' => $array_template, 'city' => $array_template, 'group' => $array_template, 'coach' => $array_template, 'user' => $array_template, 'volunteer' => $array_template,'fellow' => $array_template );
-// $all_levels['region']['show_in']	= array('national');
+$all_levels = array('region' => $array_template, 'city' => $array_template, 'group' => $array_template, 'coach' => $array_template, 'user' => $array_template, 'volunteer' => $array_template,'fellow' => $array_template, 'nonparticipative' => $array_template );
+
 $all_levels['city']['show_in']		= array('national', 'region');
 $all_levels['group']['show_in']		= array('region', /*'city'*/);
 $all_levels['coach']['show_in']		= array('national', 'region', 'city', 'group');
 $all_levels['user']['show_in']		= array('national', 'region', 'city', 'group', 'coach');
 $all_levels['fellow']['show_in']	= array('city');
 $all_levels['volunteer']['show_in']	= array('city');
+$all_levels['nonparticipative']['show_in']	= array('city');
 
 // Get the totals for the city card.
 $total_user_count = 0;
@@ -110,6 +113,7 @@ foreach ($all_levels as $key => $level_info) {
 
 		if($name == 'Fellow') $title = 'Fellow Participation';
 		if($name == 'Volunteer') $title = 'Volunteer Participation';
+		if($name == 'Nonparticipative') $title = '';
 
 		if($group_id) {
 			$city_name = $sql->getOne("SELECT name FROM cities WHERE id=$city_id");
@@ -235,9 +239,16 @@ function getData($key, $get_user_count = false) {
 		$data = getFromBothTables("C.id,C.name, %amount%",
 					"cities C
 						INNER JOIN users ON city_id=C.id
+						INNER JOIN
+						 (SELECT U.id as uid, U.name
+						 	FROM `makeadiff_madapp`.User U
+						 	WHERE U.status = 1
+						 	AND U.user_type = 'volunteer'
+						 ) IQ
+						 ON IQ.uid = users.madapp_user_id
 						%donation_table%",
 					"C.id",
-					'AND C.id != 25'); // 25 is national team
+					'AND C.id != 25'); // 25 is Leadership Team
 
 			// INNER JOIN
 			// (SELECT U.id as uid, U.name
@@ -247,13 +258,22 @@ function getData($key, $get_user_count = false) {
 			// ) IQ
 			// ON IQ.uid = users.madapp_user_id
 
-		//To get the number of users who have donated above Rs. 12,000
+		//To get the number of users who have donated above Rs. 0
 		$user_data = getFromBothTables("DISTINCT users.id,%amount%,
 					C.id as city_id",
 					"cities C
 						INNER JOIN `makeadiff_cfrapp`.users ON users.city_id=C.id
+						INNER JOIN
+						 (SELECT U.id as uid, U.name
+						 	FROM `makeadiff_madapp`.User U
+						 	WHERE U.status = 1
+						 	AND U.user_type = 'volunteer'
+						 ) IQ
+						 ON IQ.uid = users.madapp_user_id
 					%donation_table%",
 					"users.id","",false);
+
+		// dump($user_data);
 
 		foreach($data as $key => $row) {
 			$data[$key]['user_count_participated'] = 0;
@@ -274,20 +294,20 @@ function getData($key, $get_user_count = false) {
 			if(!isset($data[$this_city_id]['amount'])) continue;
 
 			$data[$this_city_id]['user_count_total'] = $sql->getOne("
-								SELECT DISTINCT COUNT(madapp_user_id)
-								FROM users
+								SELECT DISTINCT COUNT(User.id)
+								FROM `makeadiff_madapp`.User
+								INNER JOIN `makeadiff_madapp`.City on City.id = User.city_id
 								INNER JOIN
-								(SELECT DISTINCT U.id as uid, U.name
-									FROM `makeadiff_madapp`.User U
-									WHERE U.status = 1
-									AND U.user_type = 'volunteer'
+								(SELECT DISTINCT C.id as cid,C.madapp_city_id as mcid
+									FROM cities C
 								) IQ
-								ON IQ.uid = users.madapp_user_id
-								WHERE is_deleted=0 AND city_id=$this_city_id
-								");
+								ON IQ.mcid = User.city_id
+								WHERE status=1
+								AND user_type = 'volunteer'
+								AND IQ.cid=$this_city_id");
 
 			$data[$this_city_id]['target_percentage'] = intval($data[$this_city_id]['amount'] / ($data[$this_city_id]['user_count_total'] * 12000) * 100);
-			$data[$this_city_id]['participation_percentage'] = intval($data[$this_city_id]['user_count_participated'] / ($data[$this_city_id]['user_count_total']) * 100);
+			$data[$this_city_id]['participation_percentage'] = floatval($data[$this_city_id]['user_count_participated'] / ($data[$this_city_id]['user_count_total']) * 100);
 		}
 
 
@@ -307,24 +327,6 @@ function getData($key, $get_user_count = false) {
 		// dump($data);
 
 	} elseif($key == 'group') {
-
-		// $data = getFromBothTables("G.id,CONCAT(G.name, ' (', C.name, ')') AS name, %amount%", "users
-		// 			LEFT JOIN reports_tos RT ON RT.user_id=users.id
-		// 			INNER JOIN users manager ON manager.id=RT.manager_id
-		// 			INNER JOIN user_role_maps RM ON RM.user_id=manager.id
-		// 			INNER JOIN roles R ON R.id=RM.role_id
-		// 			INNER JOIN groups G ON G.id=manager.group_id
-		// 			INNER JOIN cities C ON C.id=users.city_id
-		// 			%donation_table%", "G.id", "AND R.id=9 AND G.type='center'");
-
-		// $user_data = getFromBothTables("users.id, %amount%, G.id as group_id", "users
-		// 			LEFT JOIN reports_tos RT ON RT.user_id=users.id
-		// 			INNER JOIN users manager ON manager.id=RT.manager_id
-		// 			INNER JOIN user_role_maps RM ON RM.user_id=manager.id
-		// 			INNER JOIN roles R ON R.id=RM.role_id
-		// 			INNER JOIN groups G ON G.id=manager.group_id
-		// 			INNER JOIN cities C ON C.id=users.city_id
-		// 			%donation_table%", "G.id", "AND R.id=9 AND G.name != 'Events'",false);
 
 		$data = getFromBothTables("G.id,G.name AS name, %amount%", "users
 					INNER JOIN groups G ON G.id=users.group_id
@@ -359,48 +361,6 @@ function getData($key, $get_user_count = false) {
 			if(!empty($user_count_data[$row['id']])) $data[$key]['user_count'] = $user_count_data[$row['id']];
 			else  $data[$key]['user_count'] = 0;
 		}
-
-	} elseif($key == 'coach') {
-		$data = getFromBothTables("manager.id,CONCAT(manager.first_name, ' ', manager.last_name) AS name, %amount%", "users
-					%donation_table%
-					LEFT JOIN reports_tos RT ON RT.user_id=users.id
-					INNER JOIN users AS manager ON RT.manager_id=manager.id
-					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
-					INNER JOIN roles R ON R.id=RM.role_id
-					INNER JOIN cities C ON C.id=users.city_id", "manager.id", "AND R.id=9");
-
-		$user_data = getFromBothTables("users.id, %amount%, manager.id as manager_id", "users
-					%donation_table%
-					LEFT JOIN reports_tos RT ON RT.user_id=users.id
-					INNER JOIN users AS manager ON RT.manager_id=manager.id
-					INNER JOIN user_role_maps RM ON RM.user_id=manager.id
-					INNER JOIN roles R ON R.id=RM.role_id
-					INNER JOIN cities C ON C.id=users.city_id", "users.id", "AND R.id=9",false);
-
-		foreach($data as $key => $row) {
-			$data[$key]['user_count_participated'] = 0;
-		}
-
-		foreach($user_data as $row) {
-			if($row['amount'] >= 12000 && !empty($data[$row['manager_id']])) {
-				$data[$row['manager_id']]['user_count_participated'] ++;
-			}
-		}
-
-		$user_count_data = $sql->getById("SELECT manager.id, COUNT(users.id) AS count
-			FROM users
-			LEFT JOIN reports_tos RT ON RT.user_id=users.id
-			INNER JOIN users manager ON manager.id=RT.manager_id
-			INNER JOIN user_role_maps RM ON RM.user_id=manager.id
-			INNER JOIN roles R ON R.id=RM.role_id
-			INNER JOIN cities C ON C.id=users.city_id
-			WHERE R.id=9 AND " . implode(" AND ", $user_checks)
-			. " GROUP BY manager.id");
-
-		foreach ($data as $key => $row) {
-			$data[$key]['user_count'] = $user_count_data[$row['id']];
-		}
-
 	} elseif($key == 'user') {
 		$data = getFromBothTables("users.id,CONCAT(users.first_name, ' ', users.last_name) AS name, %amount%", "users
 					INNER JOIN cities C ON users.city_id=C.id
@@ -429,8 +389,6 @@ function getData($key, $get_user_count = false) {
 					ON IQ.uid = users.madapp_user_id
 					%donation_table%", "users.id",'','',$key);
 
-					// dump($data);
-
 	} elseif($key == 'volunteer') {
 		$data = getFromBothTables("users.id,CONCAT(users.first_name, ' ', users.last_name) AS name, %amount%", "users
 					INNER JOIN cities C ON users.city_id=C.id
@@ -445,8 +403,22 @@ function getData($key, $get_user_count = false) {
 					) IQ
 					ON IQ.uid = users.madapp_user_id
 					%donation_table%", "users.id",'','',$key);
-	}
 
+	} elseif($key == 'nonparticipative') {
+		$data = getFromBothTables("users.id,CONCAT(users.first_name, ' ', users.last_name) AS name, %amount%", "users
+					INNER JOIN cities C ON users.city_id=C.id
+					INNER JOIN
+					(SELECT DISTINCT U.id as uid, U.name
+						FROM `makeadiff_madapp`.User U
+						INNER JOIN `makeadiff_madapp`.UserGroup UG on U.id = UG.user_id
+						INNER JOIN `makeadiff_madapp`.`Group` G on G.id = UG.group_id
+						WHERE U.status = 1
+						AND U.user_type = 'volunteer'
+					) IQ
+					ON IQ.uid = users.madapp_user_id
+					%donation_table%", "users.id",'','',$key);
+
+	}
 
 	if($key=='volunteer' || $key=='fellow'){
 		$partcipated_count = 0;
@@ -454,23 +426,56 @@ function getData($key, $get_user_count = false) {
 		$id = 0;
 
 		foreach ($data as $value) {
+			if($total_count == 0){
+				$id = $value['id'];
+			}
 			$total_count++;
-			if($value['amount']>0)
+			if($value['amount']>0){
 				$partcipated_count++;
-			$id = $value['id'];
+			}
+			else{
+				unset($data[$value['id']]);
+			}
 		}
 
 		$data[$id]['partcipated_count'] = $partcipated_count;
 		$data[$id]['total_count'] = $total_count;
+
 		if($total_count!=0)
 			$data[$id]['participation_percentage'] = ($partcipated_count/$total_count)*100;
 		else
 			$data[$id]['participation_percentage'] = 0;
+
+	} else if($key=='nonparticipative'){
+		$nonpartcipated_count = 0;
+		$total_count = 0;
+		$id = 0;
+
+		foreach ($data as $value) {
+			$total_count++;
+			if($value['amount']==0){
+				$nonpartcipated_count++;
+			}
+			else{
+				unset($data[$value['id']]);
+			}
+			$id = $value['id'];
+		}
+
+		$data[$id]['partcipated_count'] = $nonpartcipated_count;
+		$data[$id]['total_count'] = $total_count;
+
+		if($total_count!=0)
+			$data[$id]['participation_percentage'] = ($nonpartcipated_count/$total_count)*100;
+		else
+			$data[$id]['participation_percentage'] = 0;
+
 	}
+
 	// dump($data);
 
 	$mem->set("Infogen:index/data#$timeframe,$view_level,$state_id,$city_id,$group_id,$key", $data, $cache_expire);
-	// print_r($data);
+
  	return $data;
 }
 
@@ -492,14 +497,23 @@ function getFromBothTables($select, $tables, $group_by, $where = '',$set_order_a
 
 
 
-	if($key=='volunteer' || $key=='fellow'){ //Getting All Volunteer Data
+	if($key == 'volunteer' || $key=='fellow' || $key == 'nonparticipative'){ //Getting All Volunteer Data
 		switch ($key) {
-			case 'user':
+			case 'nonparticipative':
 				$volunteer_data = "SELECT users.id,users.id as ID,CONCAT(users.first_name, ' ', users.last_name) AS name
-													 FROM users
-													 INNER JOIN cities C ON users.city_id = C.id
-													 WHERE ".implode(" AND ", $checks).
-													 " GROUP BY users.madapp_user_id";
+														FROM users
+														INNER JOIN cities C ON users.city_id = C.id
+														INNER JOIN
+														(SELECT DISTINCT U.id as uid, U.name
+															FROM `makeadiff_madapp`.User U
+															INNER JOIN `makeadiff_madapp`.UserGroup UG on U.id = UG.user_id
+															INNER JOIN `makeadiff_madapp`.`Group` G on G.id = UG.group_id
+															WHERE U.status = 1
+															AND U.user_type = 'volunteer'
+														) IQ
+														ON IQ.uid = users.madapp_user_id
+														WHERE ".implode(" AND ", $checks).
+														" GROUP BY users.madapp_user_id";
 				break;
 			case 'volunteer':
 				$volunteer_data = "SELECT users.id,users.id as ID,CONCAT(users.first_name, ' ', users.last_name) AS name
@@ -572,7 +586,7 @@ function getFromBothTables($select, $tables, $group_by, $where = '',$set_order_a
 				$data[$id]['amount'] += $donut_data[$id]['amount'];
 				$data[$id]['donor_count'] += $donut_data[$id]['donor_count'];
 			}
-			else $data[$id]= $extdon_data[$id];
+			else $data[$id]= $donut_data[$id];
 		}
 	}
 	else{
@@ -595,10 +609,9 @@ function getFromBothTables($select, $tables, $group_by, $where = '',$set_order_a
 		return 0;
 	});
 
-	// if($set_order_and_limits == true) {
-	// 	return array_slice($data, 0, 30,true);
-	// } else {
-		return $data;
+
+
+	return $data;
 	// }
 }
 

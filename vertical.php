@@ -83,7 +83,7 @@ function getData($key, $get_user_count = false) {
 						AND V.id NOT IN ( " . implode(",", $verticals_to_hide) . ")
 						GROUP BY U.id,V.id) IQ
 					ON IQ.uid = users.madapp_user_id
-					%donation_table%", "IQ.vid");
+					%donation_table%", "IQ.vid",'',$key);
 
 		$data = array();
 		foreach($values as $value) {
@@ -130,7 +130,7 @@ function getData($key, $get_user_count = false) {
 
 		usort($data,"compare_participation");
 
-	} elseif($key == 'fellow') {
+	}elseif($key == 'fellow') {
 		$vertical_check = '';
 		if($vertical_id) {
 			$checks['vertical_id'] = "IQ.vid = $vertical_id";
@@ -149,7 +149,7 @@ function getData($key, $get_user_count = false) {
 						AND V.id NOT IN ( " . implode(",", $verticals_to_hide) . ")
 						GROUP BY U.id,V.id) IQ
 					ON IQ.uid = users.madapp_user_id
-					%donation_table%", "users.id","");
+					%donation_table%", "users.id","",$key);
 	}
 
 	$mem->set("Infogen:index/data#$timeframe,$view_level,$vertical_id,$key", $data, $cache_expire);
@@ -158,7 +158,7 @@ function getData($key, $get_user_count = false) {
 }
 
 // This is kind of horrible. But there was a lot of code repetation earlier - so I switched to this approch. Need as have to do the same check on two seperate tables.
-function getFromBothTables($select, $tables, $group_by = '', $where = '') {
+function getFromBothTables($select, $tables, $group_by = '', $where = '',$key='') {
 	global $top_count, $sql, $checks, $city_checks;
 
 	$order_and_limits = ''; //"ORDER BY amount DESC\nLIMIT 0, " . ($top_count * 20);
@@ -172,7 +172,7 @@ function getFromBothTables($select, $tables, $group_by = '', $where = '') {
 		$query = "SELECT $select FROM $tables $filter $where GROUP BY $group_by $order_and_limits";
 	}
 
-	$donut_query = str_replace(array('%amount%', '%donation_table%'), array('SUM(D.donation_amount) AS amount, COALESCE(COUNT(DISTINCT D.donour_id),0) AS donor_count, GROUP_CONCAT(users.id,",") as user_ids', 'INNER JOIN donations D ON D.fundraiser_id=users.id'), $query);
+	$donut_query = str_replace(array('%amount%', '%donation_table%'), array('SUM(D.donation_amount) AS amount, COALESCE(COUNT(DISTINCT D.donour_id),0) AS donor_count, GROUP_CONCAT(users.id,",") as user_ids, users.first_name as Uname', 'INNER JOIN donations D ON D.fundraiser_id=users.id'), $query);
 	$donut_data = $sql->getById($donut_query);
 
 	$extdon_query = str_replace(array('%amount%', '%donation_table%'), array('SUM(D.amount) AS amount, COALESCE(COUNT(DISTINCT D.donor_id),0) AS donor_count, GROUP_CONCAT(users.id,",") as user_ids', 'INNER JOIN external_donations D ON D.fundraiser_id=users.id'), $query);
@@ -180,20 +180,70 @@ function getFromBothTables($select, $tables, $group_by = '', $where = '') {
 
 	$data = $donut_data;
 
-	foreach ($extdon_data as $id => $value) {
-		if(isset($data[$id])) {
-			$data[$id]['amount'] += $extdon_data[$id]['amount'];
-			$data[$id]['donor_count'] += $extdon_data[$id]['donor_count'];
-			$data[$id]['user_ids'] .= $extdon_data[$id]['user_ids'];
+	if($key=='fellow'){
+		$volunteer_data = "SELECT users.id,users.id as ID,CONCAT(users.first_name, ' ', users.last_name) AS name
+												FROM users
+												INNER JOIN cities C ON users.city_id = C.id
+												INNER JOIN
+												(SELECT DISTINCT U.id as uid, U.name, V.id as vid
+													FROM `makeadiff_madapp`.User U
+													INNER JOIN `makeadiff_madapp`.UserGroup UG on U.id = UG.user_id
+													INNER JOIN `makeadiff_madapp`.`Group` G on G.id = UG.group_id
+													INNER JOIN `makeadiff_madapp`.`Vertical` V on G.vertical_id = V.id
+													WHERE U.status = 1
+													AND U.user_type = 'volunteer'
+													AND G.type = 'fellow'
+												) IQ
+												ON IQ.uid = users.madapp_user_id
+												WHERE ".implode(" AND ", $checks).
+												" GROUP BY users.madapp_user_id";
 
-			$ids = explode(',',$data[$id]['user_ids']);
-			sort($ids);
-			$ids = array_filter(array_unique($ids));
-			// echo $data[$id]['name'];
-			// dump($ids);
-			$data[$id]['user_count_participated']=count($ids);
+		$volunteer_data = $sql->getById($volunteer_data);
+		// var_dump ($volunteer_data);
+		$data = array();
+
+		foreach ($volunteer_data as $user_data) {
+			$data[$user_data['id']]['id']=$user_data['id'];
+			$data[$user_data['id']]['amount']=0;
+			$data[$user_data['id']]['name']=$user_data['name'];
+			$data[$user_data['id']]['donor_count']=0;
+			$data[$user_data['id']]['partcipated_count']=0;
+			$data[$user_data['id']]['total_count']=0;
+			$data[$user_data['id']]['participation_percentage']=0;
 		}
-		else $data[$id] = $extdon_data[$id];
+
+		foreach ($extdon_data as $id => $value) {
+			if(isset($data[$id])){
+				$data[$id]['amount'] += $extdon_data[$id]['amount'];
+				$data[$id]['donor_count'] += $extdon_data[$id]['donor_count'];
+			}
+			else $data[$id]= $extdon_data[$id];
+		}
+
+		foreach ($donut_data as $id => $value) {
+			if(isset($data[$id])){
+				$data[$id]['amount'] += $donut_data[$id]['amount'];
+				$data[$id]['donor_count'] += $donut_data[$id]['donor_count'];
+			}
+			else $data[$id]= $donut_data[$id];
+		}
+	}else{
+		$data = $donut_data;
+		foreach ($extdon_data as $id => $value) {
+			if(isset($data[$id])) {
+				$data[$id]['amount'] += $extdon_data[$id]['amount'];
+				$data[$id]['donor_count'] += $extdon_data[$id]['donor_count'];
+				$data[$id]['user_ids'] .= $extdon_data[$id]['user_ids'];
+
+				$ids = explode(',',$data[$id]['user_ids']);
+				sort($ids);
+				$ids = array_filter(array_unique($ids));
+				// echo $data[$id]['name'];
+				// dump($ids);
+				$data[$id]['user_count_participated']=count($ids);
+			}
+			else $data[$id] = $extdon_data[$id];
+		}
 	}
 
 	usort($data, function($a, $b) {
