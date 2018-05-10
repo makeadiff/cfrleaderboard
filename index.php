@@ -2,7 +2,6 @@
 require 'common.php';
 include("../donutleaderboard/_city_filter.php");
 
-
 $view_level = i($QUERY, 'view_level', 'national');
 $timeframe = intval(i($QUERY, 'timeframe', '0'));
 $view = i($QUERY, 'view', 'top');
@@ -47,7 +46,8 @@ $top_title = '';
 $bottom_title = '';
 
 $array_template = array('title' => '', 'data' => array(), 'show_in' => array());
-$all_levels = array('region' => $array_template, 'city' => $array_template, 'group' => $array_template, 'coach' => $array_template, 'user' => $array_template, 'volunteer' => $array_template,'fellow' => $array_template, 'nonparticipative' => $array_template );
+$all_levels = array('region' => $array_template, 'city' => $array_template, 'group' => $array_template, 'coach' => $array_template, 
+					'user' => $array_template, 'volunteer' => $array_template,'fellow' => $array_template, 'nonparticipative' => $array_template );
 
 $all_levels['city']['show_in']		= array('national', 'region');
 $all_levels['group']['show_in']		= array('region', /*'city'*/);
@@ -98,7 +98,6 @@ if(!$total_user_count or !$total_donation) {
 					$total_volunteer_particpated++;
 				}
 			}
-
 	}
 }
 
@@ -107,7 +106,6 @@ foreach ($all_levels as $key => $level_info) {
 		$name = ucfirst($key);
 		if($name == 'User') $name = 'Fundraiser';
 		if($name == 'Group') $name = 'Center';
-
 
 		$title = 'Top ' . $name;
 
